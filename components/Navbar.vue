@@ -3,9 +3,9 @@
     <template #brand>
       <b-navbar-item tag="router-link" class="" :to="{ path: '/' }">
         <img
-          src="@/assets/img/facebook_cover_photo_1_transparent.png"
-          alt=""
-          class="mr-2"
+          src="@/assets/img/facebook_cover_photo_1_fullpic.png"
+          alt="logo"
+          class="mr-2 logo"
         />
         Geek<span class="large2 pink">2</span>Door
       </b-navbar-item>
@@ -42,5 +42,8 @@
 }
 a.navbar-item:hover {
   color: #000000;
+}
+.navbar-item img {
+  max-height: 3.35rem;
 }
 </style>

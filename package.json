@@ -18,7 +18,8 @@
     "boxicons": "^2.0.7",
     "core-js": "^3.8.3",
     "nuxt": "^2.14.12",
-    "nuxt-buefy": "^0.4.4"
+    "nuxt-buefy": "^0.4.4",
+    "vee-validate": "^3.4.5"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^5.0.0",

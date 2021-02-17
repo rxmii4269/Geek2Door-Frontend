@@ -28,7 +28,7 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['@/plugins/vee-validate.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -54,6 +54,10 @@ export default {
     '@nuxtjs/auth-next',
   ],
 
+  pageTransition: {
+    mode: 'out-in',
+  },
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     prefix: process.env.API_URL,
@@ -64,6 +68,7 @@ export default {
   },
 
   auth: {
+    resetOnError: true,
     redirect: {
       login: '/accounts/login',
       logout: '/accounts/login',
@@ -103,6 +108,10 @@ export default {
         codeChallengeMethod: '',
         responseType: 'token id_token',
         nonce: null,
+        refreshToken: {
+          property: 'refresh_token',
+          maxAge: 60 * 60 * 20 * 30,
+        },
       },
     },
   },
@@ -126,5 +135,7 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: ['vee-validate/dist/rules'],
+  },
 }

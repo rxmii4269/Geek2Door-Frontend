@@ -1,6 +1,6 @@
 <template>
   <div class="center">
-    <div class="mt-3 box">
+    <div class="box">
       <LoginForm />
     </div>
   </div>
@@ -8,6 +8,7 @@
 
 <script>
 export default {
+  transitions: 'login',
   data: () => {
     return {}
   },
@@ -20,16 +21,6 @@ export default {
 </script>
 
 <style>
-.center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.box {
-  border-radius: 10px;
-  background-color: var(--white);
-  padding: 3rem;
-}
 .is-right.icon.has-text-primary {
   color: #dbdbdb !important;
 }

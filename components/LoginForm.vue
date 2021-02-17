@@ -1,65 +1,84 @@
 <template>
   <div>
-    <form method="post" @submit.prevent.stop="userLogin">
-      <h1 class="is-size-3 has-text-weight-medium has-text-centered">
-        Join Geek2Door
-      </h1>
-      <div class="is-flex is-flex-direction-column mt-2">
-        <b-field label="Email">
-          <b-input
-            v-model="form.email"
-            type="email"
-            custom-class="green"
-            icon-pack="bx"
-            icon="bxs-envelope"
-            icon-right="bx-user-circle"
-            size="is-medium"
-          ></b-input>
-        </b-field>
-
-        <b-field label="Password">
-          <b-input
-            v-model="form.password"
-            type="password"
-            custom-class="green"
-            size="is-medium"
-            icon="lock"
-            password-reveal
-          ></b-input>
-        </b-field>
-        <b-button
-          tag="input"
-          native-type="submit"
-          type="is-success"
-          outlined
-          expanded
-          value="Continue"
-        ></b-button>
-      </div>
-    </form>
-    <div class="divider">Or</div>
-    <button
-      class="button facebook has-text-white mb-2 is-fullwidth"
-      @click="loginWithFacebook"
-    >
-      Sign in with Facebook
-    </button>
-    <button
-      class="google button has-text-white is-fullwidth mb-2"
-      @click="loginWithGoogle"
-    >
-      Sign in with Google
-    </button>
-    <button
-      class="button is-fullwidth github has-text-white"
-      @click="loginWithGithub"
-    >
-      Sign in with Github
-    </button>
+    <ValidationObserver ref="observer" v-slot="{ handleSubmit }" slim>
+      <form method="post" @submit.prevent.stop="userLogin">
+        <h1 class="is-size-3 has-text-weight-medium has-text-centered">
+          Join Geek2Door
+        </h1>
+        <div class="is-flex is-flex-direction-column mt-2">
+          <ValidationProvider rules="required|email" name="Email" slim>
+            <b-field
+              slot-scope="{ errors, valid }"
+              label="Email"
+              :type="{ 'is-danger': errors[0], 'is-success': valid }"
+              :message="errors"
+            >
+              <b-input
+                v-model="form.email"
+                type="email"
+                custom-class="green"
+                icon-pack="bx"
+                icon="bxs-envelope"
+                icon-right="bx-user-circle"
+                size="is-medium"
+              ></b-input>
+            </b-field>
+          </ValidationProvider>
+          <ValidationProvider rules="required" slim>
+            <b-field
+              slot-scope="{ errors, valid }"
+              label="Password"
+              :type="{ 'is-danger': errors[0], 'is-success': valid }"
+              :message="errors"
+            >
+              <b-input
+                v-model="form.password"
+                type="password"
+                custom-class="green"
+                size="is-medium"
+                icon="lock"
+                password-reveal
+              ></b-input>
+            </b-field>
+          </ValidationProvider>
+          <b-button
+            type="is-success"
+            outlined
+            expanded
+            @click="handleSubmit(userLogin)"
+            >Continue</b-button
+          >
+        </div>
+      </form>
+      <div class="divider">Or</div>
+      <button
+        class="button facebook has-text-white mb-2 is-fullwidth"
+        @click="loginWithFacebook"
+      >
+        Sign in with Facebook
+      </button>
+      <button
+        class="google button has-text-white is-fullwidth mb-2"
+        @click="loginWithGoogle"
+      >
+        Sign in with Google
+      </button>
+      <button
+        class="button is-fullwidth github has-text-white"
+        @click="loginWithGithub"
+      >
+        Sign in with Github
+      </button>
+    </ValidationObserver>
   </div>
 </template>
 <script>
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 export default {
+  components: {
+    ValidationObserver,
+    ValidationProvider,
+  },
   data: () => {
     return {
       form: {
@@ -79,8 +98,35 @@ export default {
       this.$auth.loginWith('github')
     },
     async userLogin() {
-      const response = await this.$auth.loginWith('local', { data: this.form })
-      console.log(response)
+      const isValid = await this.$refs.observer.validate()
+      if (isValid) {
+        this.$auth
+          .loginWith('local', { data: this.form })
+          .then((response) => {
+            if (response.data.error) {
+              this.$buefy.toast.open({
+                duration: 4000,
+                message: `Unable to sign in, ${response.data.error}`,
+                type: 'is-danger',
+              })
+              this.resetForm()
+            }
+          })
+          .catch((e) => {
+            this.$buefy.toast.open({
+              duration: 4000,
+              message: `Unable to sign in due to ${e.message}. Please try again later.`,
+              type: 'is-danger',
+            })
+          })
+      }
+    },
+    resetForm() {
+      this.form.email = ''
+      this.form.password = ''
+      requestAnimationFrame(() => {
+        this.$refs.observer.reset()
+      })
     },
   },
 }

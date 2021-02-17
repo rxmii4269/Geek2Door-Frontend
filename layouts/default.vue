@@ -2,7 +2,7 @@
   <div class="is-flex-direction-column is-flex h-100">
     <Navbar />
     <section class="section is-flex-grow-1">
-      <Nuxt id="padding-scroll-content" class="" />
+      <Nuxt />
     </section>
     <Footer class="is-flex-shrink-1" />
   </div>
@@ -21,7 +21,7 @@ html {
 html,
 body,
 * {
-  font-family: 'Poppins', 'Lato' !important;
+  font-family: 'Poppins', 'Lato', 'Roboto' !important;
 }
 
 *,
@@ -53,5 +53,40 @@ a {
 
 .bg-light-pink {
   background-color: var(--light-pink);
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.b-steps .steps .step-items .step-item.is-pink::before,
+.b-steps .steps .step-items .step-item.is-pink::after {
+  background: -webkit-gradient(
+    linear,
+    right top,
+    left top,
+    color-stop(50%, #dbdbdb),
+    color-stop(50%, var(--light-pink))
+  );
+  background: linear-gradient(to left, #dbdbdb 50%, var(--light-pink) 50%);
+  background-size: 200% 100%;
+}
+
+.b-steps .steps .step-items .step-item.is-pink.is-active .step-marker {
+  background-color: white;
+  border-color: var(--light-pink);
+  color: var(--light-pink);
+}
+
+.b-steps .steps .step-items .step-item.is-pink.is-previous .step-marker {
+  color: #fff;
+  background-color: var(--light-pink);
+}
+.box {
+  border-radius: 23px;
+
+  padding: 3rem;
 }
 </style>

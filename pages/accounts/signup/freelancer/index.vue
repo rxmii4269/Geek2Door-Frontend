@@ -7,11 +7,11 @@
             <h1 class="is-size-2 has-text-centered is-capitalized">
               Sign Up FreeLancer
             </h1>
-            <SignUpForm />
+            <SignUpForm ref="signUpForm" @formData="getFormData" />
           </div>
         </div>
       </b-step-item>
-      <b-step-item step="2" label="Help"></b-step-item>
+      <b-step-item step="2" label="Experience"></b-step-item>
       <template #navigation="{ previous, next }">
         <div class="buttons is-justify-content-center">
           <b-button
@@ -32,5 +32,16 @@ export default {
   transitions: 'fade',
   scrollToTop: true,
   auth: false,
+  data() {
+    return {
+      form: '',
+    }
+  },
+
+  methods: {
+    getFormData(params) {
+      this.form = params
+    },
+  },
 }
 </script>

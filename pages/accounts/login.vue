@@ -1,6 +1,9 @@
 <template>
   <div class="center">
     <div class="box">
+      <h1 class="is-size-3 has-text-weight-medium has-text-centered">
+        Join Geek2Door
+      </h1>
       <LoginForm />
     </div>
   </div>

@@ -2,9 +2,6 @@
   <div>
     <ValidationObserver ref="observer" v-slot="{ handleSubmit }" slim>
       <form method="post" @submit.prevent.stop="userLogin">
-        <h1 class="is-size-3 has-text-weight-medium has-text-centered">
-          Join Geek2Door
-        </h1>
         <div class="is-flex is-flex-direction-column mt-2">
           <ValidationProvider rules="required|email" name="Email" slim>
             <b-field
@@ -50,26 +47,26 @@
           >
         </div>
       </form>
-      <div class="divider">Or</div>
-      <button
-        class="button facebook has-text-white mb-2 is-fullwidth"
-        @click="loginWithFacebook"
-      >
-        Sign in with Facebook
-      </button>
-      <button
-        class="google button has-text-white is-fullwidth mb-2"
-        @click="loginWithGoogle"
-      >
-        Sign in with Google
-      </button>
-      <button
-        class="button is-fullwidth github has-text-white"
-        @click="loginWithGithub"
-      >
-        Sign in with Github
-      </button>
     </ValidationObserver>
+    <div class="divider">Or</div>
+    <button
+      class="button facebook has-text-white mb-2 is-fullwidth"
+      @click="loginWithFacebook"
+    >
+      Sign in with Facebook
+    </button>
+    <button
+      class="google button has-text-white is-fullwidth mb-2"
+      @click="loginWithGoogle"
+    >
+      Sign in with Google
+    </button>
+    <button
+      class="button is-fullwidth github has-text-white"
+      @click="loginWithGithub"
+    >
+      Sign in with Github
+    </button>
   </div>
 </template>
 <script>

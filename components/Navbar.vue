@@ -1,5 +1,11 @@
 <template>
-  <b-navbar close-on-click type="is-dark" shadow class="has-text-white">
+  <b-navbar
+    wrapper-class="container"
+    close-on-click
+    type="is-dark"
+    shadow
+    class="has-text-white"
+  >
     <template #brand>
       <b-navbar-item tag="router-link" class="" :to="{ path: '/' }">
         <img

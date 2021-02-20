@@ -85,8 +85,26 @@ a {
   background-color: var(--light-pink);
 }
 .box {
-  border-radius: 23px;
-
   padding: 3rem;
+}
+
+.is-pink {
+  color: var(--light-pink);
+}
+
+.button.is-pink {
+  background-color: var(--light-pink);
+  color: var(--white);
+}
+
+.is-pink.is-outlined {
+  background-color: var(--white);
+  color: var(--light-pink);
+}
+
+.is-pink.is-outlined:hover {
+  background-color: var(--light-pink);
+  color: var(--white);
+  border-color: var(--light-pink);
 }
 </style>

@@ -24,6 +24,7 @@
     <template #end>
       <b-navbar-item tag="div">
         <div class="buttons">
+          <b-dropdown></b-dropdown>
           <b-dropdown aria-role="list">
             <template #trigger>
               <button class="button pink mr-2">

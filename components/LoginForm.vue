@@ -3,7 +3,7 @@
     <ValidationObserver ref="observer" v-slot="{ handleSubmit }" slim>
       <form method="post" @submit.prevent.stop="userLogin">
         <div class="is-flex is-flex-direction-column mt-2">
-          <ValidationProvider rules="required|email" name="Email" slim>
+          <ValidationProvider rules="required" name="Email" slim>
             <b-field
               slot-scope="{ errors, valid }"
               label="Email"
@@ -38,11 +38,7 @@
               ></b-input>
             </b-field>
           </ValidationProvider>
-          <b-button
-            type="is-success"
-            outlined
-            expanded
-            @click="handleSubmit(userLogin)"
+          <b-button type="is-pink" expanded @click="handleSubmit(userLogin)"
             >Continue</b-button
           >
         </div>
@@ -67,6 +63,10 @@
     >
       Sign in with Github
     </button>
+    <div class="divider">New to Geek2Door?</div>
+    <b-button tag="router-link" to="signup" type="is-pink" expanded outlined
+      >Sign Up</b-button
+    >
   </div>
 </template>
 <script>

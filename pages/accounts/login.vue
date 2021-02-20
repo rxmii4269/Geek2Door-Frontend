@@ -42,3 +42,9 @@ export default {
   flex-direction: column;
 }
 </style>
+<style scoped>
+.box {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+</style>

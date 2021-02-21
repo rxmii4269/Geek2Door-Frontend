@@ -1,17 +1,29 @@
 <template>
-  <div class="container box">
-    <h1 class="is-size-2 has-text-centered is-capitalized">Sign Up As</h1>
-    <b-tabs type="is-toggle" expanded>
-      <b-tab-item label="Recruiter">
-        <SignUpForm
-          ref="signUpForm"
-          class="is-flex is-justify-content-center"
-          :user-type="userType"
-          @formData="getFormData"
-        />
-      </b-tab-item>
-      <b-tab-item label="Freelancer"></b-tab-item>
-    </b-tabs>
+  <div class="center">
+    <div class="box">
+      <h1 class="is-size-4 has-text-centered is-capitalized">I want to</h1>
+      <b-field>
+        <b-radio-button
+          v-model="userType"
+          type="is-pink"
+          name="recruiter"
+          native-value="recruiter"
+          expanded
+        >
+          <span>Hire</span>
+        </b-radio-button>
+        <b-radio-button
+          v-model="userType"
+          type="is-pink"
+          name="freelancer"
+          native-value="freelancer"
+          expanded
+        >
+          <span>Work</span>
+        </b-radio-button>
+      </b-field>
+      <SignUpForm :user-type="userType" />
+    </div>
   </div>
 </template>
 <script>
@@ -19,14 +31,8 @@ export default {
   auth: false,
   data() {
     return {
-      userType: '',
-      form: '',
+      userType: 'recruiter',
     }
-  },
-  methods: {
-    getFormData(params) {
-      this.form = params
-    },
   },
 }
 </script>

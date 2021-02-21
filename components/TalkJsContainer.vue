@@ -19,13 +19,15 @@ export default {
     }
   },
   mounted() {
-    this.$axios.$get('/users/1').then((response) => {
-      return (
-        (this.user.id = response.id),
-        ((this.user.name = response.username),
-        (this.user.email = response.email))
-      )
-    })
+    this.$axios
+      .$get(`/users/${this.$store.state.auth.user.id}`)
+      .then((response) => {
+        return (
+          (this.user.id = response.id),
+          ((this.user.name = response.username),
+          (this.user.email = response.email))
+        )
+      })
     Talk.ready.then(() => {
       const me = new Talk.User({
         id: this.currentUser.id,

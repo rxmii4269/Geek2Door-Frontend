@@ -1,20 +1,16 @@
 <template>
-  <div>
-    <!-- <TalkJsContainer :current-user="this.currentUser" /> -->
-  </div>
+  <div></div>
 </template>
 <script>
 export default {
   auth: false,
-  data() {
-    return {
-      currentUser: {
-        id: '21',
-        name: 'Romaine',
-        email: 'dummy@gmail.com',
-        photoUrl: 'https://dummy-img.com/img/1',
-      },
+  middleware({ store, redirect }) {
+    if (store.state.auth.loggedIn) {
+      return redirect('/home')
     }
+  },
+  data() {
+    return {}
   },
 }
 </script>

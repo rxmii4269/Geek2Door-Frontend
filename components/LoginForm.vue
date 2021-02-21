@@ -6,7 +6,7 @@
           <ValidationProvider rules="required" name="Email" slim>
             <b-field
               slot-scope="{ errors, valid }"
-              label="Email"
+              label="Email or Username"
               :type="{ 'is-danger': errors[0], 'is-success': valid }"
               :message="errors"
             >

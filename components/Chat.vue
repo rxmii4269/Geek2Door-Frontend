@@ -1,5 +1,5 @@
 <template>
-  <div class="chatbox-container">
+  <div class="chatbox-container is-hidden">
     <div id="talkjs-container"></div>
   </div>
 </template>

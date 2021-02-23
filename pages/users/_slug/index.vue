@@ -33,6 +33,12 @@
               <a href="#">#responsive</a>
               <br />
               <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+              <b-button
+                expanded
+                type="is-pink"
+                @click="messageUser(userData.id)"
+                >Message</b-button
+              >
             </div>
           </div>
         </div>
@@ -46,6 +52,7 @@
         <p class="title">{{ userData.message }}</p>
       </div>
     </div>
+    <Chat v-if="$auth.loggedIn" ref="Chat" />
   </div>
 </template>
 <script>
@@ -53,11 +60,17 @@ export default {
   data() {
     return {
       userData: '',
+      chatWith: '',
     }
   },
   async mounted() {
     const user = await this.$axios.$get(`/users/${this.$route.params.slug}`)
     this.userData = user
+  },
+  methods: {
+    messageUser(userId) {
+      this.$refs.Chat.loadChat(userId)
+    },
   },
 }
 </script>

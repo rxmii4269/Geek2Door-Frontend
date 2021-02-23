@@ -3,7 +3,6 @@
     <Navbar />
     <section class="section is-flex-grow-1">
       <Nuxt />
-      <Chat v-if="$auth.loggedIn" />
     </section>
     <Footer class="is-flex-shrink-1" />
   </div>

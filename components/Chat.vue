@@ -1,24 +1,33 @@
 <template>
-  <div class="chatbox-container is-hidden">
-    <div id="talkjs-container"></div>
-  </div>
+  <div
+    id="talkjs-container"
+    class="chatbox-container"
+    :class="{ 'is-hidden': this.hidden }"
+  ></div>
 </template>
 <script>
 import Talk from 'talkjs'
 export default {
+  data() {
+    return {
+      hidden: true,
+    }
+  },
   methods: {
     async loadChat(userId) {
-      const user = await this.$auth.$get(`/users/${userId}`)
+      const user = await this.$axios.$get(`/users/${userId}`)
       Talk.ready.then(() => {
         const me = new Talk.User({
           id: this.$auth.user.id,
           name: this.$auth.user.name,
           email: this.$auth.user.email,
+          role: 'buyer',
         })
         const other = new Talk.User({
           id: user.id,
-          name: user.name,
-          email: user.name,
+          name: user.fullname,
+          email: user.email,
+          role: 'seller',
         })
 
         if (!window.talkSession) {
@@ -36,19 +45,19 @@ export default {
         conversation.setParticipant(other)
 
         const chatbox = window.talkSession.createChatbox(conversation)
-
         chatbox.mount(document.getElementById('talkjs-container'))
       })
+      this.hidden = false
     },
   },
 }
 </script>
 <style>
 .chatbox-container {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   height: 400px;
-  right: 0;
+  right: 5%;
   width: 300px;
 }
 </style>

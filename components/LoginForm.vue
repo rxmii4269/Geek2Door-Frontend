@@ -42,10 +42,10 @@
             type="is-pink"
             tag="input"
             native-type="submit"
+            value="Continue"
             expanded
             @click="handleSubmit(userLogin)"
-            >Continue</b-button
-          >
+          ></b-button>
         </div>
       </form>
     </ValidationObserver>

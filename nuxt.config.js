@@ -25,7 +25,6 @@ export default {
     '@/assets/css/custom.css',
     'boxicons/css/boxicons.min.css',
     '@creativebulma/bulma-divider/dist/bulma-divider.min.css',
-    '@creativebulma/bulma-badge/dist/bulma-badge.min.css',
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins

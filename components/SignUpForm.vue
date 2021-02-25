@@ -1,25 +1,51 @@
 <template>
   <div>
-    <ValidationObserver slim>
-      <ValidationProvider slim rules="required">
+    <ValidationObserver ref="signUpObserver" v-slot="{ handleSubmit }" slim>
+      <ValidationProvider
+        v-slot="{ errors, valid }"
+        slim
+        rules="required|email"
+        name="Email"
+      >
         <b-field
-          slot-scope="{ errors, valid }"
           :type="{ 'is-danger': errors[0], 'is-success': valid }"
           :message="errors"
-          label="Full Name"
+          label="Email"
         >
-          <b-input v-model="form.fullname"></b-input>
+          <b-input v-model="form.email" type="email"></b-input>
         </b-field>
       </ValidationProvider>
-      <ValidationProvider slim rules="required">
+      <b-field grouped>
+        <ValidationProvider v-slot="{ errors, valid }" slim rules="required">
+          <b-field
+            :type="{ 'is-danger': errors[0], 'is-success': valid }"
+            :message="errors"
+            label="First Name"
+          >
+            <b-input v-model="form.firstname"></b-input>
+          </b-field>
+        </ValidationProvider>
+        <ValidationProvider v-slot="{ errors, valid }" slim rules="required">
+          <b-field
+            :type="{ 'is-danger': errors[0], 'is-success': valid }"
+            :message="errors"
+            label="Last Name"
+          >
+            <b-input v-model="form.lastname"></b-input>
+          </b-field>
+        </ValidationProvider>
+      </b-field>
+      <ValidationProvider v-slot="{ errors, valid }" slim rules="required">
         <b-field
-          slot-scope="{ errors, valid }"
           :type="{ 'is-danger': errors[0], 'is-success': valid }"
           :message="errors"
           label="Occupation"
           ><b-input v-model="form.occupation"></b-input
         ></b-field>
       </ValidationProvider>
+      <b-button type="is-pink" expanded @click="handleSubmit(userLogin)"
+        >Continue</b-button
+      >
     </ValidationObserver>
   </div>
 </template>
@@ -30,10 +56,18 @@ export default {
     ValidationObserver,
     ValidationProvider,
   },
+  props: {
+    userType: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       form: {
-        fullname: '',
+        firstname: '',
+        lastname: '',
+        email: '',
       },
     }
   },

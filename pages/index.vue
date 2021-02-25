@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <TalkJsContainer :current-user="this.currentUser" /> -->
+    <img src="@/assets/img/baloons.svg" alt="baloons" />
   </div>
 </template>
 <script>

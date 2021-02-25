@@ -6,13 +6,13 @@
           <ValidationProvider rules="required" name="Email" slim>
             <b-field
               slot-scope="{ errors, valid }"
-              label="Email"
+              label="Email or Username"
               :type="{ 'is-danger': errors[0], 'is-success': valid }"
               :message="errors"
             >
               <b-input
                 v-model="form.email"
-                type="email"
+                type="text"
                 custom-class="green"
                 icon-pack="bx"
                 icon="bxs-envelope"
@@ -38,9 +38,14 @@
               ></b-input>
             </b-field>
           </ValidationProvider>
-          <b-button type="is-pink" expanded @click="handleSubmit(userLogin)"
-            >Continue</b-button
-          >
+          <b-button
+            type="is-pink"
+            tag="input"
+            native-type="submit"
+            value="Continue"
+            expanded
+            @click="handleSubmit(userLogin)"
+          ></b-button>
         </div>
       </form>
     </ValidationObserver>

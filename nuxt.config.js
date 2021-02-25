@@ -6,7 +6,7 @@ export default {
   target: 'static',
   loadingIndicator: {
     name: 'cube-grid',
-    color: 'rgba(0,78,100,1)',
+    color: '#fb8a8a',
     background: 'white',
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -25,6 +25,7 @@ export default {
     '@/assets/css/custom.css',
     'boxicons/css/boxicons.min.css',
     '@creativebulma/bulma-divider/dist/bulma-divider.min.css',
+    '@creativebulma/bulma-badge/dist/bulma-badge.min.css',
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -41,7 +42,7 @@ export default {
   ],
 
   router: {
-    middleware: ['auth'],
+    middleware: ['auth', 'talkjs'],
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules

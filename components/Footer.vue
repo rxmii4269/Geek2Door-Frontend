@@ -10,7 +10,7 @@
     </div>
   </footer>
 </template>
-<style>
+<style scoped>
 .is-dark {
   background-color: var(--dark);
 }

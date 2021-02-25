@@ -959,6 +959,7 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+<<<<<<< HEAD
 "@babel/types@^7.12.17", "@babel/types@^7.13.0":
   version "7.13.0"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.13.0.tgz#74424d2816f0171b4100f0ab34e9a374efdf7f80"
@@ -967,6 +968,12 @@
     "@babel/helper-validator-identifier" "^7.12.11"
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
+=======
+"@creativebulma/bulma-badge@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@creativebulma/bulma-badge/-/bulma-badge-1.0.1.tgz#7f1c2ec04020a4d18db1d960a644a052e61de9da"
+  integrity sha512-cTMgxPdTOsAfPqd9wbrvKNUTvnIt+pNgwwO9Xzu6MRUIFlvGRtIVApaV51f3wt0/uI78BpKv5FPAtEJbmSTZOg==
+>>>>>>> ad1bd01f2dedd2439083cc082128ef0617d2df2a
 
 "@creativebulma/bulma-divider@^1.1.0":
   version "1.1.0"

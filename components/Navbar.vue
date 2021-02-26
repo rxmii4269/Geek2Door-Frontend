@@ -20,7 +20,7 @@
     <template #end>
       <b-navbar-item
         v-if="$auth.loggedIn"
-        class="is-flex is-flex-direction-column"
+        class="is-flex is-flex-direction-column is-size-7"
         tag="router-link"
         to="/messages"
       >
@@ -104,7 +104,7 @@ export default {
   data() {
     return {
       route: this.$auth.loggedIn ? '/home' : '/',
-      profile_url: this.$auth.user.username ? this.$auth.user.username : '',
+      profile_url: this.$auth.loggedIn ? this.$auth.user.username : '',
     }
   },
   mounted() {},

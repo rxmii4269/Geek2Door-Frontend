@@ -93,8 +93,12 @@ export default {
     async loginWithFacebook() {
       await this.$auth.loginWith('facebook')
     },
-    loginWithGoogle() {
-      this.$auth.loginWith('google', { params: { prompt: 'select_account' } })
+    async loginWithGoogle() {
+      await this.$auth
+        .loginWith('google', { params: { prompt: 'select_account' } })
+        .then(() => {
+          this.$buefy.toast.open('Logged in successfully')
+        })
     },
     loginWithGithub() {
       this.$auth.loginWith('github')

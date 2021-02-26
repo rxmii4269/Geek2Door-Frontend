@@ -68,7 +68,9 @@ export default {
   },
 
   auth: {
-    resetOnError: true,
+    resetOnError: false,
+    fullPathRedirect: true,
+    localStorage: false,
     redirect: {
       login: '/accounts/login',
       logout: '/accounts/login',

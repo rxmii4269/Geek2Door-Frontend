@@ -107,7 +107,10 @@ export default {
       profile_url: this.$auth.loggedIn ? this.$auth.user.username : '',
     }
   },
-  mounted() {},
+  // async mounted() {
+  //   const user = await this.$axios.$get('/auth/user')
+  //   console.log(user)
+  // },
   methods: {},
 }
 </script>

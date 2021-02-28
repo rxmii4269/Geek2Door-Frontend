@@ -15,6 +15,17 @@ export default {
   data: () => {
     return {}
   },
+  mounted() {
+    if (this.$route.query.error) {
+      console.log(this.$route.query.error)
+      this.$buefy.notification.open({
+        duration: 5000,
+        message: `${this.$route.query.error_description}`,
+        type: 'is-danger',
+        hasIcon: true,
+      })
+    }
+  },
   methods: {
     clearIconClick() {
       this.email = ''

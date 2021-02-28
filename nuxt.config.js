@@ -28,7 +28,7 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/vee-validate.js'],
+  plugins: ['@/plugins/vee-validate.js', '@/plugins/axios.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -68,9 +68,11 @@ export default {
   },
 
   auth: {
-    resetOnError: false,
+    plugins: ['@/plugins/auth.js'],
+    resetOnError: true,
     fullPathRedirect: true,
     localStorage: false,
+    autoLogout: true,
     redirect: {
       login: '/accounts/login',
       logout: '/accounts/login',

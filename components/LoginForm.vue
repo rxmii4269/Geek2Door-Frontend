@@ -101,7 +101,7 @@ export default {
         })
     },
     loginWithGithub() {
-      this.$auth.loginWith('github')
+      this.$auth.loginWith('github').then((data) => console.log(data))
     },
     async userLogin() {
       const isValid = await this.$refs.observer.validate()

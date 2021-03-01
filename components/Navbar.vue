@@ -63,7 +63,7 @@
             </section>
           </template>
           <b-dropdown-item has-link>
-            <Nuxt-link :to="'/users/' + profile_url">Profile</Nuxt-link>
+            <Nuxt-link :to="'/users/' + $auth.user.username">Profile</Nuxt-link>
           </b-dropdown-item>
           <b-dropdown-item has-link>
             <b-button
@@ -104,13 +104,9 @@ export default {
   data() {
     return {
       route: this.$auth.loggedIn ? '/home' : '/',
-      profile_url: this.$auth.loggedIn ? this.$auth.user.username : '',
+      profile_url: '',
     }
   },
-  // async mounted() {
-  //   const user = await this.$axios.$get('/auth/user')
-  //   console.log(user)
-  // },
   methods: {},
 }
 </script>

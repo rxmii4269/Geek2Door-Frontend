@@ -28,7 +28,7 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/vee-validate.js', '@/plugins/axios.js'],
+  plugins: ['@/plugins/vee-validate.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -68,7 +68,6 @@ export default {
   },
 
   auth: {
-    plugins: ['@/plugins/auth.js'],
     resetOnError: true,
     fullPathRedirect: true,
     localStorage: false,
@@ -91,30 +90,6 @@ export default {
           login: { url: 'users/auth/login', method: 'post' },
           logout: { url: 'users/auth/logout', method: 'post' },
           user: { url: '/auth/user', method: 'get' },
-        },
-      },
-      facebook: {
-        endpoints: {
-          userInfo:
-            'https://graph.facebook.com/v6.0/me?fields=id,name,picture{url}',
-        },
-        clientId: '212618690600130',
-        scope: ['public_profile', 'email'],
-      },
-      github: {
-        clientId: 'd936b752248cd694ef7a',
-        clientSecret: '3e7718cd7f969b115256820f418f22a2de0c8cde',
-      },
-      google: {
-        clientId:
-          '1086921459591-27e69g8joj6diu1osbap27pcjquu1ffr.apps.googleusercontent.com',
-        scope: ['profile', 'email'],
-        codeChallengeMethod: '',
-        responseType: 'token id_token',
-        nonce: null,
-        refreshToken: {
-          property: 'refresh_token',
-          maxAge: 60 * 60 * 20 * 30,
         },
       },
     },

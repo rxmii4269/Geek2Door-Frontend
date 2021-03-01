@@ -32,10 +32,10 @@ export default {
   },
 }
 </script>
-<style>
+<style scoped>
 #inbox-container {
   width: 100%;
   margin: 0px;
-  height: 500px;
+  height: 100%;
 }
 </style>

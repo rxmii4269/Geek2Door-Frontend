@@ -49,25 +49,6 @@
         </div>
       </form>
     </ValidationObserver>
-    <div class="divider">Or</div>
-    <button
-      class="button facebook has-text-white mb-2 is-fullwidth"
-      @click="loginWithFacebook"
-    >
-      Sign in with Facebook
-    </button>
-    <button
-      class="google button has-text-white is-fullwidth mb-2"
-      @click="loginWithGoogle"
-    >
-      Sign in with Google
-    </button>
-    <button
-      class="button is-fullwidth github has-text-white"
-      @click="loginWithGithub"
-    >
-      Sign in with Github
-    </button>
     <div class="divider">New to Geek2Door?</div>
     <b-button tag="router-link" to="signup" type="is-pink" expanded outlined
       >Sign Up</b-button
@@ -90,19 +71,6 @@ export default {
     }
   },
   methods: {
-    async loginWithFacebook() {
-      await this.$auth.loginWith('facebook')
-    },
-    async loginWithGoogle() {
-      await this.$auth
-        .loginWith('google', { params: { prompt: 'select_account' } })
-        .then(() => {
-          this.$buefy.toast.open('Logged in successfully')
-        })
-    },
-    loginWithGithub() {
-      this.$auth.loginWith('github').then((data) => console.log(data))
-    },
     async userLogin() {
       const isValid = await this.$refs.observer.validate()
       if (isValid) {

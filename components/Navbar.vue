@@ -81,6 +81,7 @@
           <b-button
             v-if="!$auth.loggedIn"
             type="is-white"
+            size="is-small"
             tag="router-link"
             to="/accounts/signup"
           >
@@ -92,6 +93,7 @@
             tag="router-link"
             to="/accounts/login"
             type="is-white"
+            size="is-small"
             >Log in</b-button
           >
         </div>

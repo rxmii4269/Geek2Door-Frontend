@@ -1,6 +1,12 @@
 <template>
   <div>
-    <ValidationObserver ref="signUpObserver" v-slot="{ handleSubmit }" slim>
+    <ValidationObserver
+      ref="signUpObserver"
+      v-slot="{ handleSubmit }"
+      tag="form"
+      method="post"
+      slim
+    >
       <ValidationProvider
         v-slot="{ errors, valid }"
         slim
@@ -15,26 +21,26 @@
           <b-input v-model="form.email" type="email"></b-input>
         </b-field>
       </ValidationProvider>
-      <b-field grouped>
-        <ValidationProvider v-slot="{ errors, valid }" slim rules="required">
-          <b-field
-            :type="{ 'is-danger': errors[0], 'is-success': valid }"
-            :message="errors"
-            label="First Name"
-          >
-            <b-input v-model="form.firstname"></b-input>
-          </b-field>
-        </ValidationProvider>
-        <ValidationProvider v-slot="{ errors, valid }" slim rules="required">
-          <b-field
-            :type="{ 'is-danger': errors[0], 'is-success': valid }"
-            :message="errors"
-            label="Last Name"
-          >
-            <b-input v-model="form.lastname"></b-input>
-          </b-field>
-        </ValidationProvider>
-      </b-field>
+      <b-field group-multiline></b-field>
+      <ValidationProvider v-slot="{ errors, valid }" slim rules="required">
+        <b-field
+          :type="{ 'is-danger': errors[0], 'is-success': valid }"
+          :message="errors"
+          label="First Name"
+        >
+          <b-input v-model="form.firstname"></b-input>
+        </b-field>
+      </ValidationProvider>
+      <ValidationProvider v-slot="{ errors, valid }" slim rules="required">
+        <b-field
+          :type="{ 'is-danger': errors[0], 'is-success': valid }"
+          :message="errors"
+          label="Last Name"
+        >
+          <b-input v-model="form.lastname"></b-input>
+        </b-field>
+      </ValidationProvider>
+
       <ValidationProvider v-slot="{ errors, valid }" slim rules="required">
         <b-field
           :type="{ 'is-danger': errors[0], 'is-success': valid }"

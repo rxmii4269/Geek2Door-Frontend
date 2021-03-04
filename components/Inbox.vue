@@ -36,6 +36,6 @@ export default {
 #inbox-container {
   width: 100%;
   margin: 0px;
-  height: 100%;
+  height: 80vh;
 }
 </style>

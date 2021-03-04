@@ -37,7 +37,7 @@
                 v-if="userData.username != $auth.user.username"
                 expanded
                 type="is-pink"
-                @click="messageUser(userData.id)"
+                @click="messageUser()"
                 >Message</b-button
               >
             </div>
@@ -57,6 +57,7 @@
   </div>
 </template>
 <script>
+import Talk from 'talkjs'
 export default {
   data() {
     return {
@@ -69,8 +70,39 @@ export default {
     this.userData = user
   },
   methods: {
-    messageUser(userId) {
-      this.$refs.Chat.loadChat(userId)
+    async messageUser() {
+      await Talk.ready.then(() => {
+        const me = new Talk.User({
+          id: this.$auth.user.id,
+          name: this.$auth.user.name,
+          email: this.$auth.user.email,
+          role: 'buyer',
+        })
+        const other = new Talk.User({
+          id: this.userData.id,
+          name: this.userData.fullname,
+          email: this.userData.email,
+          role: 'seller',
+        })
+
+        if (!window.talkSession) {
+          window.talkSession = new Talk.Session({
+            appId: 'tR1gNHsD',
+            me,
+          })
+        }
+
+        const conversationId = Talk.oneOnOneId(me, other)
+        const conversation = window.talkSession.getOrCreateConversation(
+          conversationId
+        )
+        conversation.setParticipant(me)
+        conversation.setParticipant(other)
+
+        const popup = window.talkSession.createPopup(conversation)
+        popup.mount({ show: false })
+        popup.show()
+      })
     },
   },
 }

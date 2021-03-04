@@ -2,7 +2,7 @@
   <div
     id="talkjs-container"
     class="chatbox-container"
-    :class="{ 'is-hidden': this.hidden }"
+    :class="{ 'is-hidden': hidden }"
   ></div>
 </template>
 <script>

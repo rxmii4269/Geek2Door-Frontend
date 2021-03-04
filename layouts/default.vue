@@ -93,6 +93,18 @@ a {
   color: var(--light-pink);
 }
 
+.hero.is-pink {
+  background-color: var(--light-pink);
+}
+
+.hero.is-pink .title {
+  color: var(--white);
+}
+
+.hero.is-pink .subtitle {
+  color: var(--white);
+}
+
 .button.is-pink {
   background-color: var(--light-pink);
   color: var(--white);

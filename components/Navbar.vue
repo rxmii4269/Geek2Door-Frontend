@@ -20,7 +20,7 @@
     <template #end>
       <b-navbar-item
         v-if="$auth.loggedIn"
-        class="is-flex is-flex-direction-column"
+        class="is-flex is-flex-direction-column is-size-7"
         tag="router-link"
         to="/messages"
       >
@@ -47,11 +47,41 @@
         </div>
         <span>Messages</span>
       </b-navbar-item>
+      <b-navbar-item v-if="$auth.loggedIn">
+        <b-dropdown append-to-body position="is-bottom-left">
+          <template #trigger>
+            <section class="media">
+              <div class="">
+                <figure class="image is-32x32">
+                  <img
+                    class="is-rounded"
+                    src="https://bulma.io/images/placeholders/128x128.png"
+                    alt=""
+                  />
+                </figure>
+              </div>
+            </section>
+          </template>
+          <b-dropdown-item has-link>
+            <Nuxt-link :to="'/users/' + $auth.user.username">Profile</Nuxt-link>
+          </b-dropdown-item>
+          <b-dropdown-item has-link>
+            <b-button
+              v-if="$auth.loggedIn"
+              tag="router-link"
+              to="/logout"
+              type="is-white"
+              >Logout</b-button
+            >
+          </b-dropdown-item>
+        </b-dropdown>
+      </b-navbar-item>
       <b-navbar-item tag="div">
         <div class="buttons">
           <b-button
             v-if="!$auth.loggedIn"
             type="is-white"
+            size="is-small"
             tag="router-link"
             to="/accounts/signup"
           >
@@ -63,10 +93,8 @@
             tag="router-link"
             to="/accounts/login"
             type="is-white"
+            size="is-small"
             >Log in</b-button
-          >
-          <b-button v-else tag="router-link" to="/logout" type="is-white"
-            >Logout</b-button
           >
         </div>
       </b-navbar-item>
@@ -78,9 +106,9 @@ export default {
   data() {
     return {
       route: this.$auth.loggedIn ? '/home' : '/',
+      profile_url: '',
     }
   },
-  mounted() {},
   methods: {},
 }
 </script>
@@ -98,7 +126,7 @@ export default {
 a.navbar-item:hover {
   color: #000000;
 }
-.navbar-item img {
+.navbar-item .logo {
   max-height: 3.35rem;
 }
 .navbar-brand > .navbar-item {
@@ -148,5 +176,13 @@ a.navbar-item:hover {
 
 .h-24 {
   height: 24px;
+}
+
+.is-rounded {
+  border-radius: 50%;
+}
+
+.navbar-item img {
+  max-height: unset;
 }
 </style>

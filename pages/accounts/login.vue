@@ -15,6 +15,7 @@ export default {
   data: () => {
     return {}
   },
+  mounted() {},
   methods: {
     clearIconClick() {
       this.email = ''

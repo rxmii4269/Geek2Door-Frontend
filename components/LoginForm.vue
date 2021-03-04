@@ -1,8 +1,24 @@
 <template>
   <div>
     <ValidationObserver ref="observer" v-slot="{ handleSubmit }" slim>
-      <form method="post" @submit.prevent.stop="userLogin">
+      <form method="post" @submit.prevent="handleSubmit(userLogin)">
         <div class="is-flex is-flex-direction-column mt-2">
+          <b-field>
+            <b-radio-button
+              v-model="form.userType"
+              native-value="student"
+              expanded
+            >
+              <span>Student</span>
+            </b-radio-button>
+            <b-radio-button
+              v-model="form.userType"
+              native-value="company"
+              expanded
+            >
+              <span>Company</span>
+            </b-radio-button>
+          </b-field>
           <ValidationProvider rules="required" name="Email" slim>
             <b-field
               slot-scope="{ errors, valid }"
@@ -44,30 +60,10 @@
             native-type="submit"
             value="Continue"
             expanded
-            @click="handleSubmit(userLogin)"
           ></b-button>
         </div>
       </form>
     </ValidationObserver>
-    <div class="divider">Or</div>
-    <button
-      class="button facebook has-text-white mb-2 is-fullwidth"
-      @click="loginWithFacebook"
-    >
-      Sign in with Facebook
-    </button>
-    <button
-      class="google button has-text-white is-fullwidth mb-2"
-      @click="loginWithGoogle"
-    >
-      Sign in with Google
-    </button>
-    <button
-      class="button is-fullwidth github has-text-white"
-      @click="loginWithGithub"
-    >
-      Sign in with Github
-    </button>
     <div class="divider">New to Geek2Door?</div>
     <b-button tag="router-link" to="signup" type="is-pink" expanded outlined
       >Sign Up</b-button
@@ -86,19 +82,11 @@ export default {
       form: {
         email: '',
         password: '',
+        userType: '',
       },
     }
   },
   methods: {
-    async loginWithFacebook() {
-      await this.$auth.loginWith('facebook')
-    },
-    loginWithGoogle() {
-      this.$auth.loginWith('google', { params: { prompt: 'select_account' } })
-    },
-    loginWithGithub() {
-      this.$auth.loginWith('github')
-    },
     async userLogin() {
       const isValid = await this.$refs.observer.validate()
       if (isValid) {
@@ -115,11 +103,20 @@ export default {
             }
           })
           .catch((e) => {
-            this.$buefy.toast.open({
-              duration: 4000,
-              message: `Unable to sign in due to ${e.message}. Please try again later.`,
-              type: 'is-danger',
-            })
+            if (this.$auth.error.response) {
+              const errorMessage = this.$auth.error.response.data.message
+              this.$buefy.toast.open({
+                duration: 4000,
+                message: `${errorMessage}`,
+                type: 'is-danger',
+              })
+            } else {
+              this.$buefy.toast.open({
+                duration: 4000,
+                message: `Unable to sign in, Please try again later`,
+                type: 'is-danger',
+              })
+            }
           })
       }
     },

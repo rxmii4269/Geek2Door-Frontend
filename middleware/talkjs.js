@@ -1,33 +1,37 @@
 import Talk from 'talkjs'
 export default function (context) {
-  Talk.ready.then(() => {
-    const me = new Talk.User({
-      id: context.$auth.user.id,
-      name: context.$auth.user.name,
-      email: context.$auth.user.email,
-      role: 'buyer',
-    })
-
-    if (!window.talkSession) {
-      window.talkSession = new Talk.Session({
-        appId: 'tR1gNHsD',
-        me,
+  if (context.$auth.loggedIn) {
+    Talk.ready.then(() => {
+      const me = new Talk.User({
+        id: context.$auth.user.id,
+        name: context.$auth.user.name,
+        email: context.$auth.user.email,
+        role: context.$auth.user.role,
       })
-    }
-    window.talkSession.unreads.on('change', (unreadConversations) => {
-      const amountOfUnreads = unreadConversations.length
-      const count = document.getElementById('notification-badge--count')
-      if (amountOfUnreads > 0) {
-        count.textContent = amountOfUnreads
-        document
-          .getElementById('notification-badge')
-          .classList.remove('is-hidden')
-        document.title = `(${amountOfUnreads}) Geek2Door`
+
+      if (!window.talkSession) {
+        window.talkSession = new Talk.Session({
+          appId: 'tR1gNHsD',
+          me,
+        })
       }
-      if (amountOfUnreads === 0) {
-        document.getElementById('notification-badge').classList.add('is-hidden')
-        document.title = 'Geek2Door'
-      }
+      window.talkSession.unreads.on('change', (unreadConversations) => {
+        const amountOfUnreads = unreadConversations.length
+        const count = document.getElementById('notification-badge--count')
+        if (amountOfUnreads > 0) {
+          count.textContent = amountOfUnreads
+          document
+            .getElementById('notification-badge')
+            .classList.remove('is-hidden')
+          document.title = `(${amountOfUnreads}) Geek2Door`
+        }
+        if (amountOfUnreads === 0) {
+          document
+            .getElementById('notification-badge')
+            .classList.add('is-hidden')
+          document.title = 'Geek2Door'
+        }
+      })
     })
-  })
+  }
 }

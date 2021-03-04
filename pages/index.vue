@@ -1,35 +1,55 @@
 <template>
   <div>
-    <h1 class="moveword"></h1>
-    <div>
-      <img
-        src="@/assets/img/list.svg"
-        alt="picture_showing_lists"
-        class="fhomepic"
-      />
-    </div>
-    <br />
-    <div class="sidebyside">
-      <div>
-        <p class="arange2">
-          Is this service only for students?
-          <br />
-        </p>
-        <span>
-          But wait, we don't only offer services to students, we welcome
-          companies as well. With Geek2Door we encourage businesses to post
-          their internship opportunities on our site and let us do the searching
-          for you. We will ensure that the persons that fit the job you posted
-          are provided to you as a top priority with your option to choose. The
-          possibilities are endless with Geek2Door.
-        </span>
+    <div class="columns">
+      <div class="column is-full">
+        <div class="columns">
+          <div class="column">
+            <img
+              src="@/assets/img/list.svg"
+              alt="picture_showing_lists"
+              class="fhomepic"
+            />
+          </div>
+          <div class="column">
+            <h1 class="is-size-3 is-capitalized">
+              Is this service only for students?
+            </h1>
+            <span>
+              But wait, we don't only offer services to students, we welcome
+              companies as well. With Geek2Door we encourage businesses to post
+              their internship opportunities on our site and let us do the
+              searching for you. We will ensure that the persons that fit the
+              job you posted are provided to you as a top priority with your
+              option to choose. The possibilities are endless with Geek2Door.
+            </span>
+          </div>
+        </div>
       </div>
-      <div>
-        <img
-          src="@/assets/img/lookup.svg"
-          alt="picture_showing_lists"
-          class="fhomepic2"
-        />
+    </div>
+    <div class="columns">
+      <div class="column is-full">
+        <div class="columns">
+          <div class="column">
+            <h1 class="is-size-3 is-capitalized">
+              Is this service only for students?
+            </h1>
+            <span>
+              But wait, we don't only offer services to students, we welcome
+              companies as well. With Geek2Door we encourage businesses to post
+              their internship opportunities on our site and let us do the
+              searching for you. We will ensure that the persons that fit the
+              job you posted are provided to you as a top priority with your
+              option to choose. The possibilities are endless with Geek2Door.
+            </span>
+          </div>
+          <div class="column">
+            <img
+              src="@/assets/img/lookup.svg"
+              alt="picture_showing_lists"
+              class="fhomepic2 is-pulled-right"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -56,7 +76,6 @@ export default {
 .fhomepic2 {
   height: 350px;
   width: 350px;
-  float: right;
 }
 
 .moveword {
@@ -72,9 +91,5 @@ export default {
   padding-left: 250px;
   font-size: 1.125rem;
   text-align: left;
-}
-
-.sidebyside {
-  justify-content: space-between;
 }
 </style>

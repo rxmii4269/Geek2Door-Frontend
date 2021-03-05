@@ -9,28 +9,22 @@
       />
     </div>
     <br />
-    <div class="sidebyside">
-      <div>
-        <p class="arange2">
-          Is this service only for students?
-          <br />
-        </p>
-        <span>
-          But wait, we don't only offer services to students, we welcome
-          companies as well. With Geek2Door we encourage businesses to post
-          their internship opportunities on our site and let us do the searching
-          for you. We will ensure that the persons that fit the job you posted
-          are provided to you as a top priority with your option to choose. The
-          possibilities are endless with Geek2Door.
-        </span>
+    <div class="card-content">
+      <div class="content">
+        But wait, we don't only offer services to students, we welcome companies
+        as well. With Geek2Door we encourage businesses to post their internship
+        opportunities on our site and let us do the searching for you. We will
+        ensure that the persons that fit the job you posted are provided to you
+        as a top priority with your option to choose. The possibilities are
+        endless with Geek2Door.
       </div>
-      <div>
-        <img
-          src="@/assets/img/lookup.svg"
-          alt="picture_showing_lists"
-          class="fhomepic2"
-        />
-      </div>
+    </div>
+    <div>
+      <img
+        src="@/assets/img/lookup.svg"
+        alt="picture_showing_lists"
+        class="fhomepic2"
+      />
     </div>
   </div>
 </template>

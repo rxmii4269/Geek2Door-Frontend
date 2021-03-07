@@ -50,7 +50,6 @@ export default {
 .fhomepic2 {
   height: 350px;
   width: 350px;
-  float: right;
 }
 
 .moveword {
@@ -66,9 +65,5 @@ export default {
   padding-left: 250px;
   font-size: 1.125rem;
   text-align: left;
-}
-
-.sidebyside {
-  justify-content: space-between;
 }
 </style>

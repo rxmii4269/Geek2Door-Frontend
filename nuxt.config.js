@@ -41,7 +41,7 @@ export default {
   ],
 
   router: {
-    middleware: ['auth', 'talkjs'],
+    middleware: ['talkjs'],
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -68,10 +68,10 @@ export default {
   },
 
   auth: {
+    plugins: [{ src: '@/plugins/axios' }],
     resetOnError: true,
     fullPathRedirect: true,
     localStorage: false,
-    autoLogout: true,
     redirect: {
       login: '/accounts/login',
       logout: '/accounts/login',
@@ -80,14 +80,22 @@ export default {
     },
     strategies: {
       local: {
+        scheme: 'refresh',
         token: {
-          property: 'token',
+          property: 'access_token',
+          maxAge: 1800,
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          data: 'refresh_token',
+          tokenRequired: true,
         },
         user: {
           property: 'user',
         },
         endpoints: {
-          login: { url: 'users/auth/login', method: 'post' },
+          login: { url: '/auth/login', method: 'post' },
+          refresh: { url: '/auth/refresh', method: 'post' },
           logout: { url: 'users/auth/logout', method: 'post' },
           user: { url: '/auth/user', method: 'get' },
         },

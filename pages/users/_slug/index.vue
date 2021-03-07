@@ -17,13 +17,12 @@
                 <figure v-if="userData" class="image is-48x48">
                   <img
                     :src="`${$axios.defaults.baseURL}/images/${userData.profile_picture}`"
-                    alt="Placeholder
-                  image"
+                    alt="Profile Picture"
                   />
                 </figure>
               </div>
               <div class="media-content">
-                <p class="title is-4">{{ userData.fullname }}</p>
+                <p class="title is-4">{{ userData.name }}</p>
                 <p class="subtitle is-6">@{{ userData.username }}</p>
               </div>
             </div>

@@ -89,7 +89,7 @@ export default {
       form: {
         email: '',
         password: '',
-        userType: '',
+        userType: 'student',
       },
     }
   },

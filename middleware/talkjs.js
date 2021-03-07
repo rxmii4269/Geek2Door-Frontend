@@ -7,6 +7,10 @@ export default function (context) {
         name: context.$auth.user.name,
         email: context.$auth.user.email,
         role: context.$auth.user.role,
+        photoUrl:
+          context.$axios.defaults.baseURL +
+          '/images/' +
+          context.$auth.user.profile_picture,
       })
 
       if (!window.talkSession) {

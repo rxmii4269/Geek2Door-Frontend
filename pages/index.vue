@@ -9,15 +9,18 @@
       />
     </div>
     <br />
-    <div class="card-content">
-      <div class="content">
+    <div class="column">
+      <h1 class="is-size-3 is-capitalized">
+        Is this service only for students?
+      </h1>
+      <span>
         But wait, we don't only offer services to students, we welcome companies
         as well. With Geek2Door we encourage businesses to post their internship
         opportunities on our site and let us do the searching for you. We will
         ensure that the persons that fit the job you posted are provided to you
         as a top priority with your option to choose. The possibilities are
         endless with Geek2Door.
-      </div>
+      </span>
     </div>
     <div>
       <img

@@ -3,22 +3,29 @@
     <ValidationObserver ref="observer" v-slot="{ handleSubmit }" slim>
       <form method="post" @submit.prevent="handleSubmit(userLogin)">
         <div class="is-flex is-flex-direction-column mt-2">
-          <b-field>
-            <b-radio-button
-              v-model="form.userType"
-              native-value="student"
-              expanded
+          <ValidationProvider rules="required" name="" slim>
+            <b-field
+              slot-scope="{ errors, valid }"
+              label="Login As"
+              :type="{ 'is-danger': errors[0], 'is-success': valid }"
+              :message="errors"
             >
-              <span>Student</span>
-            </b-radio-button>
-            <b-radio-button
-              v-model="form.userType"
-              native-value="company"
-              expanded
-            >
-              <span>Company</span>
-            </b-radio-button>
-          </b-field>
+              <b-radio-button
+                v-model="form.userType"
+                native-value="student"
+                expanded
+              >
+                <span>Student</span>
+              </b-radio-button>
+              <b-radio-button
+                v-model="form.userType"
+                native-value="company"
+                expanded
+              >
+                <span>Company</span>
+              </b-radio-button>
+            </b-field>
+          </ValidationProvider>
           <ValidationProvider rules="required" name="Email" slim>
             <b-field
               slot-scope="{ errors, valid }"
@@ -82,7 +89,7 @@ export default {
       form: {
         email: '',
         password: '',
-        userType: '',
+        userType: 'student',
       },
     }
   },

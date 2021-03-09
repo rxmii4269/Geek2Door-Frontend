@@ -23,6 +23,9 @@ body,
   font-family: 'Poppins', 'Lato', 'Roboto' !important;
   -webkit-font-smoothing: antialiased;
 }
+body {
+  color: black;
+}
 
 *,
 *::before,

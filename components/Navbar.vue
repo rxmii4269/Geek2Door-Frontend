@@ -68,9 +68,9 @@
           <b-dropdown-item has-link>
             <b-button
               v-if="$auth.loggedIn"
-              tag="router-link"
-              to="/logout"
               type="is-white"
+              tag="a"
+              @click="$auth.logout()"
               >Logout</b-button
             >
           </b-dropdown-item>

@@ -41,7 +41,7 @@ export default {
   ],
 
   router: {
-    middleware: ['talkjs'],
+    middleware: ['talkjs', 'csrf', 'auth'],
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -61,7 +61,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     prefix: process.env.API_URL,
-    credentials: false,
+    credentials: true,
     common: {
       Accept: 'application/json, text/plain, */*',
     },
@@ -74,7 +74,7 @@ export default {
     localStorage: false,
     redirect: {
       login: '/accounts/login',
-      logout: '/accounts/login',
+      logout: '/',
       callback: '/accounts/login',
       home: '/home',
     },
@@ -96,7 +96,7 @@ export default {
         endpoints: {
           login: { url: '/auth/login', method: 'post' },
           refresh: { url: '/auth/refresh', method: 'post' },
-          logout: { url: 'users/auth/logout', method: 'post' },
+          logout: { url: '/auth/logout', method: 'delete' },
           user: { url: '/auth/user', method: 'get' },
         },
       },

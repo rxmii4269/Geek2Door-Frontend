@@ -16,13 +16,15 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
-  background-color: var(--vs-theme-bg2);
 }
 html,
 body,
 * {
   font-family: 'Poppins', 'Lato', 'Roboto' !important;
   -webkit-font-smoothing: antialiased;
+}
+body {
+  color: black;
 }
 
 *,

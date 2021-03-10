@@ -13,6 +13,7 @@
               <b-radio-button
                 v-model="form.userType"
                 native-value="student"
+                type="is-pink"
                 expanded
               >
                 <span>Student</span>
@@ -20,6 +21,7 @@
               <b-radio-button
                 v-model="form.userType"
                 native-value="company"
+                type="is-pink"
                 expanded
               >
                 <span>Company</span>

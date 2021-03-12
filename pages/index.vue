@@ -68,8 +68,8 @@
             <h1 class="is-size-3 is-capitalized">Excited Yet?</h1>
             <span class="info_left">
               Interested in an Internship? Want to get new Interns? Sign up
-              <NuxtLink to="/accounts/signup"> TODAY </NuxtLink> and let the
-              experience start.
+              <NuxtLink to="/accounts/signup" class="is-pink"> TODAY </NuxtLink>
+              and let the experience start.
             </span>
           </div>
         </div>

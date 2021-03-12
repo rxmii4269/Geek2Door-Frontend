@@ -11,7 +11,7 @@
             />
           </div>
           <div class="column">
-            <h1 class="is-size-3 is-capitalized info_left">
+            <h1 class="is-size-3 is-capitalized">
               What is an Internship you may ask?
             </h1>
             <span class="info_left">
@@ -35,7 +35,7 @@
             <h1 class="is-size-3 is-capitalized">
               Is this service only for students?
             </h1>
-            <span>
+            <span class="info_left">
               We don't only offer services to students, we welcome companies as
               companies as well. With Geek2Door we encourage businesses to post
               their internship opportunities on our site and let us do the
@@ -99,8 +99,9 @@ export default {
   height: 350px;
   width: 350px;
 }
-/* }
+
 .info_left {
-  padding-left: ;
-} */
+  padding-left: 20px;
+  text-align: justify;
+}
 </style>

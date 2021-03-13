@@ -6,8 +6,8 @@
         <b-radio-button
           v-model="userType"
           type="is-pink"
-          name="recruiter"
-          native-value="recruiter"
+          name="company"
+          native-value="company"
           expanded
         >
           <span>Hire</span>
@@ -15,14 +15,14 @@
         <b-radio-button
           v-model="userType"
           type="is-pink"
-          name="freelancer"
-          native-value="freelancer"
+          name="student"
+          native-value="student"
           expanded
         >
           <span>Work</span>
         </b-radio-button>
       </b-field>
-      <SignUpForm :user-type="userType" />
+      <SignUpForm :key="userType" :user-type="userType" />
     </div>
   </div>
 </template>
@@ -31,7 +31,7 @@ export default {
   auth: false,
   data() {
     return {
-      userType: 'recruiter',
+      userType: 'company',
     }
   },
 }

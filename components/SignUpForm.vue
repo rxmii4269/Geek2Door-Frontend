@@ -75,7 +75,7 @@
           <ValidationProvider
             v-slot="{ errors, valid }"
             slim
-            rules="required|password:@Confirm|min:8"
+            rules="required|confirmed:Confirm|min:8"
             name="Password"
           >
             <b-field
@@ -92,6 +92,7 @@
             slim
             rules="required"
             name="Confirm"
+            vid="Confirm"
           >
             <b-field
               :type="{ 'is-danger': errors[0], 'is-success': valid }"

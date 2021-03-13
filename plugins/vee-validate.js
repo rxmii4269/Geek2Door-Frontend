@@ -12,11 +12,3 @@ Object.keys(rules).forEach((rule) => {
     message: messages[rule],
   })
 })
-
-extend('password', {
-  params: ['target'],
-  validate(value, { target }) {
-    return value === target
-  },
-  message: 'Password confirmation does not match',
-})

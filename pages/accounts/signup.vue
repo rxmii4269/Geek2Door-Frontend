@@ -1,25 +1,25 @@
 <template>
   <div class="center">
     <div class="box">
-      <h1 class="is-size-4 has-text-centered is-capitalized">I want to</h1>
+      <h1 class="is-size-4 has-text-centered is-capitalized">Who are you?</h1>
       <b-field>
         <b-radio-button
           v-model="userType"
           type="is-pink"
-          name="recruiter"
-          native-value="recruiter"
+          name="company"
+          native-value="company"
           expanded
         >
-          <span>Hire</span>
+          <span>Company</span>
         </b-radio-button>
         <b-radio-button
           v-model="userType"
           type="is-pink"
-          name="freelancer"
-          native-value="freelancer"
+          name="student"
+          native-value="student"
           expanded
         >
-          <span>Work</span>
+          <span>Student</span>
         </b-radio-button>
       </b-field>
       <SignUpForm :user-type="userType" />

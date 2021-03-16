@@ -91,6 +91,10 @@ a {
   padding: 3rem;
 }
 
+.has-text-pink {
+  color: var(--light-pink);
+}
+
 .is-pink {
   color: var(--light-pink);
 }

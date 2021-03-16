@@ -22,7 +22,7 @@
           <span>Student</span>
         </b-radio-button>
       </b-field>
-      <SignUpForm :user-type="userType" />
+      <SignUpForm :key="userType" :user-type="userType" />
     </div>
   </div>
 </template>
@@ -31,7 +31,7 @@ export default {
   auth: false,
   data() {
     return {
-      userType: 'recruiter',
+      userType: 'company',
     }
   },
 }

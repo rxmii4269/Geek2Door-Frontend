@@ -1,10 +1,14 @@
 import { extend, setInteractionMode } from 'vee-validate'
-import { required, email } from 'vee-validate/dist/rules'
-
+import { required } from 'vee-validate/dist/rules'
+import * as rules from 'vee-validate/dist/rules'
+import { messages } from 'vee-validate/dist/locale/en.json'
 setInteractionMode('eager')
-extend('required', {
-  ...required,
-  message: 'This field is required.',
-})
+extend('required', required)
 
-extend('email', email)
+Object.keys(rules).forEach((rule) => {
+  extend(rule, {
+    // eslint-disable-next-line import/namespace
+    ...rules[rule],
+    message: messages[rule],
+  })
+})

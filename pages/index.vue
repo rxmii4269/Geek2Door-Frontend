@@ -19,7 +19,7 @@
             </div>
             <div class="column">
               <h1 class="is-size-3 is-capitalized has-text-right">
-                What is an <span class="has-text-primary"> Internship</span>?
+                What is an <span class="has-text-pink"> Internship</span>?
               </h1>
               <p class="info_left has-text-justified">
                 Let us introduce you to a world fill with possibilities,
@@ -77,8 +77,8 @@
             <h1 class="is-size-3 is-capitalized has-text-right">
               <span class="has-text-primary"> Excited</span> Yet?
             </h1>
-            <span class="info_left has-text-justified"
-              >Interested in an Internship? Want to get new Interns? Sign up
+            <span class="info_left has-text-justified">
+              Interested in an Internship? Want to get new Interns? Sign up
               <NuxtLink to="/accounts/signup" class="is-pink"> TODAY </NuxtLink>
               and let the experience start.
             </span>

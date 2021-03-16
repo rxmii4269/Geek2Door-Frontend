@@ -46,7 +46,7 @@
               ></b-input>
             </b-field>
           </ValidationProvider>
-          <ValidationProvider rules="required" slim>
+          <ValidationProvider rules="required" name="Password" slim>
             <b-field
               slot-scope="{ errors, valid }"
               label="Password"

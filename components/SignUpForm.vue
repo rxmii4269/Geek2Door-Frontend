@@ -57,6 +57,26 @@
         </b-field>
       </ValidationProvider>
       <ValidationProvider
+        v-if="userType == 'company'"
+        v-slot="{ errors, valid }"
+        slim
+        rules="required"
+        name="Company Description"
+      >
+        <b-field
+          :type="{ 'is-danger': errors[0], 'is-success': valid }"
+          :message="errors"
+          label="Company Description"
+          expanded
+        >
+          <b-input
+            v-model="form.companyDescr"
+            type="textarea"
+            maxlength="200"
+          ></b-input>
+        </b-field>
+      </ValidationProvider>
+      <ValidationProvider
         v-slot="{ errors, valid }"
         slim
         rules="required|email"
@@ -67,7 +87,11 @@
           :message="errors"
           label="Email"
         >
-          <b-input v-model="form.email" type="email"></b-input>
+          <b-input
+            v-model="form.email"
+            type="email"
+            placeholder="e.g. example@example.com.gov"
+          ></b-input>
         </b-field>
       </ValidationProvider>
       <ValidationProvider
@@ -111,7 +135,7 @@
         v-if="userType == 'student'"
         v-slot="{ errors, valid }"
         slim
-        rules="required|usernameCheck"
+        rules="required"
         name="Username"
       >
         <b-field
@@ -199,6 +223,7 @@ export default {
         number: '',
         name: '',
         companyName: '',
+        companyDescr: '',
         userType: this.userType,
       },
     }

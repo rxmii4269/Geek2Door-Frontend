@@ -12,7 +12,10 @@
             </figure>
           </div>
           <div class="card-content">
-            <div class="test is-clearfix">
+            <div
+              v-if="userData.username == $auth.user.username"
+              class="test is-clearfix"
+            >
               <b-tooltip
                 label="Edit Profile"
                 position="is-left"
@@ -28,7 +31,7 @@
                 </figure>
               </b-tooltip>
             </div>
-            <div class="media mt-2">
+            <div class="media mt-5">
               <div class="media-left">
                 <figure v-if="userData" class="image is-48x48">
                   <img
@@ -37,16 +40,35 @@
                   />
                 </figure>
               </div>
-              <div class="media-content">
-                <b-input v-if="edit" v-model="userData.company_name"></b-input>
+              <div class="media-content mt-2">
+                <b-field v-if="edit" label="Name" label-position="on-border">
+                  <b-input
+                    v-model.trim.lazy="updatedData.company_name"
+                  ></b-input>
+                </b-field>
                 <p v-else class="title is-4">{{ userData.company_name }}</p>
               </div>
             </div>
-            <b-input v-if="edit" v-model="userData.email"></b-input>
+            <b-field v-if="edit" label="Email" label-position="on-border">
+              <b-input v-model.trim.lazy="updatedData.email"></b-input>
+            </b-field>
+
             <p v-else class="subtitle is-6">{{ userData.email }}</p>
 
             <div class="content">
-              <p>{{ userData.company_desc }}</p>
+              <b-field
+                v-if="edit"
+                label="Description"
+                label-position="on-border"
+                class="mt-3"
+              >
+                <b-input
+                  v-model.trim.lazy="updatedData.company_desc"
+                  maxlength="200"
+                  type="textarea"
+                ></b-input>
+              </b-field>
+              <p v-else>{{ userData.company_desc }}</p>
               <b-button
                 v-if="userData.username != $auth.user.username"
                 expanded
@@ -55,17 +77,17 @@
                 >Message</b-button
               >
             </div>
-            <div v-if="edit" class="buttons is-centered"></div>
+            <div v-if="edit" class="buttons is-centered">
+              <b-button
+                type="is-danger is-outlined card-footer-item"
+                @click="editProfile"
+                >Cancel</b-button
+              >
+              <b-button type="is-primary card-footer-item" @click="saveProfile"
+                >Save</b-button
+              >
+            </div>
           </div>
-          <footer class="card-footer">
-            <b-button tag="a" type="is-danger is-outlined card-footer-item pb-0"
-              >Cancel</b-button
-            >
-            <b-button type="is-primary card-footer-item" @click="saveProfile"
-              >Save</b-button
-            >
-            <a href="" class="card-footer-item">Edit</a>
-          </footer>
         </div>
       </div>
       <div class="column is-9">
@@ -88,6 +110,7 @@ export default {
       userData: '',
       chatWith: '',
       edit: false,
+      updatedData: '',
     }
   },
   async mounted() {
@@ -131,9 +154,18 @@ export default {
     },
     editProfile() {
       this.edit = !this.edit
+      this.updatedData = this.userData
     },
-    saveProfile() {
-      this.$axios.$post(`/user/${this.$auth.user.id}`, this.userData)
+    async saveProfile() {
+      const self = this
+      await this.$axios
+        .$post(`/users/company/${this.$auth.user.id}`, this.updatedData)
+        .then(async function (response) {
+          const updatedUser = await self.$axios.$get('/auth/user')
+          await self.$auth.setUser(updatedUser.user)
+          self.$router.push(`/users/company/${self.$auth.user.name}`)
+          self.$store.dispatch('generateProfileUrl')
+        })
     },
   },
 }

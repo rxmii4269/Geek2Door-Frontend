@@ -73,7 +73,7 @@
           expanded
         >
           <b-input
-            v-model="form.companyDescr"
+            v-model="form.company_desc"
             type="textarea"
             maxlength="200"
             placeholder="e.g. General company Description"
@@ -254,7 +254,11 @@ export default {
             }
             console.log(loginData)
             this.$auth.loginWith('local', { data: loginData }).then(() => {
-              this.$router.push(`/users/${this.form.username}`)
+              if (this.userType === 'student') {
+                this.$router.push(`/users/student/${this.form.username}`)
+              } else {
+                this.$router.push(`/users/company/${this.form.company_name}`)
+              }
             })
           })
           .catch((error) => {

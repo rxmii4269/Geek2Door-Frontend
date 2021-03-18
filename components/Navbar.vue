@@ -63,7 +63,7 @@
             </section>
           </template>
           <b-dropdown-item has-link>
-            <Nuxt-link :to="'/users/' + $auth.user.username">Profile</Nuxt-link>
+            <Nuxt-link :to="profile_url">Profile</Nuxt-link>
           </b-dropdown-item>
           <b-dropdown-item has-link>
             <b-button
@@ -108,6 +108,12 @@ export default {
       route: this.$auth.loggedIn ? '/home' : '/',
       profile_url: '',
     }
+  },
+  mounted() {
+    this.profile_url =
+      typeof this.$auth.user.username === 'undefined'
+        ? `/users/company/${this.$auth.user.name}`
+        : `/users/student/${this.$auth.user.username}`
   },
   methods: {},
 }

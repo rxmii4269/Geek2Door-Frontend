@@ -54,7 +54,7 @@
           expanded
         >
           <b-input
-            v-model="form.companyName"
+            v-model="form.company_name"
             placeholder="e.g. Big Corp"
           ></b-input>
         </b-field>

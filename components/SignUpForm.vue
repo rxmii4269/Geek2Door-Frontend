@@ -222,8 +222,8 @@ export default {
         dob: new Date(),
         number: '',
         name: '',
-        companyName: '',
-        companyDescr: '',
+        company_name: '',
+        company_desc: '',
         userType: this.userType,
       },
     }

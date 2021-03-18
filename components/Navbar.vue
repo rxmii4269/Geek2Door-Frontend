@@ -63,7 +63,9 @@
             </section>
           </template>
           <b-dropdown-item has-link>
-            <Nuxt-link :to="profile_url">Profile</Nuxt-link>
+            <Nuxt-link v-if="$auth.user.id" :to="profile_url"
+              >Profile</Nuxt-link
+            >
           </b-dropdown-item>
           <b-dropdown-item has-link>
             <b-button
@@ -102,18 +104,15 @@
   </b-navbar>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
       route: this.$auth.loggedIn ? '/home' : '/',
-      profile_url: '',
     }
   },
-  mounted() {
-    this.profile_url =
-      typeof this.$auth.user.username === 'undefined'
-        ? `/users/company/${this.$auth.user.name}`
-        : `/users/student/${this.$auth.user.username}`
+  computed: {
+    ...mapState(['profile_url']),
   },
   methods: {},
 }

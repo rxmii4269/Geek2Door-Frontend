@@ -245,15 +245,13 @@ export default {
         await this.$axios
           .$post('/auth/register', this.form)
           .then((response) => {
-            console.log(response)
-
             const loginData = {
               email: this.form.email,
               password: this.form.password,
               userType: this.form.userType,
             }
-            console.log(loginData)
             this.$auth.loginWith('local', { data: loginData }).then(() => {
+              this.$store.dispatch('generateProfileUrl')
               if (this.userType === 'student') {
                 this.$router.push(`/users/student/${this.form.username}`)
               } else {

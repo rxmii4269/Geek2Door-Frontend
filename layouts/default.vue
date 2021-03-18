@@ -7,6 +7,18 @@
     <Footer class="is-flex-shrink-1" />
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {}
+  },
+  mounted() {
+    if (this.$auth.loggedIn) {
+      this.$store.dispatch('generateProfileUrl')
+    }
+  },
+}
+</script>
 <style>
 html {
   font-size: 16px;

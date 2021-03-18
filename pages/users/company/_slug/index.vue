@@ -12,7 +12,23 @@
             </figure>
           </div>
           <div class="card-content">
-            <div class="media">
+            <div class="test is-clearfix">
+              <b-tooltip
+                label="Edit Profile"
+                position="is-left"
+                size="is-small"
+                type="is-primary is-light"
+                class="is-pulled-right"
+              >
+                <figure
+                  class="image is-16x16 is-pulled-right is-clickable"
+                  @click="editProfile"
+                >
+                  <img src="~assets/img/pencil.svg" alt="" />
+                </figure>
+              </b-tooltip>
+            </div>
+            <div class="media mt-2">
               <div class="media-left">
                 <figure v-if="userData" class="image is-48x48">
                   <img
@@ -22,17 +38,15 @@
                 </figure>
               </div>
               <div class="media-content">
-                <p class="title is-4">{{ userData.company_name }}</p>
+                <b-input v-if="edit" v-model="userData.company_name"></b-input>
+                <p v-else class="title is-4">{{ userData.company_name }}</p>
               </div>
             </div>
-            <p class="subtitle is-6">{{ userData.email }}</p>
+            <b-input v-if="edit" v-model="userData.email"></b-input>
+            <p v-else class="subtitle is-6">{{ userData.email }}</p>
 
             <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-              nec iaculis mauris. <a>@bulmaio</a>. <a href="#">#css</a>
-              <a href="#">#responsive</a>
-              <br />
-              <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+              <p>{{ userData.company_desc }}</p>
               <b-button
                 v-if="userData.username != $auth.user.username"
                 expanded
@@ -41,7 +55,17 @@
                 >Message</b-button
               >
             </div>
+            <div v-if="edit" class="buttons is-centered"></div>
           </div>
+          <footer class="card-footer">
+            <b-button tag="a" type="is-danger is-outlined card-footer-item pb-0"
+              >Cancel</b-button
+            >
+            <b-button type="is-primary card-footer-item" @click="saveProfile"
+              >Save</b-button
+            >
+            <a href="" class="card-footer-item">Edit</a>
+          </footer>
         </div>
       </div>
       <div class="column is-9">
@@ -63,6 +87,7 @@ export default {
     return {
       userData: '',
       chatWith: '',
+      edit: false,
     }
   },
   async mounted() {
@@ -103,6 +128,12 @@ export default {
         popup.mount({ show: false })
         popup.show()
       })
+    },
+    editProfile() {
+      this.edit = !this.edit
+    },
+    saveProfile() {
+      this.$axios.$post(`/user/${this.$auth.user.id}`, this.userData)
     },
   },
 }

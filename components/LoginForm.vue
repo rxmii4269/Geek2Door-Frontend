@@ -110,6 +110,7 @@ export default {
               })
               this.resetForm()
             }
+            this.$store.dispatch('generateProfileUrl')
           })
           .catch((e) => {
             if (this.$auth.error.response) {

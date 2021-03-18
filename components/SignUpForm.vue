@@ -20,7 +20,7 @@
             label="First Name"
             expanded
           >
-            <b-input v-model="form.firstname"></b-input>
+            <b-input v-model="form.firstname" placeholder="e.g. John"></b-input>
           </b-field>
         </ValidationProvider>
         <ValidationProvider
@@ -36,7 +36,7 @@
             label="Last Name"
             expanded
           >
-            <b-input v-model="form.lastname"></b-input>
+            <b-input v-model="form.lastname" placeholder="e.g. Doe"></b-input>
           </b-field>
         </ValidationProvider>
       </b-field>
@@ -53,7 +53,10 @@
           label="Company Name"
           expanded
         >
-          <b-input v-model="form.companyName"></b-input>
+          <b-input
+            v-model="form.companyName"
+            placeholder="e.g. Big Corp"
+          ></b-input>
         </b-field>
       </ValidationProvider>
       <ValidationProvider
@@ -73,6 +76,7 @@
             v-model="form.companyDescr"
             type="textarea"
             maxlength="200"
+            placeholder="e.g. General company Description"
           ></b-input>
         </b-field>
       </ValidationProvider>
@@ -128,7 +132,10 @@
           :message="errors"
           label="Phone Number"
         >
-          <b-input v-model="form.number"></b-input>
+          <b-input
+            v-model="form.number"
+            placeholder="e.g. 876-478-578"
+          ></b-input>
         </b-field>
       </ValidationProvider>
       <ValidationProvider
@@ -143,7 +150,10 @@
           :message="errors"
           label="Username"
         >
-          <b-input v-model="form.username"></b-input>
+          <b-input
+            v-model="form.username"
+            placeholder="e.g. John.Doe"
+          ></b-input>
         </b-field>
       </ValidationProvider>
       <b-field>

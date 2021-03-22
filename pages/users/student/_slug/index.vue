@@ -45,9 +45,9 @@
         </div>
       </div>
       <div class="column is-9">
-        <div class="box"></div>
-        <b-button type="is-primary mt-6">Create Blog </b-button>
-        <div class="card column is-4 mt-4">
+        <b-button type="is-primary">Create Blog </b-button>
+
+        <div class="card column is-4">
           <div class="card-image">
             <figure class="image is-4by3">
               <img

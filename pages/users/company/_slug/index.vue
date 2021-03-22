@@ -2,7 +2,7 @@
   <div class="container">
     <div v-if="!profileData.message" class="columns is-8">
       <div class="column is-3">
-        <div class="card">
+        <div class="card is-unclipped">
           <div class="card-image">
             <figure class="image is-4by3">
               <img
@@ -18,7 +18,7 @@
             >
               <b-tooltip
                 label="Edit Profile"
-                position="is-left"
+                position="is-right"
                 size="is-small"
                 type="is-primary is-light"
                 class="is-pulled-right"
@@ -78,25 +78,32 @@
         <div class="modal-card-body">
           <b-field label="Name" label-position="on-border">
             <b-input
-              v-model.trim.lazy="updatedProfileData.company_name"
+              v-model.trim="updatedProfileData.company_name"
+              lazy
             ></b-input>
           </b-field>
           <b-field label="Email" label-position="on-border">
-            <b-input v-model.trim.lazy="updatedProfileData.email"></b-input>
+            <b-input
+              v-model.trim="updatedProfileData.email"
+              type="email"
+              lazy
+            ></b-input>
           </b-field>
           <b-field label="Description" label-position="on-border" class="mt-3">
             <b-input
-              v-model.trim.lazy="updatedProfileData.company_desc"
+              v-model.trim="updatedProfileData.company_desc"
               maxlength="200"
               type="textarea"
+              lazy
             ></b-input>
           </b-field>
-          <h1>Address Information</h1>
+          <h1 class="has-text-centered is-size-5">Address Information</h1>
           <b-field grouped group-multiline class="mt-3">
             <p class="control">
               <b-field label="Street" label-position="on-border">
                 <b-input
-                  v-model.trim.lazy="updatedProfileData.street"
+                  v-model.trim="updatedProfileData.street"
+                  lazy
                   expanded
                 ></b-input>
               </b-field>
@@ -104,7 +111,8 @@
             <p class="control">
               <b-field label="Parish" label-position="on-border">
                 <b-input
-                  v-model.trim.lazy="updatedProfileData.parish"
+                  v-model.trim="updatedProfileData.parish"
+                  lazy
                   expanded
                 ></b-input>
               </b-field>
@@ -112,7 +120,8 @@
             <p class="control">
               <b-field label="City" label-position="on-border">
                 <b-input
-                  v-model.trim.lazy="updatedProfileData.city"
+                  v-model.trim="updatedProfileData.city"
+                  lazy
                   expanded
                 ></b-input>
               </b-field>
@@ -212,3 +221,8 @@ export default {
   },
 }
 </script>
+<style scoped>
+.is-unclipped {
+  overflow: visible;
+}
+</style>

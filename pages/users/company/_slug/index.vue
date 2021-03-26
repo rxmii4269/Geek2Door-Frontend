@@ -13,7 +13,7 @@
           </div>
           <div class="card-content">
             <div
-              v-if="profileData.username == $auth.user.username"
+              v-if="profileData.company_name == $auth.user.name"
               class="test is-clearfix"
             >
               <b-tooltip
@@ -35,7 +35,7 @@
               <div class="media-left">
                 <figure v-if="profileData" class="image is-48x48">
                   <img
-                    :src="`${$axios.defaults.baseURL}/images/${profileData.profile_picture}`"
+                    :src="`/api/images/${profileData.profile_picture}`"
                     alt="Profile Picture"
                   />
                 </figure>
@@ -50,7 +50,7 @@
             <div class="content">
               <p>{{ profileData.company_desc }}</p>
               <b-button
-                v-if="profileData.username != $auth.user.username"
+                v-if="profileData.company_name != $auth.user.name"
                 expanded
                 type="is-pink"
                 @click="messageUser()"
@@ -142,15 +142,144 @@
         </div>
       </div>
     </b-modal>
+    <b-modal
+      v-model="nojobs"
+      active
+      trap-focus
+      has-modal-card
+      :destroy-on-hide="false"
+      aria-role="dialog"
+      aria-modal
+    >
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Create a Job</p>
+          <button type="button" class="delete" @click="nojobs = !nojobs" />
+        </header>
+        <section class="modal-card-body">
+          <b-field label="Title">
+            <b-input></b-input>
+          </b-field>
+          <b-field label="Position">
+            <b-input
+              placeholder="eg. Web Developer, Backend Developer, Database Administrator"
+            ></b-input>
+          </b-field>
+          <b-field grouped group-multiline>
+            <b-field label="GPA Requirement">
+              <b-numberinput
+                v-model="jobForm.GPA"
+                expanded
+                step="0.01"
+                min="2.5"
+                max="4.0"
+              ></b-numberinput>
+            </b-field>
+            <b-field label="Qualifications">
+              <b-select v-model="jobForm.Qualifications" expanded>
+                <option
+                  v-for="degree in degrees"
+                  :key="degree.id"
+                  :value="degree.name"
+                >
+                  {{ degree.name }}
+                </option>
+              </b-select>
+            </b-field>
+          </b-field>
+          <b-field
+            v-for="(input, k) in inputs"
+            :key="k"
+            label="Skills & Skill Level"
+          >
+            <b-autocomplete
+              :data="skillsData"
+              field="title"
+              :loading="isFetching"
+              @typing="getAsyncData"
+              @select="(option) => selected.push(option)"
+            ></b-autocomplete>
+            <b-select placeholder="eg. Beginner" @select="addToSkills()">
+              <option
+                v-for="experience in experienceLevel"
+                :key="experience.index"
+                :value="experience"
+              >
+                {{ experience }}
+              </option>
+            </b-select>
+            <span>
+              <b-button
+                v-show="k || (!k && inputs.length > 1)"
+                icon-pack="bx"
+                icon-right="bxs-minus-circle"
+                class="ml-2"
+                @click="remove(k)"
+              ></b-button>
+              <b-button
+                v-show="k == inputs.length - 1"
+                icon-pack="bx"
+                icon-right="bxs-plus-circle"
+                class="ml-2"
+                @click="add(k)"
+              ></b-button>
+            </span>
+          </b-field>
+          <b-field></b-field>
+          <b-field label="Description">
+            <b-input type="textarea" maxlength="350"></b-input>
+          </b-field>
+        </section>
+      </div>
+    </b-modal>
   </div>
 </template>
 <script>
 import Talk from 'talkjs'
+import debounce from 'lodash.debounce'
 export default {
   data() {
     return {
       chatWith: '',
       edit: false,
+      nojobs: true,
+      jobForm: {
+        GPA: 2.5,
+        Qualifications: '',
+        skills: [],
+      },
+      degrees: [
+        {
+          id: 1,
+          name: 'BSc. Computer Science',
+        },
+        {
+          id: 2,
+          name: 'BSc. Information Technology',
+        },
+        {
+          id: 3,
+          name: 'BSc. Software Engineering',
+        },
+        {
+          id: 4,
+          name: 'BSc. Computer Studies',
+        },
+        {
+          id: 5,
+          name: 'BSc. Information Systems',
+        },
+      ],
+      experienceLevel: ['Beginner', 'Intermediate', 'Expert'],
+      option: '',
+      selected: [],
+      skillsData: [],
+      isFetching: false,
+      inputs: [
+        {
+          name: '',
+        },
+      ],
     }
   },
   computed: {
@@ -178,13 +307,13 @@ export default {
           id: this.$auth.user.id,
           name: this.$auth.user.name,
           email: this.$auth.user.email,
-          role: 'buyer',
+          role: this.$auth.user.role,
         })
         const other = new Talk.User({
           id: this.profileData.id,
-          name: this.profileData.fullname,
+          name: this.profileData.company_name,
           email: this.profileData.email,
-          role: 'seller',
+          role: 'company',
         })
 
         if (!window.talkSession) {
@@ -217,6 +346,40 @@ export default {
     saveProfile() {
       this.$store.dispatch('saveProfile', this.updatedProfileData)
       this.edit = !this.edit
+    },
+    getAsyncData: debounce(function (name) {
+      if (!name.length) {
+        this.data = []
+        return
+      }
+      this.isFetching = true
+      this.$axios.setHeader('apikey', '0Sugakz7qs9ge2tBcL5tIWWv6iOwT346')
+      this.$axios
+        .get(`/api2/?q=${name}`)
+        .then(({ data }) => {
+          this.skillsData = []
+          data.forEach((item) => this.skillsData.push(item))
+        })
+        .catch((error) => {
+          this.skillsData = []
+          throw error
+        })
+        .finally(() => {
+          this.isFetching = false
+        })
+    }),
+    add(index) {
+      this.inputs.push({ name: '' })
+    },
+    remove(index) {
+      this.inputs.splice(index, 1)
+    },
+    addToSkills(option) {
+      const skill = {
+        name: option,
+        experience: 'Beginner',
+      }
+      this.jobForm.skills.push(skill)
     },
   },
 }

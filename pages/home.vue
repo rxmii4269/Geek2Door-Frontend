@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+    <b-button @click="$auth.refreshTokens()">Refresh</b-button>
+  </div>
 </template>
 <script>
 export default {

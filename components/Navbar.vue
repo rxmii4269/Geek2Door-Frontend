@@ -1,11 +1,5 @@
 <template>
-  <b-navbar
-    wrapper-class="container"
-    close-on-click
-    type="is-dark"
-    shadow
-    class="has-text-white"
-  >
+  <b-navbar wrapper-class="container" shadow close-on-click>
     <template #brand>
       <b-navbar-item tag="router-link" class="" :to="route">
         <img
@@ -55,7 +49,7 @@
                 <figure class="image is-32x32">
                   <img
                     class="is-rounded"
-                    :src="`${$axios.defaults.baseURL}/images/${$auth.user.profile_picture}`"
+                    :src="`/api/images/${$auth.user.profile_picture}`"
                     alt=""
                   />
                 </figure>
@@ -78,28 +72,20 @@
           </b-dropdown-item>
         </b-dropdown>
       </b-navbar-item>
-      <b-navbar-item tag="div">
-        <div class="buttons">
-          <b-button
-            v-if="!$auth.loggedIn"
-            type="is-white"
-            size="is-small"
-            tag="router-link"
-            to="/accounts/signup"
-          >
-            Get Started</b-button
-          >
-
-          <b-button
-            v-if="!$auth.loggedIn"
-            tag="router-link"
-            to="/accounts/login"
-            type="is-white"
-            size="is-small"
-            >Log in</b-button
-          >
-        </div>
-      </b-navbar-item>
+      <b-navbar-item
+        v-if="!$auth.loggedIn"
+        class="is-tab"
+        tag="nuxt-link"
+        to="/accounts/signup"
+        >Get Started</b-navbar-item
+      >
+      <b-navbar-item
+        v-if="!$auth.loggedIn"
+        class="is-tab"
+        tag="nuxt-link"
+        to="/accounts/login"
+        >Log In</b-navbar-item
+      >
     </template>
   </b-navbar>
 </template>
@@ -171,12 +157,12 @@ a.navbar-item:hover {
 
 @media screen and (min-width: 1024px) {
   #message--svg {
-    fill: #ffffff !important;
+    fill: #7957d5 !important;
   }
 }
 
 #message--svg {
-  fill: #000000;
+  fill: #7957d5;
 }
 
 .h-24 {

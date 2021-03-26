@@ -60,10 +60,18 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    prefix: process.env.API_URL,
+    proxy: true,
     credentials: true,
     common: {
       Accept: 'application/json, text/plain, */*',
+    },
+  },
+
+  proxy: {
+    '/api/': process.env.API_URL,
+    '/api2/': {
+      target: 'https://api.promptapi.com/skills',
+      pathRewrite: { '^/api2/': '' },
     },
   },
 
@@ -94,10 +102,10 @@ export default {
           property: 'user',
         },
         endpoints: {
-          login: { url: '/auth/login', method: 'post' },
-          refresh: { url: '/auth/refresh', method: 'post' },
-          logout: { url: '/auth/logout', method: 'delete' },
-          user: { url: '/auth/user', method: 'get' },
+          login: { url: '/api/auth/login', method: 'post' },
+          refresh: { url: '/api/auth/refresh', method: 'post' },
+          logout: { url: '/api/auth/logout', method: 'delete' },
+          user: { url: '/api/auth/user', method: 'get' },
         },
       },
     },
@@ -105,11 +113,10 @@ export default {
 
   googleFonts: {
     families: {
-      Poppins: [300, 400, 500, 700],
+      Poppins: [100, 200, 300, 400, 500, 700, 800, 900],
       Lato: [100, 300, 400],
     },
-    display: 'swap',
-    text: 'Geek2Door',
+    display: 'auto',
     prefetch: true,
     preload: true,
   },
@@ -123,6 +130,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: ['vee-validate/dist/rules'],
+    transpile: ['vee-validate/dist/rules', 'lodash'],
   },
 }

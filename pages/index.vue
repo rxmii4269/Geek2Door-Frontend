@@ -10,11 +10,11 @@
       <div class="columns">
         <div class="column is-full">
           <div class="columns">
-            <div class="column moveleft">
+            <div class="column">
               <img
                 src="@/assets/img/intern.svg"
                 alt="picture_showing_lists"
-                class="fhomepic2 pl-6 ml-6"
+                class="fhomepic2 pl-6"
               />
             </div>
             <div class="column">
@@ -53,7 +53,7 @@
               option to choose. The possibilities are endless with Geek2Door.
             </p>
           </div>
-          <div class="column moveright">
+          <div class="column">
             <img
               src="@/assets/img/lookup.svg"
               alt="picture_showing_lists"
@@ -66,7 +66,7 @@
     <div class="columns">
       <div class="column is-full">
         <div class="columns">
-          <div class="column moveleft">
+          <div class="column">
             <img
               src="@/assets/img/signup.svg"
               alt="picture_showing_lists"

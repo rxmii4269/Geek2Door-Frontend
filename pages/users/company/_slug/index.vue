@@ -12,56 +12,74 @@
             </figure>
           </div>
           <div class="card-content">
-            <div
-              v-if="profileData.company_name == $auth.user.name"
-              class="test is-clearfix"
-            >
-              <b-tooltip
-                label="Edit Profile"
-                position="is-right"
-                size="is-small"
-                type="is-primary is-light"
-                class="is-pulled-right"
+            <template v-if="!loadingProfileCard">
+              <div
+                v-if="profileData.company_name == $auth.user.name"
+                class="test is-clearfix"
               >
-                <figure
-                  class="image is-16x16 is-pulled-right is-clickable"
-                  @click="editProfile"
+                <b-tooltip
+                  label="Edit Profile"
+                  position="is-right"
+                  size="is-small"
+                  type="is-primary is-light"
+                  class="is-pulled-right"
                 >
-                  <img src="~assets/img/pencil.svg" alt="" />
-                </figure>
-              </b-tooltip>
-            </div>
-            <div class="media mt-5">
-              <div class="media-left">
-                <figure v-if="profileData" class="image is-48x48">
-                  <img
-                    :src="`/api/images/${profileData.profile_picture}`"
-                    alt="Profile Picture"
-                  />
-                </figure>
+                  <!-- <figure
+                    class="image is-16x16 is-pulled-right is-clickable"
+                    @click="editProfile"
+                  >
+                    <img src="~assets/img/pencil.svg" alt="" />
+                  </figure> -->
+                  <i
+                    class="bx bx-edit is-clickable is-size-5"
+                    @click="editProfile"
+                  ></i>
+                </b-tooltip>
               </div>
-              <div class="media-content mt-2">
-                <p class="title is-4">{{ profileData.company_name }}</p>
+              <div class="media mt-5">
+                <div class="media-left">
+                  <figure v-if="profileData" class="image is-48x48">
+                    <img
+                      :src="`/api/images/${profileData.profile_picture}`"
+                      alt="Profile Picture"
+                    />
+                  </figure>
+                </div>
+                <div class="media-content mt-2 is-unclipped">
+                  <p class="title is-4">{{ profileData.company_name }}</p>
+                </div>
               </div>
-            </div>
-
-            <p class="subtitle is-6">{{ profileData.email }}</p>
-
-            <div class="content">
-              <p>{{ profileData.company_desc }}</p>
-              <b-button
-                v-if="profileData.company_name != $auth.user.name"
-                expanded
-                type="is-pink"
-                @click="messageUser()"
-                >Message</b-button
-              >
-            </div>
+              <div class="content">
+                <p class="subtitle is-6">{{ profileData.email }}</p>
+              </div>
+              <div class="content">
+                <p>{{ profileData.company_desc }}</p>
+                <b-button
+                  v-if="profileData.company_name != $auth.user.name"
+                  expanded
+                  type="is-pink"
+                  @click="messageUser()"
+                  >Message</b-button
+                >
+              </div>
+            </template>
+            <b-skeleton
+              size="is-large"
+              :active="loadingProfileCard"
+              count="2"
+            ></b-skeleton>
           </div>
         </div>
       </div>
       <div class="column is-9">
-        <div class="box"></div>
+        <b-button type="is-pink" @click="nojobs = !nojobs"
+          >Add Internship</b-button
+        >
+        <h1 class="title has-text-centered">Internships</h1>
+        <b-tabs>
+          <b-tab-item label="Recent" type="is-pink" icon="history"></b-tab-item>
+          <b-tab-item label="Archived" icon="package-down"></b-tab-item>
+        </b-tabs>
       </div>
     </div>
     <div v-if="profileData.message" class="hero is-warning is-medium">
@@ -99,37 +117,27 @@
           </b-field>
           <h1 class="has-text-centered is-size-5">Address Information</h1>
           <b-field grouped group-multiline class="mt-3">
-            <p class="control">
-              <b-field label="Street" label-position="on-border">
-                <b-input
-                  v-model.trim="updatedProfileData.street"
-                  lazy
-                  expanded
-                ></b-input>
-              </b-field>
-            </p>
-            <p class="control">
-              <b-field label="Parish" label-position="on-border">
-                <b-input
-                  v-model.trim="updatedProfileData.parish"
-                  lazy
-                  expanded
-                ></b-input>
-              </b-field>
-            </p>
-            <p class="control">
-              <b-field label="City" label-position="on-border">
-                <b-input
-                  v-model.trim="updatedProfileData.city"
-                  lazy
-                  expanded
-                ></b-input>
-              </b-field>
-            </p>
+            <b-field label="Street" label-position="on-border" expanded>
+              <b-input
+                v-model.trim="updatedProfileData.street"
+                lazy
+                expanded
+              ></b-input>
+            </b-field>
+            <b-field label="Parish" label-position="on-border" expanded>
+              <b-input
+                v-model.trim="updatedProfileData.parish"
+                lazy
+                expanded
+              ></b-input>
+            </b-field>
+            <b-field label="City" label-position="on-border" expanded>
+              <b-input v-model.trim="updatedProfileData.city" lazy></b-input>
+            </b-field>
           </b-field>
         </div>
-        <div class="modal-card-foot is-centered">
-          <div class="buttons is-centered">
+        <div class="modal-card-foot">
+          <div class="buttons">
             <b-button
               type="is-danger is-outlined card-footer-item"
               @click="cancel"
@@ -158,78 +166,76 @@
         </header>
         <section class="modal-card-body">
           <b-field label="Title">
-            <b-input></b-input>
+            <b-input v-model="jobForm.title"></b-input>
           </b-field>
           <b-field label="Position">
             <b-input
+              v-model="jobForm.position"
               placeholder="eg. Web Developer, Backend Developer, Database Administrator"
             ></b-input>
           </b-field>
-          <b-field grouped group-multiline>
-            <b-field label="GPA Requirement">
-              <b-numberinput
+          <b-field grouped>
+            <b-field label="Min GPA Required" expanded>
+              <b-input
                 v-model="jobForm.GPA"
-                expanded
+                type="number"
+                min="1.75"
                 step="0.01"
-                min="2.5"
                 max="4.0"
-              ></b-numberinput>
+                expanded
+              ></b-input>
             </b-field>
-            <b-field label="Qualifications">
-              <b-select v-model="jobForm.Qualifications" expanded>
-                <option
-                  v-for="degree in degrees"
-                  :key="degree.id"
-                  :value="degree.name"
-                >
-                  {{ degree.name }}
-                </option>
-              </b-select>
-            </b-field>
-          </b-field>
-          <b-field
-            v-for="(input, k) in inputs"
-            :key="k"
-            label="Skills & Skill Level"
-          >
-            <b-autocomplete
-              :data="skillsData"
-              field="title"
-              :loading="isFetching"
-              @typing="getAsyncData"
-              @select="(option) => selected.push(option)"
-            ></b-autocomplete>
-            <b-select placeholder="eg. Beginner" @select="addToSkills()">
-              <option
-                v-for="experience in experienceLevel"
-                :key="experience.index"
-                :value="experience"
+            <b-field label="Qualifications" expanded>
+              <b-autocomplete
+                ref="autocomplete"
+                v-model="degreeName"
+                open-on-focus
+                clearable
+                :data="filteredDegrees"
+                expanded
+                @select="(option) => (jobForm.qualifications = option)"
               >
-                {{ experience }}
-              </option>
-            </b-select>
-            <span>
-              <b-button
-                v-show="k || (!k && inputs.length > 1)"
-                icon-pack="bx"
-                icon-right="bxs-minus-circle"
-                class="ml-2"
-                @click="remove(k)"
-              ></b-button>
-              <b-button
-                v-show="k == inputs.length - 1"
-                icon-pack="bx"
-                icon-right="bxs-plus-circle"
-                class="ml-2"
-                @click="add(k)"
-              ></b-button>
-            </span>
+                <template #footer>
+                  <a @click="showAddDegrees">
+                    <span>Add new...</span>
+                  </a>
+                </template>
+                <template #empty>No results for {{ degreeName }}</template>
+              </b-autocomplete>
+            </b-field>
           </b-field>
-          <b-field></b-field>
+          <b-field label="Location">
+            <b-input v-model="jobForm.location"></b-input>
+          </b-field>
+
+          <b-field label="Skills">
+            <b-input v-model="jobForm.skills" type="textarea"></b-input>
+          </b-field>
           <b-field label="Description">
-            <b-input type="textarea" maxlength="350"></b-input>
+            <b-input
+              v-model="jobForm.description"
+              type="textarea"
+              maxlength="350"
+            ></b-input>
           </b-field>
         </section>
+        <footer class="modal-card-foot">
+          <b-button
+            label="Close"
+            icon-pack="bx"
+            icon-left="bx-x"
+            type="is-danger is-outlined"
+            @click="nojobs = !nojobs"
+          ></b-button>
+          <b-button
+            label="Save"
+            type="is-primary"
+            icon-pack="bx"
+            icon-left="bx-check"
+            :loading="isSubmittingJob"
+            @click="submitJob"
+          ></b-button>
+        </footer>
       </div>
     </b-modal>
   </div>
@@ -242,47 +248,40 @@ export default {
     return {
       chatWith: '',
       edit: false,
-      nojobs: true,
+      nojobs: false,
       jobForm: {
-        GPA: 2.5,
-        Qualifications: '',
-        skills: [],
+        title: '',
+        position: '',
+        GPA: 2.0,
+        qualifications: '',
+        skills: '',
+        location: '',
+        description: '',
       },
       degrees: [
-        {
-          id: 1,
-          name: 'BSc. Computer Science',
-        },
-        {
-          id: 2,
-          name: 'BSc. Information Technology',
-        },
-        {
-          id: 3,
-          name: 'BSc. Software Engineering',
-        },
-        {
-          id: 4,
-          name: 'BSc. Computer Studies',
-        },
-        {
-          id: 5,
-          name: 'BSc. Information Systems',
-        },
+        'BSc. Computer Science',
+        'BSc. Information Technology',
+        'BSc. Software Engineering',
+        'BSc. Computer Studies',
+        'BSc. Information Systems',
       ],
-      experienceLevel: ['Beginner', 'Intermediate', 'Expert'],
       option: '',
-      selected: [],
       skillsData: [],
       isFetching: false,
-      inputs: [
-        {
-          name: '',
-        },
-      ],
+      isSubmittingJob: false,
+      loadingProfileCard: true,
+      degreeName: '',
     }
   },
   computed: {
+    filteredDegrees() {
+      return this.degrees.filter((option) => {
+        return option
+          .toString()
+          .toLowerCase()
+          .includes(this.degreeName.toLowerCase())
+      })
+    },
     profileData: {
       get() {
         return this.$store.state.profileData
@@ -299,6 +298,7 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch('getProfile', this.$route.params.slug)
+    this.loadingProfileCard = false
   },
   methods: {
     async messageUser() {
@@ -335,9 +335,9 @@ export default {
         popup.show()
       })
     },
-    editProfile() {
+    async editProfile() {
+      await this.$store.dispatch('editProfile', this.profileData)
       this.edit = !this.edit
-      this.$store.dispatch('editProfile', this.profileData)
     },
     cancel() {
       this.$store.dispatch('getProfile', this.$route.params.slug)
@@ -346,6 +346,7 @@ export default {
     saveProfile() {
       this.$store.dispatch('saveProfile', this.updatedProfileData)
       this.edit = !this.edit
+      this.loadingProfileCard = false
     },
     getAsyncData: debounce(function (name) {
       if (!name.length) {
@@ -380,6 +381,24 @@ export default {
         experience: 'Beginner',
       }
       this.jobForm.skills.push(skill)
+    },
+    showAddDegrees() {
+      this.$buefy.dialog.prompt({
+        message: `Qualifications`,
+        inputAttrs: {
+          placeholder: 'eg. Web Design',
+          maxlength: 50,
+          value: this.degreeName,
+        },
+        confrimText: 'Add',
+        onConfirm: (value) => {
+          this.degrees.push(value)
+          this.$refs.autocomplete.setSelected(value)
+        },
+      })
+    },
+    submitJob() {
+      console.log(this.jobForm)
     },
   },
 }

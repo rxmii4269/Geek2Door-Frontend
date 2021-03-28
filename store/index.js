@@ -43,11 +43,11 @@ export const actions = {
         const updatedUser = await self.$axios.$get('/api/auth/user')
         await self.$auth.setUser(updatedUser.user)
         if (self.$auth.user.role === 'company') {
-          self.$router.push(`/api/users/company/${self.$auth.user.name}`)
+          self.$router.push(`/users/company/${self.$auth.user.name}`)
           dispatch('getProfile', updatedUser.user.name)
         } else {
           dispatch('generateProfileUrl')
-          self.$router.push(`/api/user/student/${self.$auth.user.username}`)
+          self.$router.push(`/user/student/${self.$auth.user.username}`)
           dispatch('getProfile', updatedUser.user.username)
         }
       })

@@ -41,6 +41,44 @@
                 >Message</b-button
               >
             </div>
+            <!-- <b-field
+            v-for="(input, k) in inputs"
+            :key="k"
+            label="Skills & Skill Level"
+          >
+            <b-autocomplete
+              :data="skillsData"
+              field="title"
+              :loading="isFetching"
+              @typing="getAsyncData"
+              @select="(option) => selected.push(option)"
+            ></b-autocomplete>
+            <b-select placeholder="eg. Beginner" @select="addToSkills()">
+              <option
+                v-for="experience in experienceLevel"
+                :key="experience.index"
+                :value="experience"
+              >
+                {{ experience }}
+              </option>
+            </b-select>
+            <span>
+              <b-button
+                v-show="k || (!k && inputs.length > 1)"
+                icon-pack="bx"
+                icon-right="bxs-minus-circle"
+                class="ml-2"
+                @click="remove(k)"
+              ></b-button>
+              <b-button
+                v-show="k == inputs.length - 1"
+                icon-pack="bx"
+                icon-right="bxs-plus-circle"
+                class="ml-2"
+                @click="add(k)"
+              ></b-button>
+            </span>
+          </b-field> -->
           </div>
         </div>
       </div>

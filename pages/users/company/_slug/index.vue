@@ -66,7 +66,7 @@
             <b-skeleton
               size="is-large"
               :active="loadingProfileCard"
-              count="2"
+              :count="count"
             ></b-skeleton>
           </div>
         </div>
@@ -77,7 +77,12 @@
         >
         <h1 class="title has-text-centered">Internships</h1>
         <b-tabs>
-          <b-tab-item label="Recent" type="is-pink" icon="history"></b-tab-item>
+          <b-tab-item label="Recent" type="is-pink" icon="history">
+            <div class="columns">
+              <InternshipPost />
+              <InternshipPost />
+            </div>
+          </b-tab-item>
           <b-tab-item label="Archived" icon="package-down"></b-tab-item>
         </b-tabs>
       </div>
@@ -271,6 +276,7 @@ export default {
       isSubmittingJob: false,
       loadingProfileCard: true,
       degreeName: '',
+      count: 3,
     }
   },
   computed: {

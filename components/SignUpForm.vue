@@ -243,7 +243,7 @@ export default {
       const isValid = await this.$refs.signUpObserver.validate()
       if (isValid) {
         await this.$axios
-          .$post('/auth/register', this.form)
+          .$post('/api/auth/register', this.form)
           .then((response) => {
             const loginData = {
               email: this.form.email,

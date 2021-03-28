@@ -1,6 +1,20 @@
 <template>
-  <div>
-    <b-button @click="$auth.refreshTokens()">Refresh</b-button>
+  <div class="container">
+    <div class="columns is-8">
+      <div class="column is-3">
+        <div class="card">
+          <div class="card-content">
+            <div class="content">Hello These are your recommended Jobs:</div>
+          </div>
+        </div>
+        <b-button @click="$auth.refreshTokens()">Refresh</b-button>
+      </div>
+      <div class="column is-9">
+        <div class="columns">
+          <InternshipPost />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>

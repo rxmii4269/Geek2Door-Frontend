@@ -91,7 +91,6 @@ export default {
         scheme: 'refresh',
         token: {
           property: 'access_token',
-          maxAge: 1800,
         },
         refreshToken: {
           property: 'refresh_token',

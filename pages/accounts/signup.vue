@@ -6,7 +6,7 @@
       >
         Who are you?
       </h1>
-      <b-field>
+      <b-field expanded>
         <b-radio-button
           v-model="userType"
           type="is-pink"

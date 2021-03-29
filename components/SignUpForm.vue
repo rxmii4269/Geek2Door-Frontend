@@ -20,7 +20,11 @@
             label="First Name"
             expanded
           >
-            <b-input v-model="form.firstname" placeholder="e.g. John"></b-input>
+            <b-input
+              v-model="form.firstname"
+              placeholder="e.g. John"
+              expanded
+            ></b-input>
           </b-field>
         </ValidationProvider>
         <ValidationProvider
@@ -36,7 +40,11 @@
             label="Last Name"
             expanded
           >
-            <b-input v-model="form.lastname" placeholder="e.g. Doe"></b-input>
+            <b-input
+              v-model="form.lastname"
+              placeholder="e.g. Doe"
+              expanded
+            ></b-input>
           </b-field>
         </ValidationProvider>
       </b-field>
@@ -56,6 +64,7 @@
           <b-input
             v-model="form.company_name"
             placeholder="e.g. Big Corp"
+            expanded
           ></b-input>
         </b-field>
       </ValidationProvider>
@@ -77,6 +86,7 @@
             type="textarea"
             maxlength="200"
             placeholder="e.g. General company Description"
+            expanded
           ></b-input>
         </b-field>
       </ValidationProvider>
@@ -90,11 +100,13 @@
           :type="{ 'is-danger': errors[0], 'is-success': valid }"
           :message="errors"
           label="Email"
+          expanded
         >
           <b-input
             v-model="form.email"
             type="email"
             placeholder="e.g. example@example.com.gov"
+            expanded
           ></b-input>
         </b-field>
       </ValidationProvider>
@@ -109,12 +121,14 @@
           :type="{ 'is-danger': errors[0], 'is-success': valid }"
           :message="errors"
           label="Date of birth"
+          expanded
         >
           <b-datepicker
             v-model="form.dob"
             icon="calendar-today"
             locale="en-US"
             editable
+            expanded
           ></b-datepicker>
         </b-field>
       </ValidationProvider>
@@ -131,10 +145,12 @@
           :type="{ 'is-danger': errors[0], 'is-success': valid }"
           :message="errors"
           label="Phone Number"
+          expanded
         >
           <b-input
             v-model="form.number"
             placeholder="e.g. 876-478-578"
+            expanded
           ></b-input>
         </b-field>
       </ValidationProvider>
@@ -149,10 +165,12 @@
           :type="{ 'is-danger': errors[0], 'is-success': valid }"
           :message="errors"
           label="Username"
+          expanded
         >
           <b-input
             v-model="form.username"
             placeholder="e.g. John.Doe"
+            expanded
           ></b-input>
         </b-field>
       </ValidationProvider>
@@ -170,7 +188,11 @@
               :message="errors"
               expanded
             >
-              <b-input v-model="form.password" type="password"></b-input>
+              <b-input
+                v-model="form.password"
+                type="password"
+                expanded
+              ></b-input>
             </b-field>
           </ValidationProvider>
           <ValidationProvider
@@ -189,6 +211,7 @@
               <b-input
                 v-model="form.confirm_password"
                 type="password"
+                expanded
               ></b-input>
             </b-field>
           </ValidationProvider>

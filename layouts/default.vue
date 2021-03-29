@@ -1,7 +1,10 @@
 <template>
   <div class="is-flex-direction-column is-flex h-100">
     <Navbar />
-    <section class="section is-flex-grow-1">
+    <section
+      class="section is-flex-grow-1"
+      :class="[this.$route.name.includes('accounts') ? 'wave' : '']"
+    >
       <Nuxt />
     </section>
     <Footer class="is-flex-shrink-1" />
@@ -10,7 +13,9 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      isForm: false,
+    }
   },
   mounted() {
     if (this.$auth.loggedIn) {
@@ -137,5 +142,16 @@ a {
   background-color: var(--light-pink);
   color: var(--white);
   border-color: var(--light-pink);
+}
+.wave {
+  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1356 500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="rgba(121, 87, 213, 1)" d="M 0 500 C 342.5 500 342.5 144 685 144 L 685 144 L 685 0 L 0 0 Z" stroke-width="0"></path> <path fill="rgba(121, 87, 213, 1)" d="M 684 144 C 1020 144 1020 0 1356 0 L 1356 0 L 1356 0 L 684 0 Z" stroke-width="0"></path> </svg>');
+  /* background-size: cover; */
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 1365px) {
+  .wave {
+    background-size: contain;
+  }
 }
 </style>

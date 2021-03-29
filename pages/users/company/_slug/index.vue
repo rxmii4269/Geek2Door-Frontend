@@ -24,12 +24,6 @@
                   type="is-primary is-light"
                   class="is-pulled-right"
                 >
-                  <!-- <figure
-                    class="image is-16x16 is-pulled-right is-clickable"
-                    @click="editProfile"
-                  >
-                    <img src="~assets/img/pencil.svg" alt="" />
-                  </figure> -->
                   <i
                     class="bx bx-edit is-clickable is-size-5"
                     @click="editProfile"
@@ -72,15 +66,23 @@
         </div>
       </div>
       <div class="column is-9">
-        <b-button type="is-pink" @click="nojobs = !nojobs"
+        <b-button type="is-pink" @click="nojobs = true"
           >Add Internship</b-button
         >
         <h1 class="title has-text-centered">Internships</h1>
         <b-tabs>
           <b-tab-item label="Recent" type="is-pink" icon="history">
-            <div class="columns">
-              <InternshipPost />
-              <InternshipPost />
+            <div class="columns is-multiline">
+              <InternshipPost
+                v-for="internship in internships"
+                :key="internship.id"
+                :gpa="internship.gpa"
+                :skills="internship.skills"
+                :position="internship.position"
+                :start-time="internship.start_date"
+                :end-time="internship.end_date"
+                :description="internship.internship_desc"
+              />
             </div>
           </b-tab-item>
           <b-tab-item label="Archived" icon="package-down"></b-tab-item>
@@ -156,8 +158,7 @@
       </div>
     </b-modal>
     <b-modal
-      v-model="nojobs"
-      active
+      :active.sync="nojobs"
       trap-focus
       has-modal-card
       :destroy-on-hide="false"
@@ -167,62 +168,142 @@
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">Create a Job</p>
-          <button type="button" class="delete" @click="nojobs = !nojobs" />
+          <button type="button" class="delete" @click="closeJobModal" />
         </header>
         <section class="modal-card-body">
-          <b-field label="Title">
-            <b-input v-model="jobForm.title"></b-input>
-          </b-field>
-          <b-field label="Position">
-            <b-input
-              v-model="jobForm.position"
-              placeholder="eg. Web Developer, Backend Developer, Database Administrator"
-            ></b-input>
-          </b-field>
-          <b-field grouped>
-            <b-field label="Min GPA Required" expanded>
-              <b-input
-                v-model="jobForm.GPA"
-                type="number"
-                min="1.75"
-                step="0.01"
-                max="4.0"
-                expanded
-              ></b-input>
-            </b-field>
-            <b-field label="Qualifications" expanded>
-              <b-autocomplete
-                ref="autocomplete"
-                v-model="degreeName"
-                open-on-focus
-                clearable
-                :data="filteredDegrees"
-                expanded
-                @select="(option) => (jobForm.qualifications = option)"
+          <ValidationObserver ref="createJobObserver">
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required"
+              name="Position"
+              slim
+            >
+              <b-field
+                label="Position"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
               >
-                <template #footer>
-                  <a @click="showAddDegrees">
-                    <span>Add new...</span>
-                  </a>
-                </template>
-                <template #empty>No results for {{ degreeName }}</template>
-              </b-autocomplete>
+                <b-input v-model="jobForm.position"></b-input>
+              </b-field>
+            </ValidationProvider>
+            <b-field grouped group-multiline>
+              <ValidationProvider
+                v-slot="{ errors, valid }"
+                rules="required"
+                name="GPA"
+                slim
+              >
+                <b-field
+                  label="Minimum GPA"
+                  :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                  :message="errors"
+                  expanded
+                >
+                  <b-input
+                    v-model.number="jobForm.GPA"
+                    type="number"
+                    min="1.75"
+                    step="0.01"
+                    max="4.0"
+                    expanded
+                    lazy
+                  ></b-input>
+                </b-field>
+              </ValidationProvider>
+              <ValidationProvider
+                v-slot="{ errors, valid }"
+                rules="required"
+                name="Qualifications"
+                slim
+              >
+                <b-field
+                  label="Qualifications"
+                  :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                  :message="errors"
+                  expanded
+                >
+                  <b-autocomplete
+                    ref="autocomplete"
+                    v-model="degreeName"
+                    open-on-focus
+                    clearable
+                    :data="filteredDegrees"
+                    expanded
+                    @select="(option) => (jobForm.qualifications = option)"
+                  >
+                    <template #footer>
+                      <a @click="showAddDegrees">
+                        <span>Add new...</span>
+                      </a>
+                    </template>
+                    <template #empty>No results for {{ degreeName }}</template>
+                  </b-autocomplete>
+                </b-field>
+              </ValidationProvider>
             </b-field>
-          </b-field>
-          <b-field label="Location">
-            <b-input v-model="jobForm.location"></b-input>
-          </b-field>
-
-          <b-field label="Skills">
-            <b-input v-model="jobForm.skills" type="textarea"></b-input>
-          </b-field>
-          <b-field label="Description">
-            <b-input
-              v-model="jobForm.description"
-              type="textarea"
-              maxlength="350"
-            ></b-input>
-          </b-field>
+            <b-field label="Location">
+              <b-input v-model="jobForm.location"></b-input>
+            </b-field>
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              slim
+              rules="required"
+              name="Tenure/Duration"
+            >
+              <b-field
+                label="Tenure/Duration"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+                expanded
+              >
+                <b-datepicker
+                  v-model="jobForm.duration"
+                  editable
+                  range
+                  :min-date="new Date(Date.now())"
+                  icon-pack="bx"
+                  icon="bxs-calendar-event"
+                  icon-next="bxs-right-arrow"
+                  icon-prev="bxs-left-arrow"
+                ></b-datepicker>
+              </b-field>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              slim
+              rules="required"
+              name="Skills"
+            >
+              <b-field
+                label="Skills"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input
+                  v-model.trim="jobForm.skills"
+                  type="textarea"
+                ></b-input>
+              </b-field>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              slim
+              rules="required"
+              name="Description"
+            >
+              <b-field
+                label="Description"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input
+                  v-model="jobForm.description"
+                  type="textarea"
+                  maxlength="350"
+                ></b-input>
+              </b-field>
+            </ValidationProvider>
+          </ValidationObserver>
         </section>
         <footer class="modal-card-foot">
           <b-button
@@ -230,14 +311,14 @@
             icon-pack="bx"
             icon-left="bx-x"
             type="is-danger is-outlined"
-            @click="nojobs = !nojobs"
+            @click="closeJobModal"
           ></b-button>
           <b-button
             label="Save"
             type="is-primary"
             icon-pack="bx"
             icon-left="bx-check"
-            :loading="isSubmittingJob"
+            :loading.sync="isSubmittingJob"
             @click="submitJob"
           ></b-button>
         </footer>
@@ -248,20 +329,26 @@
 <script>
 import Talk from 'talkjs'
 import debounce from 'lodash.debounce'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { mapState } from 'vuex'
 export default {
+  components: {
+    ValidationObserver,
+    ValidationProvider,
+  },
   data() {
     return {
       chatWith: '',
       edit: false,
       nojobs: false,
       jobForm: {
-        title: '',
         position: '',
         GPA: 2.0,
         qualifications: '',
         skills: '',
         location: '',
         description: '',
+        duration: [],
       },
       degrees: [
         'BSc. Computer Science',
@@ -273,7 +360,6 @@ export default {
       option: '',
       skillsData: [],
       isFetching: false,
-      isSubmittingJob: false,
       loadingProfileCard: true,
       degreeName: '',
       count: 3,
@@ -301,10 +387,12 @@ export default {
         this.$store.commit('', value)
       },
     },
+    ...mapState(['internships', 'isSubmittingJob']),
   },
   async mounted() {
     await this.$store.dispatch('getProfile', this.$route.params.slug)
     this.loadingProfileCard = false
+    this.$store.dispatch('getInternships')
   },
   methods: {
     async messageUser() {
@@ -403,8 +491,27 @@ export default {
         },
       })
     },
-    submitJob() {
-      console.log(this.jobForm)
+    async submitJob() {
+      const isValid = await this.$refs.createJobObserver.validate()
+      if (isValid) {
+        this.jobForm.company_id = this.profileData.id
+        this.jobForm.profile_picture = this.profileData.profile_picture
+        await this.$store.dispatch('submitInternship', this.jobForm)
+        this.closeJobModal()
+      }
+    },
+    closeJobModal() {
+      Object.keys(this.jobForm).forEach((key, index) => {
+        if (typeof this.jobForm[key] === 'object') {
+          this.jobForm[key] = []
+        } else if (typeof this.jobForm[key] === 'number') {
+          this.jobForm[key] = 2
+        } else {
+          this.jobForm[key] = ''
+        }
+      })
+      this.degreeName = ''
+      this.nojobs = !this.nojobs
     },
   },
 }

@@ -67,6 +67,10 @@ export default {
     },
   },
 
+  publicRuntimeConfig: {
+    API_URL: process.env.API_URL,
+  },
+
   proxy: {
     '/api/': process.env.API_URL,
     '/api2/': {

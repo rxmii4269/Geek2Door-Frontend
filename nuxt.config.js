@@ -60,7 +60,6 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    proxy: true,
     credentials: true,
     common: {
       Accept: 'application/json, text/plain, */*',
@@ -69,14 +68,6 @@ export default {
 
   publicRuntimeConfig: {
     API_URL: process.env.API_URL,
-  },
-
-  proxy: {
-    '/api/': process.env.API_URL,
-    '/api2/': {
-      target: 'https://api.promptapi.com/skills',
-      pathRewrite: { '^/api2/': '' },
-    },
   },
 
   auth: {

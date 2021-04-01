@@ -10,7 +10,6 @@
         Geek<span class="large2 pink">2</span>Door
       </b-navbar-item>
     </template>
-
     <template #end>
       <b-navbar-item
         v-if="$auth.loggedIn"

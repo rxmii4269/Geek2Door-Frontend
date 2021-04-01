@@ -10,8 +10,19 @@
         <b-button @click="$auth.refreshTokens()">Refresh</b-button>
       </div>
       <div class="column is-9">
+        <div class="container mb-5">
+          <b-field expanded>
+            <b-input
+              expanded
+              rounded
+              icon-pack="bx"
+              icon-right="bx-search"
+              placeholder="Search"
+            ></b-input>
+          </b-field>
+        </div>
         <div class="columns">
-          <InternshipPost />
+          <!-- <InternshipPost /> -->
         </div>
       </div>
     </div>

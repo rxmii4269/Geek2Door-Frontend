@@ -1,11 +1,29 @@
 import { NotificationProgrammatic as Notification } from 'buefy'
+import clonedeep from 'lodash/cloneDeep'
+
 export const state = () => ({
   profile_url: '',
   profileData: '',
   updatedProfileData: '',
   isSubmittingJob: false,
-  internships: null,
+  isArchivingPost: false,
+  internships: [],
+  internshipPageInfo: [],
 })
+
+export const getters = {
+  unarchivedJobs: (state) => {
+    return state.internships.filter((internship) => internship.is_active)
+  },
+  archivedJobs: (state) => {
+    return state.internships.filter(
+      (internship) => internship.is_active === false
+    )
+  },
+  getJobById: (state) => (id) => {
+    return state.internships.filter((internship) => internship.id === id)
+  },
+}
 
 export const mutations = {
   SET_PROFILE_URL(state, url) {
@@ -15,13 +33,19 @@ export const mutations = {
     state.profileData = profileData
   },
   SET_UPDATED_PROFILE_DATA(state, profileData) {
-    state.updatedProfileData = profileData
+    state.updatedProfileData = clonedeep(profileData)
   },
   SET_INTERNSHIPS(state, internships) {
     state.internships = internships
   },
   TOGGLE_SUBMITTING_JOB(state, flag) {
     state.isSubmittingJob = flag
+  },
+  TOGGLE_ARCHIVING_POST(state, flag) {
+    state.isArchivingPost = flag
+  },
+  SET_JOB_PAGE_INFO(state, data) {
+    state.internshipPageInfo = data
   },
 }
 
@@ -64,7 +88,7 @@ export const actions = {
   async submitInternship({ commit, dispatch }, internshipForm) {
     commit('TOGGLE_SUBMITTING_JOB', true)
     await this.$axios
-      .$post('/api/internship', internshipForm)
+      .$post('/api/internships', internshipForm)
       .then((response) => {
         commit('TOGGLE_SUBMITTING_JOB', false)
         Notification.open({
@@ -75,16 +99,52 @@ export const actions = {
           hasIcon: true,
         })
       })
-    dispatch('getInternships')
+    await dispatch('getInternships')
   },
   async getInternships({ commit, state }) {
     const response = await this.$axios.$get(
       `/api/users/${state.auth.user.id}/internships`
     )
     response.forEach((element, index, response) => {
-      response[index].internship_desc =
-        element.internship_desc.replace(/\r?\n|\r/g, ' ').slice(0, 40) + '...'
+      response[index].shortDescription =
+        element.description.replace(/\r?\n|\r/g, ' ').slice(0, 100) + '...'
     })
-    await commit('SET_INTERNSHIPS', response)
+    commit('SET_INTERNSHIPS', response)
+  },
+  async updateInternship({ commit, dispatch }, internshipForm) {
+    commit('TOGGLE_SUBMITTING_JOB', true)
+    await this.$axios
+      .$post(`/api/internships/${internshipForm.id}`, internshipForm)
+      .then((response) => {
+        commit('TOGGLE_SUBMITTING_JOB', false)
+        Notification.open({
+          duration: 3000,
+          message: 'Job Post Created Successfully',
+          position: 'is-top-right',
+          type: 'is-success is-light',
+          hasIcon: true,
+        })
+      })
+    await dispatch('getInternships')
+  },
+  async archivePost({ commit, dispatch }, info) {
+    const response = await this.$axios.$post(
+      `/api/internships/${info.id}/archive`,
+      info
+    )
+    await commit('TOGGLE_ARCHIVING_POST', true)
+    Notification.open({
+      duration: 3000,
+      message: response,
+      position: 'is-top-right',
+      type: 'is-success is-light',
+      hasIcon: true,
+    })
+    await commit('TOGGLE_ARCHIVING_POST', false)
+    await dispatch('getInternships')
+  },
+  async getInternshipPage({ commit }, id) {
+    const response = await this.$axios.$get(`/api/internships/${id}`)
+    commit('SET_JOB_PAGE_INFO', response)
   },
 }

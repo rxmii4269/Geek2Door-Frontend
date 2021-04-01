@@ -16,7 +16,7 @@
               <div class="media-left">
                 <figure v-if="userData" class="image is-48x48">
                   <img
-                    :src="`${$axios.defaults.baseURL}/images/${userData.profile_picture}`"
+                    :src="`/api/images/${userData.profile_picture}`"
                     alt="Profile Picture"
                   />
                 </figure>
@@ -140,7 +140,7 @@ export default {
     }
   },
   async mounted() {
-    const user = await this.$axios.$get(`/users/${this.$route.params.slug}`)
+    const user = await this.$axios.$get(`/api/users/${this.$route.params.slug}`)
     this.userData = user
   },
   methods: {
@@ -150,13 +150,13 @@ export default {
           id: this.$auth.user.id,
           name: this.$auth.user.name,
           email: this.$auth.user.email,
-          role: 'buyer',
+          role: this.$$auth.user.role,
         })
         const other = new Talk.User({
           id: this.userData.id,
           name: this.userData.fullname,
           email: this.userData.email,
-          role: 'seller',
+          role: this.userData.role,
         })
 
         if (!window.talkSession) {

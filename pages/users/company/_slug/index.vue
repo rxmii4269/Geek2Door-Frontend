@@ -15,11 +15,10 @@
             <template v-if="!loadingProfileCard">
               <div
                 v-if="profileData.company_name == $auth.user.name"
-                class="test is-clearfix"
+                class="is-clearfix"
               >
                 <b-tooltip
                   label="Edit Profile"
-                  position="is-right"
                   size="is-small"
                   type="is-primary is-light"
                   class="is-pulled-right"
@@ -71,21 +70,49 @@
         >
         <h1 class="title has-text-centered">Internships</h1>
         <b-tabs>
-          <b-tab-item label="Recent" type="is-pink" icon="history">
-            <div class="columns is-multiline">
+          <b-tab-item label="Recent" icon="history">
+            <div v-if="unarchivedJobs" class="columns is-multiline">
               <InternshipPost
-                v-for="internship in internships"
+                v-for="internship in unarchivedJobs"
+                :id="internship.id"
                 :key="internship.id"
                 :gpa="internship.gpa"
                 :skills="internship.skills"
                 :position="internship.position"
                 :start-time="internship.start_date"
                 :end-time="internship.end_date"
-                :description="internship.internship_desc"
+                :short-description="internship.shortDescription"
+                :description="internship.description"
+                :profile-picture="internship.profile_picture"
+                :qualifications="internship.qualifications"
+                :is-active="internship.is_active"
               />
             </div>
           </b-tab-item>
-          <b-tab-item label="Archived" icon="package-down"></b-tab-item>
+          <b-tab-item label="Archived" icon="package-down">
+            <div v-if="archivedJobs.length != 0" class="columns is-multiline">
+              <InternshipPost
+                v-for="internship in archivedJobs"
+                :id="internship.id"
+                :key="internship.id"
+                :gpa="internship.gpa"
+                :skills="internship.skills"
+                :position="internship.position"
+                :start-time="internship.start_date"
+                :end-time="internship.end_date"
+                :short-description="internship.shortDescription"
+                :description="internship.description"
+                :profile-picture="internship.profile_picture"
+                :qualifications="internship.qualifications"
+                :is-active="internship.is_active"
+              />
+            </div>
+            <section v-else class="hero is-primary">
+              <div class="hero-body has-text-centered">
+                <p class="title">No Archived Jobs Available</p>
+              </div>
+            </section>
+          </b-tab-item>
         </b-tabs>
       </div>
     </div>
@@ -260,7 +287,6 @@
                   v-model="jobForm.duration"
                   editable
                   range
-                  :min-date="new Date(Date.now())"
                   icon-pack="bx"
                   icon="bxs-calendar-event"
                   icon-next="bxs-right-arrow"
@@ -330,7 +356,7 @@
 import Talk from 'talkjs'
 import debounce from 'lodash.debounce'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
   components: {
     ValidationObserver,
@@ -363,6 +389,7 @@ export default {
       loadingProfileCard: true,
       degreeName: '',
       count: 3,
+      minDate: '',
     }
   },
   computed: {
@@ -384,15 +411,19 @@ export default {
         return this.$store.state.updatedProfileData
       },
       set(value) {
-        this.$store.commit('', value)
+        this.$store.commit('SET_PROFILE_DATA', value)
       },
     },
     ...mapState(['internships', 'isSubmittingJob']),
+    ...mapGetters(['unarchivedJobs', 'archivedJobs']),
   },
+  created() {
+    this.$store.dispatch('getInternships')
+  },
+
   async mounted() {
     await this.$store.dispatch('getProfile', this.$route.params.slug)
     this.loadingProfileCard = false
-    this.$store.dispatch('getInternships')
   },
   methods: {
     async messageUser() {
@@ -512,6 +543,7 @@ export default {
       })
       this.degreeName = ''
       this.nojobs = !this.nojobs
+      this.$refs.createJobObserver.reset()
     },
   },
 }

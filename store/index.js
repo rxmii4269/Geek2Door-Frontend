@@ -8,9 +8,11 @@ export const state = () => ({
   isSubmittingJob: false,
   isSavingProfile: false,
   isArchivingPost: false,
+  isApplyingForInternship: false,
   internships: [],
   appliedInternships: [],
   internshipPageInfo: [],
+  allInternships: [],
 })
 
 export const getters = {
@@ -40,6 +42,9 @@ export const mutations = {
   SET_INTERNSHIPS(state, internships) {
     state.internships = internships
   },
+  SET_ALL_INTERNSHIPS(state, internships) {
+    state.allInternships = internships
+  },
   SET_APPLIED_INTERNSHIPS(state, appliedInternships) {
     state.appliedInternships = appliedInternships
   },
@@ -51,6 +56,12 @@ export const mutations = {
   },
   SET_JOB_PAGE_INFO(state, data) {
     state.internshipPageInfo = data
+  },
+  TOGGLE_SAVING_PROFILE(state, flag) {
+    state.isSavingProfile = flag
+  },
+  TOGGLE_APPLYING_FOR_INTERNSHIP(state, flag) {
+    state.isApplyingForInternship = flag
   },
 }
 
@@ -80,36 +91,38 @@ export const actions = {
         .$post(`/api/users/company/${this.$auth.user.id}`, profile)
         .then(async function (response) {
           const updatedUser = await self.$axios.$get('/api/auth/user')
+          Notification.open({
+            duration: 3000,
+            message: 'Profile Updated Successfully',
+            position: 'is-top-right',
+            type: 'is-success is-light',
+            hasIcon: true,
+          })
           await self.$auth.setUser(updatedUser.user)
           self.$router.push(`/users/company/${self.$auth.user.name}`)
           dispatch('getProfile', updatedUser.user.name)
         })
     } else if (this.$auth.user.role === 'student') {
+      commit('TOGGLE_SAVING_PROFILE', true)
       await this.$axios
         .$post(`/api/users/student/${this.$auth.user.id}`, profile)
         .then(async function (response) {
+          commit('TOGGLE_SAVING_PROFILE', false)
           const updateUser = await self.$axios.$get('/api/auth/user')
+          Notification.open({
+            duration: 3000,
+            message: 'Profile Updated Successfully',
+            position: 'is-top-right',
+            type: 'is-success is-light',
+            hasIcon: true,
+          })
           await self.$auth.setUser(updateUser.user)
           self.$router.push(`/users/student/${self.$auth.user.username}`)
-          dispatch('getProfile', updateUser.user.name)
+          dispatch('getProfile', updateUser.user.username)
         })
     }
-    await this.$axios
-      .$post(`/api/users/company/${this.$auth.user.id}`, profile)
-      .then(async function (response) {
-        const updatedUser = await self.$axios.$get('/api/auth/user')
-        await self.$auth.setUser(updatedUser.user)
-        if (self.$auth.user.role === 'company') {
-          self.$router.push(`/users/company/${self.$auth.user.name}`)
-          dispatch('getProfile', updatedUser.user.name)
-        } else {
-          dispatch('generateProfileUrl')
-          self.$router.push(`/users/student/${self.$auth.user.username}`)
-          dispatch('getProfile', updatedUser.user.username)
-        }
-      })
   },
-  async submitInternship({ commit, dispatch }, internshipForm) {
+  async submitInternship({ commit, dispatch, state }, internshipForm) {
     commit('TOGGLE_SUBMITTING_JOB', true)
     await this.$axios
       .$post('/api/internships', internshipForm)
@@ -123,7 +136,7 @@ export const actions = {
           hasIcon: true,
         })
       })
-    await dispatch('getInternships')
+    await dispatch('getInternships', state.auth.user.id)
   },
   async getInternships({ commit, state }, id) {
     const response = await this.$axios.$get(`/api/users/${id}/internships`)
@@ -135,11 +148,11 @@ export const actions = {
   },
   async getAppliedInternships({ commit, state }) {
     const response = await this.$axios.$get(
-      `/api/users/${state.auth.user.id}/internships/applied`
+      `/api/users/${state.auth.user.id}/internships/apply`
     )
     commit('SET_APPLIED_INTERNSHIPS', response)
   },
-  async updateInternship({ commit, dispatch }, internshipForm) {
+  async updateInternship({ commit, dispatch, state }, internshipForm) {
     commit('TOGGLE_SUBMITTING_JOB', true)
     await this.$axios
       .$post(`/api/internships/${internshipForm.id}`, internshipForm)
@@ -153,7 +166,7 @@ export const actions = {
           hasIcon: true,
         })
       })
-    await dispatch('getInternships')
+    await dispatch('getInternships', state.auth.user.id)
   },
   async archivePost({ commit, dispatch }, info) {
     const response = await this.$axios.$post(
@@ -174,5 +187,23 @@ export const actions = {
   async getInternshipPage({ commit }, id) {
     const response = await this.$axios.$get(`/api/internships/${id}`)
     commit('SET_JOB_PAGE_INFO', response)
+  },
+  async getAllInternships({ commit }) {
+    const response = await this.$axios.$get(`/api/internships`)
+    commit('SET_ALL_INTERNSHIPS', response)
+  },
+  async applyForInternship({ commit, state, dispatch }, data) {
+    commit('TOGGLE_APPLYING_FOR_INTERNSHIP', true)
+    const response = await this.$axios.$post(`/api/internships/apply`, data)
+    commit('TOGGLE_APPLYING_FOR_INTERNSHIP', false)
+    await dispatch('getAppliedInternships')
+    Notification.open({
+      duration: 3000,
+      message: 'Application Sent Successfully',
+      position: 'is-top-right',
+      type: 'is-success is-light',
+      hasIcon: true,
+    })
+    console.log(response)
   },
 }

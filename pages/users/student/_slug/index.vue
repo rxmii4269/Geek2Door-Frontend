@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div v-if="!userData.message" class="columns is-8">
+    <div v-if="!profileData.message" class="columns is-8">
       <div class="column is-3">
         <div class="card is-unclipped">
           <div class="card-image">
@@ -14,7 +14,7 @@
           <div class="card-content">
             <template v-if="!loadingProfileCard">
               <div
-                v-if="$auth.user.username === userData.username"
+                v-if="$auth.user.username === profileData.username"
                 class="is-clearfix"
               >
                 <b-tooltip
@@ -31,21 +31,38 @@
               </div>
               <div class="media">
                 <div class="media-left">
-                  <figure v-if="userData" class="image is-48x48">
+                  <figure v-if="profileData" class="image is-48x48">
                     <img
-                      :src="`/api/images/${userData.profile_picture}`"
+                      :src="`/api/images/${profileData.profile_picture}`"
                       alt="Profile Picture"
                     />
                   </figure>
                 </div>
-                <div class="media-content is-unclipped">
-                  <p class="title is-4">{{ userData.name }}</p>
-                  <p class="subtitle is-6">@{{ userData.username }}</p>
+                <div class="media-content">
+                  <p class="title is-4">{{ profileData.name }}</p>
+                  <p class="subtitle is-6">@{{ profileData.username }}</p>
                 </div>
               </div>
               <div class="content">
+                <p class="subtitle is-7">{{ profileData.email }}</p>
+                <b-taglist attached>
+                  <b-tag type="is-dark"
+                    ><b-icon pack="bx" icon="bx-map"></b-icon
+                  ></b-tag>
+                  <b-tag type="is-primary">{{ profileData.parish }}</b-tag>
+                </b-taglist>
+              </div>
+              <div class="content">
+                <b-taglist>
+                  <b-tag
+                    v-for="skill in profileData.skills"
+                    :key="skill.index"
+                    type="is-primary"
+                    >{{ skill }}</b-tag
+                  >
+                </b-taglist>
                 <b-button
-                  v-if="userData.username != $auth.user.username"
+                  v-if="profileData.username != $auth.user.username"
                   expanded
                   type="is-pink"
                   @click="messageUser()"
@@ -53,8 +70,8 @@
                 >
               </div>
             </template>
-            <div class="media">
-              <figure v-if="loadingProfileCard" class="media-left">
+            <div v-if="loadingProfileCard" class="media">
+              <figure class="media-left">
                 <p class="image is-64x64">
                   <b-skeleton
                     :active="loadingProfileCard"
@@ -76,7 +93,17 @@
         </div>
       </div>
       <div class="column is-9">
-        <h1 class="title has-text-centered">Latest Job Applied For</h1>
+        <h1 class="title has-text-centered">Latest Internships Applied For</h1>
+        <section v-if="appliedInternships.length === 0" class="hero is-primary">
+          <div class="hero-body has-text-centered">
+            <h1 class="title">You haven't applied to any Internships.</h1>
+            <h2 class="subtitle has-text-centered mt-2">
+              <b-button tag="nuxt-link" to="/home" type="is-dark" inverted
+                >Apply now</b-button
+              >
+            </h2>
+          </div>
+        </section>
         <div class="columns is-multiline">
           <InternshipPost
             v-for="internship in appliedInternships"
@@ -95,9 +122,9 @@
             :company-id="internship.company_id"
           />
         </div>
-        <b-button type="is-primary">Create Blog </b-button>
+        <!-- <b-button type="is-primary">Create Blog </b-button> -->
 
-        <div class="card column is-4">
+        <!-- <div class="card column is-4">
           <div class="card-image">
             <figure class="image is-4by3">
               <img
@@ -110,7 +137,7 @@
             <div class="media">
               <div class="media-content">
                 <p class="title is-4">Some Blog Title</p>
-                <p class="subtitle is-6">by: {{ userData.username }}</p>
+                <p class="subtitle is-6">by: {{ profileData.username }}</p>
               </div>
             </div>
             <div class="content">
@@ -131,12 +158,12 @@
               <time datetime="2016-1-1">11:09 PM - 1 Jan 2021</time>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
-    <div v-if="userData.message" class="hero is-warning is-medium">
+    <div v-if="profileData.message" class="hero is-warning is-medium">
       <div class="hero-body">
-        <p class="title">{{ userData.message }}</p>
+        <p class="title">{{ profileData.message }}</p>
       </div>
     </div>
     <Chat v-if="$auth.loggedIn" ref="Chat" />
@@ -147,7 +174,7 @@
           <button type="button" class="delete" @click="closeJobModal" />
         </header>
         <div class="modal-card-body">
-          <ValidationObserver>
+          <ValidationObserver ref="editProfileObserver">
             <ValidationProvider
               v-slot="{ errors, valid }"
               rules="required"
@@ -211,6 +238,55 @@
                 ></b-taginput>
               </b-field>
             </ValidationProvider>
+            <b-field grouped group-multiline expanded>
+              <ValidationProvider
+                v-slot="{ errors, valid }"
+                rules="required"
+                name="Parish"
+                slim
+              >
+                <b-field
+                  label="Parish"
+                  :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                  :message="errors"
+                  expanded
+                >
+                  <b-select
+                    v-model="updatedProfileData.parish"
+                    placeholder="Select your Parish"
+                    icon-pack="bx"
+                    icon="bx-globe"
+                  >
+                    <option
+                      v-for="parish in parishes"
+                      :key="parish.index"
+                      :value="parish"
+                    >
+                      {{ parish }}
+                    </option>
+                  </b-select>
+                </b-field>
+              </ValidationProvider>
+              <ValidationProvider
+                v-slot="{ errors, valid }"
+                :rules="{
+                  required: true,
+                  regex:
+                    '^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
+                }"
+                name="Phone Number"
+                slim
+              >
+                <b-field
+                  label="Phone Number"
+                  :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                  :message="errors"
+                  expanded
+                >
+                  <b-input v-model="updatedProfileData.number"></b-input>
+                </b-field>
+              </ValidationProvider>
+            </b-field>
           </ValidationObserver>
         </div>
         <footer class="modal-card-foot">
@@ -248,23 +324,37 @@ export default {
   },
   data() {
     return {
-      userData: '',
       chatWith: '',
       count: 3,
       loadingProfileCard: true,
       edit: false,
       updatedProfileData: '',
+      parishes: [
+        'St. Andrew',
+        'Kingston',
+        'St. Thomas',
+        'Portland',
+        'St. Catherine',
+        'Clarendon',
+        'Mandeville',
+        'St. Elizabeth',
+        'Hanover',
+        'Westmoreland',
+        'St. James',
+        'Trelawny',
+        'St. Ann',
+        'St. Mary',
+      ],
     }
   },
   computed: {
-    ...mapState(['appliedInternships', 'isSavingProfile']),
+    ...mapState(['appliedInternships', 'isSavingProfile', 'profileData']),
   },
   created() {
     this.$store.dispatch('getAppliedInternships')
   },
   async mounted() {
-    const user = await this.$axios.$get(`/api/users/${this.$route.params.slug}`)
-    this.userData = user
+    await this.$store.dispatch('getProfile', this.$route.params.slug)
     this.loadingProfileCard = false
   },
 
@@ -275,13 +365,13 @@ export default {
           id: this.$auth.user.id,
           name: this.$auth.user.name,
           email: this.$auth.user.email,
-          role: this.$$auth.user.role,
+          role: this.$auth.user.role,
         })
         const other = new Talk.User({
-          id: this.userData.id,
-          name: this.userData.fullname,
-          email: this.userData.email,
-          role: this.userData.role,
+          id: this.profileData.id,
+          name: this.profileData.fullname,
+          email: this.profileData.email,
+          role: this.profileData.role,
         })
 
         if (!window.talkSession) {
@@ -304,14 +394,20 @@ export default {
       })
     },
     editProfile() {
-      this.updatedProfileData = clonedeep(this.userData)
+      this.parishes = this.parishes.sort()
+      this.updatedProfileData = clonedeep(this.profileData)
       this.edit = !this.edit
     },
-    saveProfile() {
-      this.$store.dispatch('saveProfile', this.updatedProfileData)
+    async saveProfile() {
+      const isValid = await this.$refs.editProfileObserver.validate()
+      if (isValid) {
+        await this.$store.dispatch('saveProfile', this.updatedProfileData)
+        this.edit = !this.edit
+      }
     },
     closeJobModal() {
       this.edit = !this.edit
+      this.$refs.editProfileObserver.reset()
     },
   },
 }

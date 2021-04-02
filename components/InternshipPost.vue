@@ -68,6 +68,16 @@
       </nav>
       <div class="buttons is-centered">
         <b-button
+          v-if="$auth.user.role == 'student'"
+          outlined
+          type="is-primary"
+          size="is-small"
+          :loading="isApplyingForInternship"
+          @click="applyForInternship"
+        >
+          Apply
+        </b-button>
+        <b-button
           v-if="$auth.user.id === companyId"
           outlined
           size="is-small"
@@ -390,7 +400,11 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isSubmittingJob', 'isArchivingPost']),
+    ...mapState([
+      'isSubmittingJob',
+      'isArchivingPost',
+      'isApplyingForInternship',
+    ]),
     filteredDegrees() {
       return this.degrees.filter((option) => {
         return option
@@ -401,6 +415,12 @@ export default {
     },
   },
   methods: {
+    async applyForInternship() {
+      await this.$store.dispatch('applyForInternship', {
+        student_id: this.$auth.user.id,
+        post_id: this.id,
+      })
+    },
     async updateJob() {
       const isValid = await this.$refs.updateJobObserver.validate()
       if (isValid) {

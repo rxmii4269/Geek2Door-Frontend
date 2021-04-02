@@ -6,8 +6,10 @@ export const state = () => ({
   profileData: '',
   updatedProfileData: '',
   isSubmittingJob: false,
+  isSavingProfile: false,
   isArchivingPost: false,
   internships: [],
+  appliedInternships: [],
   internshipPageInfo: [],
 })
 
@@ -37,6 +39,9 @@ export const mutations = {
   },
   SET_INTERNSHIPS(state, internships) {
     state.internships = internships
+  },
+  SET_APPLIED_INTERNSHIPS(state, appliedInternships) {
+    state.appliedInternships = appliedInternships
   },
   TOGGLE_SUBMITTING_JOB(state, flag) {
     state.isSubmittingJob = flag
@@ -70,6 +75,25 @@ export const actions = {
   },
   async saveProfile({ commit, dispatch }, profile) {
     const self = this
+    if (this.$auth.user.role === 'company') {
+      await this.$axios
+        .$post(`/api/users/company/${this.$auth.user.id}`, profile)
+        .then(async function (response) {
+          const updatedUser = await self.$axios.$get('/api/auth/user')
+          await self.$auth.setUser(updatedUser.user)
+          self.$router.push(`/users/company/${self.$auth.user.name}`)
+          dispatch('getProfile', updatedUser.user.name)
+        })
+    } else if (this.$auth.user.role === 'student') {
+      await this.$axios
+        .$post(`/api/users/student/${this.$auth.user.id}`, profile)
+        .then(async function (response) {
+          const updateUser = await self.$axios.$get('/api/auth/user')
+          await self.$auth.setUser(updateUser.user)
+          self.$router.push(`/users/student/${self.$auth.user.username}`)
+          dispatch('getProfile', updateUser.user.name)
+        })
+    }
     await this.$axios
       .$post(`/api/users/company/${this.$auth.user.id}`, profile)
       .then(async function (response) {
@@ -80,7 +104,7 @@ export const actions = {
           dispatch('getProfile', updatedUser.user.name)
         } else {
           dispatch('generateProfileUrl')
-          self.$router.push(`/user/student/${self.$auth.user.username}`)
+          self.$router.push(`/users/student/${self.$auth.user.username}`)
           dispatch('getProfile', updatedUser.user.username)
         }
       })
@@ -101,15 +125,19 @@ export const actions = {
       })
     await dispatch('getInternships')
   },
-  async getInternships({ commit, state }) {
-    const response = await this.$axios.$get(
-      `/api/users/${state.auth.user.id}/internships`
-    )
+  async getInternships({ commit, state }, id) {
+    const response = await this.$axios.$get(`/api/users/${id}/internships`)
     response.forEach((element, index, response) => {
       response[index].shortDescription =
         element.description.replace(/\r?\n|\r/g, ' ').slice(0, 100) + '...'
     })
     commit('SET_INTERNSHIPS', response)
+  },
+  async getAppliedInternships({ commit, state }) {
+    const response = await this.$axios.$get(
+      `/api/users/${state.auth.user.id}/internships/applied`
+    )
+    commit('SET_APPLIED_INTERNSHIPS', response)
   },
   async updateInternship({ commit, dispatch }, internshipForm) {
     commit('TOGGLE_SUBMITTING_JOB', true)

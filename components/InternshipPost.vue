@@ -7,7 +7,7 @@
         type="is-primary is-light"
       >
         <i
-          v-if="hover"
+          v-if="hover && $auth.user.id === companyId"
           class="bx bx-edit is-size-4 is-clickable"
           @click="editPost = true"
         ></i>
@@ -68,6 +68,7 @@
       </nav>
       <div class="buttons is-centered">
         <b-button
+          v-if="$auth.user.id === companyId"
           outlined
           size="is-small"
           type="is-primary"
@@ -76,6 +77,7 @@
           >View More</b-button
         >
         <b-button
+          v-if="$auth.user.id === companyId"
           outlined
           inverted
           size="is-small"
@@ -84,6 +86,14 @@
           @click="archivePost"
         >
           {{ active }}
+        </b-button>
+        <b-button
+          v-if="$auth.user.id === companyId"
+          outlined
+          size="is-small"
+          type="is-danger"
+        >
+          Delete
         </b-button>
       </div>
     </div>
@@ -347,6 +357,10 @@ export default {
     isActive: {
       type: Boolean,
       defualt: true,
+    },
+    companyId: {
+      type: Number,
+      default: 0,
     },
   },
   data() {

@@ -60,6 +60,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
+    baseURL: process.env.API_URL,
     credentials: true,
     common: {
       Accept: 'application/json, text/plain, */*',
@@ -67,7 +68,15 @@ export default {
   },
 
   publicRuntimeConfig: {
-    API_URL: process.env.API_URL,
+    axios: {
+      browserBaseURL: process.env.API_URL,
+    },
+  },
+
+  privateRuntimeConfig: {
+    axios: {
+      baseURL: process.env.API_URL,
+    },
   },
 
   auth: {

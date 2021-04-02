@@ -65,7 +65,10 @@
         </div>
       </div>
       <div class="column is-9">
-        <b-button type="is-pink" @click="nojobs = true"
+        <b-button
+          v-if="$auth.user.id === profileData.id"
+          type="is-pink"
+          @click="nojobs = true"
           >Add Internship</b-button
         >
         <h1 class="title has-text-centered">Internships</h1>
@@ -86,10 +89,15 @@
                 :profile-picture="internship.profile_picture"
                 :qualifications="internship.qualifications"
                 :is-active="internship.is_active"
+                :company-id="internship.company_id"
               />
             </div>
           </b-tab-item>
-          <b-tab-item label="Archived" icon="package-down">
+          <b-tab-item
+            v-if="$auth.user.id === profileData.id"
+            label="Archived"
+            icon="package-down"
+          >
             <div v-if="archivedJobs.length != 0" class="columns is-multiline">
               <InternshipPost
                 v-for="internship in archivedJobs"
@@ -105,6 +113,7 @@
                 :profile-picture="internship.profile_picture"
                 :qualifications="internship.qualifications"
                 :is-active="internship.is_active"
+                :company-id="internship.company_id"
               />
             </div>
             <section v-else class="hero is-primary">
@@ -417,13 +426,12 @@ export default {
     ...mapState(['internships', 'isSubmittingJob']),
     ...mapGetters(['unarchivedJobs', 'archivedJobs']),
   },
-  created() {
-    this.$store.dispatch('getInternships')
-  },
+  created() {},
 
   async mounted() {
     await this.$store.dispatch('getProfile', this.$route.params.slug)
     this.loadingProfileCard = false
+    await this.$store.dispatch('getInternships', this.profileData.id)
   },
   methods: {
     async messageUser() {

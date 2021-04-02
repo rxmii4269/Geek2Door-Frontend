@@ -22,23 +22,35 @@
           </b-field>
         </div>
         <div class="columns">
-          <!-- <InternshipPost /> -->
+          <InternshipPost
+            v-for="internship in allInternships"
+            :id="internship.id"
+            :key="internship.id"
+            :gpa="internship.gpa"
+            :skills="internship.skills"
+            :position="internship.position"
+            :start-time="internship.start_date"
+            :end-time="internship.end_date"
+            :short-description="internship.shortDescription"
+            :description="internship.description"
+            :profile-picture="internship.profile_picture"
+            :qualifications="internship.qualifications"
+            :is-active="internship.is_active"
+            :company-id="internship.company_id"
+          />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
-  // mounted() {
-  //   if (this.$store.state.auth.user) {
-  //     this.$buefy.snackbar.open({
-  //       duration: 8000,
-  //       message: `Logged in Successfully. Welcome, ${this.$store.state.auth.user.name}`,
-  //       type: 'is-success',
-  //       position: 'is-bottom',
-  //     })
-  //   }
-  // },
+  computed: {
+    ...mapState(['allInternships']),
+  },
+  async mounted() {
+    await this.$store.dispatch('getAllInternships')
+  },
 }
 </script>

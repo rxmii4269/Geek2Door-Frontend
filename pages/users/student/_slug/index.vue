@@ -33,7 +33,7 @@
                 <div class="media-left">
                   <figure v-if="profileData" class="image is-48x48">
                     <img
-                      :src="`/api/images/${profileData.profile_picture}`"
+                      :src="`${$config.axios.browserBaseURL}/api/images/${profileData.profile_picture}`"
                       alt="Profile Picture"
                     />
                   </figure>

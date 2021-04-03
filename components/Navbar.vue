@@ -48,7 +48,7 @@
                 <figure class="image is-32x32">
                   <img
                     class="is-rounded"
-                    :src="`/api/images/${$auth.user.profile_picture}`"
+                    :src="`${$config.axios.browserBaseURL}/api/images/${$auth.user.profile_picture}`"
                     alt=""
                   />
                 </figure>

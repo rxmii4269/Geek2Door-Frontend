@@ -77,6 +77,7 @@ export default {
   privateRuntimeConfig: {
     axios: {
       baseURL: process.env.API_URL,
+      credentials: true,
     },
   },
 

@@ -376,7 +376,7 @@ export default {
   data() {
     return {
       hover: false,
-      img_url: `/api/images/${this.$auth.user.profile_picture}`,
+      img_url: `${this.$config.axios.browserBaseURL}/api/images/${this.$auth.user.profile_picture}`,
       internshipUrl: `/jobs/${this.id}`,
       editPost: false,
       jobForm: {

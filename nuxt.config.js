@@ -64,12 +64,12 @@ export default {
     common: {
       Accept: 'application/json, text/plain, */*',
     },
+    credentials: true,
   },
 
   publicRuntimeConfig: {
     axios: {
       browserBaseURL: process.env.API_URL,
-      credentials: true,
     },
   },
 

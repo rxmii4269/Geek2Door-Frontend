@@ -58,12 +58,12 @@
         </div>
         <div class="is-justify-content-end"></div>
       </div>
-      <nav class="level">
+      <nav v-if="$auth.user.role === 'company'" class="level">
         <div class="level-left">
-          <p class="is-size-7 has-text-grey-light">Views:{{ views }}</p>
+          <p class="is-size-7 has-text-grey-light">Views: {{ views }}</p>
         </div>
         <div class="level-right">
-          <p class="is-size-7 has-text-grey-light">Applied:{{ applied }}</p>
+          <p class="is-size-7 has-text-grey-light">Applied: {{ applied }}</p>
         </div>
       </nav>
       <div class="buttons is-centered">
@@ -78,7 +78,6 @@
           Apply
         </b-button>
         <b-button
-          v-if="$auth.user.id === companyId"
           outlined
           size="is-small"
           type="is-primary"

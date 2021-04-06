@@ -21,7 +21,7 @@
             ></b-input>
           </b-field>
         </div>
-        <div class="columns">
+        <div v-if="$auth.user.role === 'student'" class="columns">
           <InternshipPost
             v-for="internship in allInternships"
             :id="internship.id"
@@ -37,6 +37,7 @@
             :qualifications="internship.qualifications"
             :is-active="internship.is_active"
             :company-id="internship.company_id"
+            :home-page="true"
           />
         </div>
       </div>

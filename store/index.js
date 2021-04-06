@@ -150,6 +150,10 @@ export const actions = {
     const response = await this.$axios.$get(
       `/api/users/${state.auth.user.id}/internships/apply`
     )
+    response.forEach((element, index, response) => {
+      response[index].shortDescription =
+        element.description.replace(/\r?\n|\r/g, ' ').slice(0, 100) + '...'
+    })
     commit('SET_APPLIED_INTERNSHIPS', response)
   },
   async updateInternship({ commit, dispatch, state }, internshipForm) {
@@ -160,7 +164,7 @@ export const actions = {
         commit('TOGGLE_SUBMITTING_JOB', false)
         Notification.open({
           duration: 3000,
-          message: 'Job Post Created Successfully',
+          message: 'Job Post Updated Successfully',
           position: 'is-top-right',
           type: 'is-success is-light',
           hasIcon: true,

@@ -8,7 +8,7 @@ export default function (context) {
         email: context.$auth.user.email,
         role: context.$auth.user.role,
         photoUrl:
-          context.$axios.defaults.baseURL +
+          context.$config.axios.browserBaseURL +
           '/images/' +
           context.$auth.user.profile_picture,
       })

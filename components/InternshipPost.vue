@@ -73,9 +73,10 @@
           type="is-primary"
           size="is-small"
           :loading="isApplyingForInternship"
+          :disabled="hasApplied"
           @click="applyForInternship"
         >
-          Apply
+          {{ isApplied }}
         </b-button>
         <b-button
           outlined
@@ -371,6 +372,10 @@ export default {
       type: Number,
       default: 0,
     },
+    hasApplied: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -396,7 +401,7 @@ export default {
         'BSc. Information Systems',
       ],
       active: this.isActive ? 'Archive' : 'Unarchive',
-      isApplied: '',
+      isApplied: this.hasApplied ? 'Applied' : 'Apply',
     }
   },
   computed: {

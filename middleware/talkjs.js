@@ -1,6 +1,6 @@
 import Talk from 'talkjs'
 export default function (context) {
-  if (context.$auth.loggedIn) {
+  if (context.$auth.loggedIn && process.browser) {
     Talk.ready.then(() => {
       const me = new Talk.User({
         id: context.$auth.user.id,
@@ -9,7 +9,7 @@ export default function (context) {
         role: context.$auth.user.role,
         photoUrl:
           context.$config.axios.browserBaseURL +
-          '/images/' +
+          '/api/images/' +
           context.$auth.user.profile_picture,
       })
 

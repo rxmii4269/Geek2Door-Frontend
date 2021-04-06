@@ -20,7 +20,7 @@ export default {
         id: self.currentUser.id,
         name: self.currentUser.name,
         email: self.currentUser.email,
-        role: 'buyer',
+        role: self.currentUser.role,
       })
       window.talkSession = new Talk.Session({
         appId: 'tR1gNHsD',

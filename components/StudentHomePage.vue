@@ -38,7 +38,7 @@
           :qualifications="internship.qualifications"
           :is-active="internship.is_active"
           :company-id="internship.company_id"
-          :home-page="true"
+          :has-applied="internship.has_applied"
         />
       </div>
     </div>

@@ -172,7 +172,7 @@ export const actions = {
       })
     await dispatch('getInternships', state.auth.user.id)
   },
-  async archivePost({ commit, dispatch }, info) {
+  async archivePost({ commit, dispatch, state }, info) {
     const response = await this.$axios.$post(
       `/api/internships/${info.id}/archive`,
       info
@@ -186,7 +186,7 @@ export const actions = {
       hasIcon: true,
     })
     await commit('TOGGLE_ARCHIVING_POST', false)
-    await dispatch('getInternships')
+    await dispatch('getInternships', state.auth.user.id)
   },
   async getInternshipPage({ commit }, id) {
     const response = await this.$axios.$get(`/api/internships/${id}`)
@@ -194,6 +194,10 @@ export const actions = {
   },
   async getAllInternships({ commit }) {
     const response = await this.$axios.$get(`/api/internships`)
+    response.forEach((element, index, response) => {
+      response[index].shortDescription =
+        element.description.replace(/\r?\n|\r/g, ' ').slice(0, 100) + '...'
+    })
     commit('SET_ALL_INTERNSHIPS', response)
   },
   async applyForInternship({ commit, state, dispatch }, data) {

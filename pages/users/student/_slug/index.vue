@@ -45,7 +45,7 @@
               </div>
               <div class="content">
                 <p class="subtitle is-7">{{ profileData.email }}</p>
-                <b-taglist attached>
+                <b-taglist v-if="profileData.parish" attached>
                   <b-tag type="is-dark"
                     ><b-icon pack="bx" icon="bx-map"></b-icon
                   ></b-tag>
@@ -120,6 +120,7 @@
             :qualifications="internship.qualifications"
             :is-active="internship.is_active"
             :company-id="internship.company_id"
+            :has-applied="internship.has_applied"
           />
         </div>
         <!-- <b-button type="is-primary">Create Blog </b-button> -->
@@ -369,9 +370,10 @@ export default {
         })
         const other = new Talk.User({
           id: this.profileData.id,
-          name: this.profileData.fullname,
+          name: this.profileData.name,
           email: this.profileData.email,
           role: this.profileData.role,
+          photoUrl: `${this.$config.axios.browserBaseURL}/api/images/${this.profileData.profile_picture}`,
         })
 
         if (!window.talkSession) {

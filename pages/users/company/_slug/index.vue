@@ -90,6 +90,7 @@
                 :qualifications="internship.qualifications"
                 :is-active="internship.is_active"
                 :company-id="internship.company_id"
+                :has-applied="internship.has_applied"
               />
             </div>
           </b-tab-item>
@@ -446,7 +447,8 @@ export default {
           id: this.profileData.id,
           name: this.profileData.company_name,
           email: this.profileData.email,
-          role: 'company',
+          role: this.profileData.role,
+          photoUrl: `${this.$config.axios.browserBaseURL}/api/images/${this.profileData.profile_picture}`,
         })
 
         if (!window.talkSession) {

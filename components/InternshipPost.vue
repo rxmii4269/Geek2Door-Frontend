@@ -396,6 +396,7 @@ export default {
         'BSc. Information Systems',
       ],
       active: this.isActive ? 'Archive' : 'Unarchive',
+      isApplied: '',
     }
   },
   computed: {

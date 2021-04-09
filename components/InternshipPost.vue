@@ -26,9 +26,12 @@
 
       <hr />
       <b-taglist>
-        <b-tag v-for="skill in skills" :key="skill.index" type="is-primary">{{
-          skill
-        }}</b-tag>
+        <b-tag
+          v-for="(weight, skill) in skills"
+          :key="skill.index"
+          type="is-primary"
+          >{{ skill }}</b-tag
+        >
       </b-taglist>
       <b-field group-multiline grouped>
         <div class="control">
@@ -102,6 +105,7 @@
           outlined
           size="is-small"
           type="is-danger"
+          @click="confirmDeletePost"
         >
           Delete
         </b-button>
@@ -457,6 +461,19 @@ export default {
       this.$store.dispatch('archivePost', {
         id: this.id,
         isActive: !this.isActive,
+      })
+    },
+    confirmDeletePost() {
+      this.$buefy.dialog.confirm({
+        title: 'Deleting Post',
+        message:
+          'Are you sure you want to <b>delete</b> this post? This action cannot be undone.',
+        confirmText: 'Delete Post',
+        type: 'is-danger',
+        hasIcon: true,
+        onConfirm: () => {
+          this.$store.dispatch('deleteInternship', this.id)
+        },
       })
     },
   },

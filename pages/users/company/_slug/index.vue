@@ -204,7 +204,7 @@
     >
       <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">Create a Job</p>
+          <p class="modal-card-title">Create an Internship</p>
           <button type="button" class="delete" @click="closeJobModal" />
         </header>
         <section class="modal-card-body">
@@ -313,8 +313,14 @@
               <b-field
                 label="Skills"
                 :type="{ 'is-danger': errors[0], 'is-success': valid }"
-                :message="errors"
               >
+                <template #message>
+                  <span
+                    >Enter each skill in the format <b>Skill name</b> -
+                    <b>weight</b> separating each skill weight pair with a
+                    comma. e.g. PHP-5, Javascript-2.</span
+                  >
+                </template>
                 <b-input
                   v-model.trim="jobForm.skills"
                   type="textarea"

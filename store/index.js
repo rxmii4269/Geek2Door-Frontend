@@ -214,4 +214,7 @@ export const actions = {
     })
     console.log(response)
   },
+  async deleteInternship({ commit, state, dispatch }, id) {
+    await this.$axios.$delete(`/api/internships/${id}`)
+  },
 }

@@ -115,8 +115,7 @@ export default {
 
   googleFonts: {
     families: {
-      Poppins: [100, 200, 300, 400, 500, 700, 800, 900],
-      Lato: [100, 300, 400],
+      Poppins: [100, 200, 300, 400, 500],
     },
     display: 'auto',
     prefetch: true,

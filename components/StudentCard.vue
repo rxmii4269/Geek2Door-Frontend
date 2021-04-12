@@ -18,7 +18,7 @@
           <p>@{{ username }}</p>
           <p>{{ email }}</p>
           <b-taglist>
-            <b-tag v-for="skill in skills" :key="skill.index"g type="is-primary">
+            <b-tag v-for="skill in skills" :key="skill.index" type="is-primary">
               {{ skill }}
             </b-tag>
           </b-taglist>

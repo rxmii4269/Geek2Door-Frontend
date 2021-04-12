@@ -13,6 +13,7 @@ export const state = () => ({
   appliedInternships: [],
   internshipPageInfo: [],
   allInternships: [],
+  allStudents: [],
 })
 
 export const getters = {
@@ -44,6 +45,9 @@ export const mutations = {
   },
   SET_ALL_INTERNSHIPS(state, internships) {
     state.allInternships = internships
+  },
+  SET_ALL_STUDENTS(state, students) {
+    state.allStudents = students
   },
   SET_APPLIED_INTERNSHIPS(state, appliedInternships) {
     state.appliedInternships = appliedInternships
@@ -202,7 +206,7 @@ export const actions = {
   },
   async applyForInternship({ commit, state, dispatch }, data) {
     commit('TOGGLE_APPLYING_FOR_INTERNSHIP', true)
-    const response = await this.$axios.$post(`/api/internships/apply`, data)
+    await this.$axios.$post(`/api/internships/apply`, data)
     commit('TOGGLE_APPLYING_FOR_INTERNSHIP', false)
     await dispatch('getAppliedInternships')
     Notification.open({
@@ -212,9 +216,12 @@ export const actions = {
       type: 'is-success is-light',
       hasIcon: true,
     })
-    console.log(response)
   },
   async deleteInternship({ commit, state, dispatch }, id) {
     await this.$axios.$delete(`/api/internships/${id}`)
+  },
+  async getAllStudents({ commit, dispatch }) {
+    const response = await this.$axios.$get('/api/users/students')
+    commit('SET_ALL_STUDENTS', response)
   },
 }

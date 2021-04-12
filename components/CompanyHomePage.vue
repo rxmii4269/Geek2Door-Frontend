@@ -22,6 +22,19 @@
           ></b-input>
         </b-field>
       </div>
+      <div class="columns is-multiline">
+        <StudentCard
+          v-for="student in allStudents"
+          :key="student.id"
+          :first-name="student.firstname"
+          :last-name="student.lastname"
+          :profile-picture="student.profile_picture"
+          :role="student.role"
+          :email="student.email"
+          :skills="student.skills"
+          :username="student.username"
+        />
+      </div>
     </div>
   </div>
 </template>

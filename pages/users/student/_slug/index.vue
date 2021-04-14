@@ -179,11 +179,11 @@
             <ValidationProvider
               v-slot="{ errors, valid }"
               rules="required"
-              name="Name"
+              name="Full Name"
               slim
             >
               <b-field
-                label="Name"
+                label="Full Name"
                 :type="{ 'is-danger': errors[0], 'is-success': valid }"
                 :message="errors"
               >
@@ -238,6 +238,45 @@
                   icon="label"
                 ></b-taginput>
               </b-field>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required"
+              name="school"
+              slim
+            >
+             <b-field
+                label="School Attanding"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input v-model="updatedProfileData.school"></b-input>
+            </ValidationProvider>
+           <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required"
+              name="major"
+              slim
+            >
+             <b-field
+                label="Major"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input v-model="updatedProfileData.major"></b-input>
+            </ValidationProvider>
+           <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required"
+              name="minnor"
+              slim
+            >
+             <b-field
+                label="Minnor"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input v-model="updatedProfileData.minnor"></b-input>
             </ValidationProvider>
             <b-field grouped group-multiline expanded>
               <ValidationProvider

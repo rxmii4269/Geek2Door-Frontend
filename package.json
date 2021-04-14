@@ -17,11 +17,10 @@
     "@nuxtjs/pwa": "^3.3.5",
     "boxicons": "^2.0.7",
     "buefy": "^0.9.4",
-    "core-js": "^3.8.3",
-    "nuxt": "^2.15.1",
+    "core-js": "^3.6.5",
+    "nuxt": "^2.14.6",
     "nuxt-buefy": "^0.4.4",
-    "vee-validate": "^3.4.5",
-    "yarn": "^1.22.10"
+    "vee-validate": "^3.4.5"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^5.0.0",
@@ -33,6 +32,7 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.5.0",
+    "lodash": "^4.17.21",
     "prettier": "^2.2.1",
     "talkjs": "^0.14.3"
   }

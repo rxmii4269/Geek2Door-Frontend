@@ -1,11 +1,5 @@
 <template>
-  <b-navbar
-    wrapper-class="container"
-    close-on-click
-    type="is-dark"
-    shadow
-    class="has-text-white"
-  >
+  <b-navbar wrapper-class="container" shadow close-on-click>
     <template #brand>
       <b-navbar-item tag="router-link" class="" :to="route">
         <img
@@ -16,7 +10,6 @@
         Geek<span class="large2 pink">2</span>Door
       </b-navbar-item>
     </template>
-
     <template #end>
       <b-navbar-item
         v-if="$auth.loggedIn"
@@ -30,7 +23,7 @@
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
-            style="fill: rgba(255, 255, 255, 1); transform: ; -ms-filter: "
+            style="transform: ; -ms-filter: "
           >
             <path
               d="M20,2H4C2.897,2,2,2.894,2,3.992v12.017C2,17.106,2.897,18,4,18h3v4l6.351-4H20c1.103,0,2-0.894,2-1.992 V3.992C22,2.894,21.103,2,20,2z M11,10c0,1.104-0.896,2-2,2s-2-0.896-2-2s0.896-2,2-2c0.086,0,0.167,0.015,0.25,0.025 C9.332,8.011,9.414,8,9.5,8C10.328,8,11,8.671,11,9.5c0,0.086-0.012,0.168-0.025,0.25C10.985,9.833,11,9.915,11,10z M15,12 c-1.104,0-2-0.896-2-2c0-0.086,0.015-0.167,0.025-0.25C13.012,9.668,13,9.585,13,9.5C13,8.671,13.672,8,14.5,8 c0.086,0,0.168,0.011,0.25,0.025C14.833,8.015,14.914,8,15,8c1.104,0,2,0.896,2,2S16.104,12,15,12z"
@@ -55,7 +48,7 @@
                 <figure class="image is-32x32">
                   <img
                     class="is-rounded"
-                    :src="`${$axios.defaults.baseURL}/images/${$auth.user.profile_picture}`"
+                    :src="`${$config.axios.browserBaseURL}/api/images/${$auth.user.profile_picture}`"
                     alt=""
                   />
                 </figure>
@@ -78,28 +71,20 @@
           </b-dropdown-item>
         </b-dropdown>
       </b-navbar-item>
-      <b-navbar-item tag="div">
-        <div class="buttons">
-          <b-button
-            v-if="!$auth.loggedIn"
-            type="is-white"
-            size="is-small"
-            tag="router-link"
-            to="/accounts/signup"
-          >
-            Get Started</b-button
-          >
-
-          <b-button
-            v-if="!$auth.loggedIn"
-            tag="router-link"
-            to="/accounts/login"
-            type="is-white"
-            size="is-small"
-            >Log in</b-button
-          >
-        </div>
-      </b-navbar-item>
+      <b-navbar-item
+        v-if="!$auth.loggedIn"
+        class="is-tab"
+        tag="nuxt-link"
+        to="/accounts/signup"
+        >Get Started</b-navbar-item
+      >
+      <b-navbar-item
+        v-if="!$auth.loggedIn"
+        class="is-tab"
+        tag="nuxt-link"
+        to="/accounts/login"
+        >Log In</b-navbar-item
+      >
     </template>
   </b-navbar>
 </template>
@@ -171,12 +156,12 @@ a.navbar-item:hover {
 
 @media screen and (min-width: 1024px) {
   #message--svg {
-    fill: #ffffff !important;
+    fill: #7957d5 !important;
   }
 }
 
 #message--svg {
-  fill: #000000;
+  fill: #7957d5;
 }
 
 .h-24 {

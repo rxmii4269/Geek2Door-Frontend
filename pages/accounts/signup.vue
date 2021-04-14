@@ -1,8 +1,12 @@
 <template>
   <div class="center">
     <div class="box">
-      <h1 class="is-size-4 has-text-centered is-capitalized">Who are you?</h1>
-      <b-field>
+      <h1
+        class="is-size-3 has-text-centered has-text-weight-medium is-capitalized"
+      >
+        Who are you?
+      </h1>
+      <b-field expanded>
         <b-radio-button
           v-model="userType"
           type="is-pink"

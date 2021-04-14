@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div v-if="!userData.message" class="columns is-8">
+    <div v-if="!profileData.message" class="columns is-8">
       <div class="column is-3">
-        <div class="card">
+        <div class="card is-unclipped">
           <div class="card-image">
             <figure class="image is-4by3">
               <img
@@ -12,42 +12,120 @@
             </figure>
           </div>
           <div class="card-content">
-            <div class="media">
-              <div class="media-left">
-                <figure v-if="userData" class="image is-48x48">
-                  <img
-                    :src="`${$axios.defaults.baseURL}/images/${userData.profile_picture}`"
-                    alt="Profile Picture"
-                  />
-                </figure>
-              </div>
-              <div class="media-content">
-                <p class="title is-4">{{ userData.name }}</p>
-                <p class="subtitle is-6">@{{ userData.username }}</p>
-              </div>
-            </div>
-
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-              nec iaculis mauris. <a>@bulmaio</a>. <a href="#">#css</a>
-              <a href="#">#responsive</a>
-              <br />
-              <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-              <b-button
-                v-if="userData.username != $auth.user.username"
-                expanded
-                type="is-pink"
-                @click="messageUser()"
-                >Message</b-button
+            <template v-if="!loadingProfileCard">
+              <div
+                v-if="$auth.user.username === profileData.username"
+                class="is-clearfix"
               >
+                <b-tooltip
+                  label="Edit Profile"
+                  size="is-small"
+                  type="is-primary is-light"
+                  class="is-pulled-right"
+                >
+                  <i
+                    class="bx bx-edit is-clickable is-size-5"
+                    @click="editProfile"
+                  ></i>
+                </b-tooltip>
+              </div>
+              <div class="media">
+                <div class="media-left">
+                  <figure v-if="profileData" class="image is-48x48">
+                    <img
+                      :src="`${$config.axios.browserBaseURL}/api/images/${profileData.profile_picture}`"
+                      alt="Profile Picture"
+                    />
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <p class="title is-4">{{ profileData.name }}</p>
+                  <p class="subtitle is-6">@{{ profileData.username }}</p>
+                </div>
+              </div>
+              <div class="content">
+                <p class="subtitle is-7">{{ profileData.email }}</p>
+                <b-taglist v-if="profileData.parish" attached>
+                  <b-tag type="is-dark"
+                    ><b-icon pack="bx" icon="bx-map"></b-icon
+                  ></b-tag>
+                  <b-tag type="is-primary">{{ profileData.parish }}</b-tag>
+                </b-taglist>
+              </div>
+              <div class="content">
+                <b-taglist>
+                  <b-tag
+                    v-for="skill in profileData.skills"
+                    :key="skill.index"
+                    type="is-primary"
+                    >{{ skill }}</b-tag
+                  >
+                </b-taglist>
+                <b-button
+                  v-if="profileData.username != $auth.user.username"
+                  expanded
+                  type="is-pink"
+                  @click="messageUser()"
+                  >Message</b-button
+                >
+              </div>
+            </template>
+            <div v-if="loadingProfileCard" class="media">
+              <figure class="media-left">
+                <p class="image is-64x64">
+                  <b-skeleton
+                    :active="loadingProfileCard"
+                    circle
+                    width="64px"
+                    height="64px"
+                  ></b-skeleton>
+                </p>
+              </figure>
+              <div class="media-content">
+                <b-skeleton
+                  size="is-large"
+                  :active="loadingProfileCard"
+                  :count="count"
+                ></b-skeleton>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div class="column is-9">
-        <div class="box"></div>
-        <b-button type="is-primary mt-6">Create Blog </b-button>
-        <div class="card column is-4 mt-4">
+        <h1 class="title has-text-centered">Latest Internships Applied For</h1>
+        <section v-if="appliedInternships.length === 0" class="hero is-primary">
+          <div class="hero-body has-text-centered">
+            <h1 class="title">You haven't applied to any Internships.</h1>
+            <h2 class="subtitle has-text-centered mt-2">
+              <b-button tag="nuxt-link" to="/home" type="is-dark" inverted
+                >Apply now</b-button
+              >
+            </h2>
+          </div>
+        </section>
+        <div class="columns is-multiline">
+          <InternshipPost
+            v-for="internship in appliedInternships"
+            :id="internship.id"
+            :key="internship.id"
+            :gpa="internship.gpa"
+            :skills="internship.skills"
+            :position="internship.position"
+            :start-time="internship.start_date"
+            :end-time="internship.end_date"
+            :short-description="internship.shortDescription"
+            :description="internship.description"
+            :profile-picture="internship.profile_picture"
+            :qualifications="internship.qualifications"
+            :is-active="internship.is_active"
+            :company-id="internship.company_id"
+            :has-applied="internship.has_applied"
+          />
+        </div>
+        <!-- <b-button type="is-primary">Create Blog </b-button> -->
+
+        <!-- <div class="card column is-4">
           <div class="card-image">
             <figure class="image is-4by3">
               <img
@@ -60,7 +138,7 @@
             <div class="media">
               <div class="media-content">
                 <p class="title is-4">Some Blog Title</p>
-                <p class="subtitle is-6">by: {{ userData.username }}</p>
+                <p class="subtitle is-6">by: {{ profileData.username }}</p>
               </div>
             </div>
             <div class="content">
@@ -81,30 +159,206 @@
               <time datetime="2016-1-1">11:09 PM - 1 Jan 2021</time>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
-    <div v-if="userData.message" class="hero is-warning is-medium">
+    <div v-if="profileData.message" class="hero is-warning is-medium">
       <div class="hero-body">
-        <p class="title">{{ userData.message }}</p>
+        <p class="title">{{ profileData.message }}</p>
       </div>
     </div>
     <Chat v-if="$auth.loggedIn" ref="Chat" />
+    <b-modal :active="edit" has-modal-card>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <h1 class="modal-card-title">Edit Profile</h1>
+          <button type="button" class="delete" @click="closeJobModal" />
+        </header>
+        <div class="modal-card-body">
+          <ValidationObserver ref="editProfileObserver">
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required"
+              name="Name"
+              slim
+            >
+              <b-field
+                label="Name"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input v-model="updatedProfileData.name"></b-input>
+              </b-field>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required"
+              name="Username"
+              slim
+            >
+              <b-field
+                label="Username"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input v-model="updatedProfileData.username"></b-input>
+              </b-field>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required|email"
+              name="Email"
+              slim
+            >
+              <b-field
+                label="Email"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input
+                  v-model="updatedProfileData.email"
+                  type="email"
+                ></b-input>
+              </b-field>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required"
+              name="Skills"
+              slim
+            >
+              <b-field
+                label="Skills"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-taginput
+                  v-model="updatedProfileData.skills"
+                  ellipsis
+                  icon="label"
+                ></b-taginput>
+              </b-field>
+            </ValidationProvider>
+            <b-field grouped group-multiline expanded>
+              <ValidationProvider
+                v-slot="{ errors, valid }"
+                rules="required"
+                name="Parish"
+                slim
+              >
+                <b-field
+                  label="Parish"
+                  :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                  :message="errors"
+                  expanded
+                >
+                  <b-select
+                    v-model="updatedProfileData.parish"
+                    placeholder="Select your Parish"
+                    icon-pack="bx"
+                    icon="bx-globe"
+                  >
+                    <option
+                      v-for="parish in parishes"
+                      :key="parish.index"
+                      :value="parish"
+                    >
+                      {{ parish }}
+                    </option>
+                  </b-select>
+                </b-field>
+              </ValidationProvider>
+              <ValidationProvider
+                v-slot="{ errors, valid }"
+                :rules="{
+                  required: true,
+                  regex:
+                    '^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
+                }"
+                name="Phone Number"
+                slim
+              >
+                <b-field
+                  label="Phone Number"
+                  :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                  :message="errors"
+                  expanded
+                >
+                  <b-input v-model="updatedProfileData.number"></b-input>
+                </b-field>
+              </ValidationProvider>
+            </b-field>
+          </ValidationObserver>
+        </div>
+        <footer class="modal-card-foot">
+          <b-button
+            label="Cancel"
+            icon-pack="bx"
+            icon-left="bx-x"
+            outlined
+            type="is-danger"
+            @click="closeJobModal"
+          ></b-button>
+          <b-button
+            label="Save"
+            type="is-primary"
+            icon-pack="bx"
+            icon-left="bx-check"
+            :loading="isSavingProfile"
+            @click="saveProfile"
+          ></b-button>
+        </footer>
+      </div>
+    </b-modal>
   </div>
 </template>
 <script>
 import Talk from 'talkjs'
+import { mapState } from 'vuex'
+import clonedeep from 'lodash/cloneDeep'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
+
 export default {
+  components: {
+    ValidationObserver,
+    ValidationProvider,
+  },
   data() {
     return {
-      userData: '',
       chatWith: '',
+      count: 3,
+      loadingProfileCard: true,
+      edit: false,
+      updatedProfileData: '',
+      parishes: [
+        'St. Andrew',
+        'Kingston',
+        'St. Thomas',
+        'Portland',
+        'St. Catherine',
+        'Clarendon',
+        'Mandeville',
+        'St. Elizabeth',
+        'Hanover',
+        'Westmoreland',
+        'St. James',
+        'Trelawny',
+        'St. Ann',
+        'St. Mary',
+      ],
     }
   },
-  async mounted() {
-    const user = await this.$axios.$get(`/users/${this.$route.params.slug}`)
-    this.userData = user
+  computed: {
+    ...mapState(['appliedInternships', 'isSavingProfile', 'profileData']),
   },
+  created() {
+    this.$store.dispatch('getAppliedInternships')
+  },
+  async mounted() {
+    await this.$store.dispatch('getProfile', this.$route.params.slug)
+    this.loadingProfileCard = false
+  },
+
   methods: {
     async messageUser() {
       await Talk.ready.then(() => {
@@ -112,13 +366,14 @@ export default {
           id: this.$auth.user.id,
           name: this.$auth.user.name,
           email: this.$auth.user.email,
-          role: 'buyer',
+          role: this.$auth.user.role,
         })
         const other = new Talk.User({
-          id: this.userData.id,
-          name: this.userData.fullname,
-          email: this.userData.email,
-          role: 'seller',
+          id: this.profileData.id,
+          name: this.profileData.name,
+          email: this.profileData.email,
+          role: this.profileData.role,
+          photoUrl: `${this.$config.axios.browserBaseURL}/api/images/${this.profileData.profile_picture}`,
         })
 
         if (!window.talkSession) {
@@ -140,6 +395,27 @@ export default {
         popup.show()
       })
     },
+    editProfile() {
+      this.parishes = this.parishes.sort()
+      this.updatedProfileData = clonedeep(this.profileData)
+      this.edit = !this.edit
+    },
+    async saveProfile() {
+      const isValid = await this.$refs.editProfileObserver.validate()
+      if (isValid) {
+        await this.$store.dispatch('saveProfile', this.updatedProfileData)
+        this.edit = !this.edit
+      }
+    },
+    closeJobModal() {
+      this.edit = !this.edit
+      this.$refs.editProfileObserver.reset()
+    },
   },
 }
 </script>
+<style scoped>
+.is-unclipped {
+  overflow: visible;
+}
+</style>

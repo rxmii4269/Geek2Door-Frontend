@@ -12,19 +12,19 @@
             >
               <b-radio-button
                 v-model="form.userType"
-                native-value="student"
-                type="is-pink"
-                expanded
-              >
-                <span>Student</span>
-              </b-radio-button>
-              <b-radio-button
-                v-model="form.userType"
                 native-value="company"
                 type="is-pink"
                 expanded
               >
                 <span>Company</span>
+              </b-radio-button>
+              <b-radio-button
+                v-model="form.userType"
+                native-value="student"
+                type="is-pink"
+                expanded
+              >
+                <span>Student</span>
               </b-radio-button>
             </b-field>
           </ValidationProvider>
@@ -91,7 +91,7 @@ export default {
       form: {
         email: '',
         password: '',
-        userType: 'student',
+        userType: 'company',
       },
     }
   },

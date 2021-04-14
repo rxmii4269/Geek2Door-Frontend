@@ -60,10 +60,21 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    prefix: process.env.API_URL,
-    credentials: true,
+    baseURL: process.env.API_URL,
     common: {
       Accept: 'application/json, text/plain, */*',
+    },
+  },
+
+  publicRuntimeConfig: {
+    axios: {
+      browserBaseURL: process.env.API_URL,
+    },
+  },
+
+  privateRuntimeConfig: {
+    axios: {
+      baseURL: process.env.API_URL,
     },
   },
 
@@ -83,7 +94,6 @@ export default {
         scheme: 'refresh',
         token: {
           property: 'access_token',
-          maxAge: 1800,
         },
         refreshToken: {
           property: 'refresh_token',
@@ -94,10 +104,10 @@ export default {
           property: 'user',
         },
         endpoints: {
-          login: { url: '/auth/login', method: 'post' },
-          refresh: { url: '/auth/refresh', method: 'post' },
-          logout: { url: '/auth/logout', method: 'delete' },
-          user: { url: '/auth/user', method: 'get' },
+          login: { url: '/api/auth/login', method: 'post' },
+          refresh: { url: '/api/auth/refresh', method: 'post' },
+          logout: { url: '/api/auth/logout', method: 'delete' },
+          user: { url: '/api/auth/user', method: 'get' },
         },
       },
     },
@@ -105,11 +115,9 @@ export default {
 
   googleFonts: {
     families: {
-      Poppins: [300, 400, 500, 700],
-      Lato: [100, 300, 400],
+      Poppins: [100, 200, 300, 400, 500],
     },
-    display: 'swap',
-    text: 'Geek2Door',
+    display: 'auto',
     prefetch: true,
     preload: true,
   },
@@ -123,6 +131,10 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: ['vee-validate/dist/rules'],
+    transpile: [
+      'vee-validate/dist/rules',
+      'lodash.debounce',
+      'lodash.cloneDeep',
+    ],
   },
 }

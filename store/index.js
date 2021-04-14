@@ -129,7 +129,9 @@ export const actions = {
   async submitInternship({ commit, dispatch, state }, internshipForm) {
     commit('TOGGLE_SUBMITTING_JOB', true)
     await this.$axios
-      .$post('/api/internships', internshipForm)
+      .$post('/api/internships', internshipForm, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
       .then((response) => {
         commit('TOGGLE_SUBMITTING_JOB', false)
         Notification.open({

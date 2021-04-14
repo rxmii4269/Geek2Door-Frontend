@@ -312,12 +312,11 @@ export default {
       default: '',
     },
     skills: {
-      type: Array,
+      type: [Array, Object],
       default: () => {
         return []
       },
-      validator: (prop) => prop.every((e) => typeof e === 'string'),
-      required: true,
+      // validator: (prop) => prop.every((e) => typeof e === 'string'),
     },
     location: {
       type: String,

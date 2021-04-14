@@ -212,18 +212,57 @@
             <ValidationProvider
               v-slot="{ errors, valid }"
               rules="required"
-              name="Position"
+              name="Internship Title"
               slim
             >
               <b-field
-                label="Position"
+                label="Title"
                 :type="{ 'is-danger': errors[0], 'is-success': valid }"
                 :message="errors"
               >
                 <b-input v-model="jobForm.position"></b-input>
               </b-field>
             </ValidationProvider>
-            <b-field grouped group-multiline>
+            <ValidationProvider
+              v-slot="{ errors, validate, valid }"
+              rules="required"
+              slim
+            >
+              <b-field
+                class="file"
+                label=""
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-upload
+                  v-model="jobForm.file"
+                  drag-drop
+                  expanded
+                  accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  required
+                  @change="validate"
+                >
+                  <section class="section">
+                    <div class="content has-text-centered">
+                      <p>
+                        <b-icon icon="upload" size="is-large"></b-icon>
+                      </p>
+                      <p>Drop your internship file here or click to upload</p>
+                    </div>
+                  </section>
+                </b-upload>
+              </b-field>
+              <b-tag
+                v-if="jobForm.file"
+                type="is-primary"
+                closable
+                aria-close-label="Delete file upload"
+                @close="deleteDropFile"
+              >
+                {{ jobForm.file.name }}
+              </b-tag>
+            </ValidationProvider>
+            <!-- <b-field grouped group-multiline>
               <ValidationProvider
                 v-slot="{ errors, valid }"
                 rules="required"
@@ -344,7 +383,7 @@
                   maxlength="350"
                 ></b-input>
               </b-field>
-            </ValidationProvider>
+            </ValidationProvider> -->
           </ValidationObserver>
         </section>
         <footer class="modal-card-foot">
@@ -391,6 +430,7 @@ export default {
         location: '',
         description: '',
         duration: [],
+        file: null,
       },
       degrees: [
         'BSc. Computer Science',
@@ -543,9 +583,20 @@ export default {
       if (isValid) {
         this.jobForm.company_id = this.profileData.id
         this.jobForm.profile_picture = this.profileData.profile_picture
-        await this.$store.dispatch('submitInternship', this.jobForm)
+        const formData = new FormData()
+        const keys = Object.keys(this.jobForm)
+
+        keys.forEach((key, index) => {
+          formData.append(key, this.jobForm[key])
+        })
+
+        await this.$store.dispatch('submitInternship', formData)
         this.closeJobModal()
+        this.deleteDropFile()
       }
+    },
+    deleteDropFile() {
+      this.jobForm.file = null
     },
     closeJobModal() {
       Object.keys(this.jobForm).forEach((key, index) => {
@@ -558,6 +609,7 @@ export default {
         }
       })
       this.degreeName = ''
+      this.deleteDropFile()
       this.nojobs = !this.nojobs
       this.$refs.createJobObserver.reset()
     },

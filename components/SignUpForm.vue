@@ -6,9 +6,8 @@
       tag="form"
       method="post"
     >
-      <b-field grouped>
+      <b-field v-if="userType == 'student'" grouped group-multiline>
         <ValidationProvider
-          v-if="userType == 'student'"
           v-slot="{ errors, valid }"
           slim
           rules="required"
@@ -222,9 +221,7 @@
         >Continue</b-button
       >
     </ValidationObserver>
-    <div class="divider" style="font-family: Lato !important">
-      Already Joined Geek2Door?
-    </div>
+    <div class="divider">Already Joined Geek2Door?</div>
     <b-button tag="router-link" to="login" type="is-pink" expanded outlined
       >Log In</b-button
     >
@@ -283,6 +280,12 @@ export default {
             })
           })
           .catch((error) => {
+            this.$buefy.notification.open({
+              duration: 3000,
+              type: 'is-danger is-light',
+              message: error,
+              hasIcon: true,
+            })
             console.error(error)
           })
       }

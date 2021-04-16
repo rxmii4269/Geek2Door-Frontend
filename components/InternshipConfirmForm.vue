@@ -47,7 +47,7 @@
         <ValidationProvider
           v-slot="{ errors, valid }"
           class="is-clearfix"
-          rules="required|min_value:5"
+          rules="required|min_value:3"
           name="Total Weight"
         >
           <b-field
@@ -66,8 +66,8 @@
             </template>
             <b-numberinput
               v-model.number="totalWeight"
+              step="0.01"
               :controls="false"
-              @blur="calculateWeights($event)"
             ></b-numberinput>
           </b-field>
         </ValidationProvider>
@@ -100,7 +100,8 @@
             </b-field>
             <b-field label="Assign Weight" expanded>
               <b-numberinput
-                v-model="weights.qualificationWeight"
+                v-model="qualificationWeight"
+                step="0.01"
                 :controls="false"
               ></b-numberinput
             ></b-field>
@@ -119,7 +120,8 @@
           </b-field>
           <b-field label="Assign Weight" expanded>
             <b-numberinput
-              v-model="weights.gpaWeight"
+              v-model="gpaWeight"
+              step="0.01"
               :controls="false"
             ></b-numberinput>
           </b-field>
@@ -147,7 +149,8 @@
             </b-field>
             <b-field class="is-pulled-right" label="Overall Skills Weight">
               <b-numberinput
-                v-model="weights.skillsWeight"
+                v-model="skillsWeight"
+                step="0.01"
                 class="ml-2"
                 :controls="false"
                 expanded
@@ -170,6 +173,7 @@
             <b-field>
               <b-numberinput
                 v-if="`skill-${index}`"
+                v-model="skillsList[index]"
                 controls-alignment="right"
                 controls-position="compact"
                 expanded
@@ -177,7 +181,7 @@
             </b-field>
           </b-field>
         </b-field>
-        <ValidationProvider v-if="activeStep === 2">
+        <ValidationProvider v-if="activeStep === 1">
           <b-field label="Responsibilities">
             <b-input type="textarea"></b-input>
           </b-field>
@@ -197,7 +201,9 @@
         </div>
       </template>
     </b-steps>
-
+    <div v-if="activeStep === 1" class="buttons is-pulled-right">
+      <b-button type="is-success" @click="saveInternship">Submit</b-button>
+    </div>
     <!-- <b-field grouped group-multiline>
               <ValidationProvider
                 v-slot="{ errors, valid }"
@@ -324,7 +330,7 @@
 </template>
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   components: {
     ValidationObserver,
@@ -336,12 +342,6 @@ export default {
         company_id: this.$auth.user.id,
         profile_picture: this.$auth.user.profile_picture,
         file: null,
-      },
-      totalWeight: 100,
-      weights: {
-        qualificationWeight: 0,
-        gpaWeight: 0,
-        skillsWeight: 0,
       },
     }
   },
@@ -408,8 +408,64 @@ export default {
         this.$store.commit('DECREMENT_STEP')
       },
     },
-    ...mapState(['isSubmittingJob']),
-    ...mapGetters(['qualifications2']),
+    totalWeight: {
+      get() {
+        return this.$store.state.totalWeight
+      },
+      set(newValue) {
+        return this.$store.dispatch('recalculateTotalWeight', newValue)
+      },
+    },
+    weights: {
+      get() {
+        return this.$store.state.weights
+      },
+    },
+    qualificationWeight: {
+      get() {
+        if (this.$store.state.weights) {
+          return this.$store.state.weights.qualificationWeight
+        } else {
+          return 0
+        }
+      },
+      set(newValue) {
+        return this.$store.dispatch('calculateQualWeight', newValue)
+      },
+    },
+    gpaWeight: {
+      get() {
+        if (this.$store.state.weights) {
+          return this.$store.state.weights.gpaWeight
+        } else {
+          return 0
+        }
+      },
+      set(newValue) {
+        return this.$store.dispatch('calculateGPAWeight', newValue)
+      },
+    },
+    skillsWeight: {
+      get() {
+        if (this.$store.state.weights) {
+          return this.$store.state.weights.skillsWeight
+        } else {
+          return 0
+        }
+      },
+      set(newValue) {
+        return this.$store.dispatch('calculateSkillsWeight', newValue)
+      },
+    },
+    skillsList: {
+      get() {
+        return this.$store.state.skillsList
+      },
+      set(newValue) {
+        console.log(newValue)
+      },
+    },
+    ...mapState(['isSubmittingJob', 'activeStep']),
   },
   methods: {
     add(index) {
@@ -439,6 +495,9 @@ export default {
         // this.closeJobModal()
         // this.deleteDropFile()
       }
+    },
+    saveInternship() {
+      this.$store.dispatch('saveInternship')
     },
     deleteDropFile() {
       this.jobForm.file = null

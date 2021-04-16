@@ -57,7 +57,7 @@
             <img
               src="@/assets/img/lookup.svg"
               alt="picture_showing_lists"
-              class="fhomepic2 is-pulled-right"
+              class="fhomepic2"
             />
           </div>
         </div>
@@ -70,7 +70,7 @@
             <img
               src="@/assets/img/signup.svg"
               alt="picture_showing_lists"
-              class="fhomepic2"
+              class="fhomepic2 pullright"
             />
           </div>
           <div class="column mt-6">
@@ -113,5 +113,9 @@ export default {
 
 .moveright {
   padding-right: 200px;
+}
+
+.pullright{
+  margin-left: 80px;
 }
 </style>

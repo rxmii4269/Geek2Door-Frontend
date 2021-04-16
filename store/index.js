@@ -9,6 +9,8 @@ export const state = () => ({
   isSavingProfile: false,
   isArchivingPost: false,
   isApplyingForInternship: false,
+  newInternship: null,
+  activeStep: 0,
   internships: [],
   appliedInternships: [],
   internshipPageInfo: [],
@@ -27,6 +29,9 @@ export const getters = {
   },
   getJobById: (state) => (id) => {
     return state.internships.filter((internship) => internship.id === id)
+  },
+  qualifications2: (state) => {
+    return state.newInternship.qualifications.join('\n') || ''
   },
 }
 
@@ -49,8 +54,32 @@ export const mutations = {
   SET_ALL_STUDENTS(state, students) {
     state.allStudents = students
   },
+  SET_NEW_INTERNSHIP(state, internshipData) {
+    state.newInternship = internshipData
+  },
+  SET_DIPLOMA(state, value) {
+    state.newInternship.diploma = value
+  },
+  SET_JOB_TITLE(state, value) {
+    state.newInternship.job_title = value
+  },
+  SET_SKILLS(state, value) {
+    state.newInternship.skills = value
+  },
+  REMOVE_SKILL(state, index) {
+    state.newInternship.skills.splice(index, 1)
+  },
+  ADD_SKILL(state) {
+    state.newInternship.skills.push('value')
+  },
   SET_APPLIED_INTERNSHIPS(state, appliedInternships) {
     state.appliedInternships = appliedInternships
+  },
+  INCREMENT_STEP(state) {
+    state.activeStep++
+  },
+  DECREMENT_STEP(state) {
+    state.activeStep--
   },
   TOGGLE_SUBMITTING_JOB(state, flag) {
     state.isSubmittingJob = flag
@@ -128,21 +157,36 @@ export const actions = {
   },
   async submitInternship({ commit, dispatch, state }, internshipForm) {
     commit('TOGGLE_SUBMITTING_JOB', true)
-    await this.$axios
-      .$post('/api/internships', internshipForm, {
+    try {
+      const response = await this.$axios.$post('/api/upload', internshipForm, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
-      .then((response) => {
-        commit('TOGGLE_SUBMITTING_JOB', false)
-        Notification.open({
-          duration: 3000,
-          message: 'Job Post Created Successfully',
-          position: 'is-top-right',
-          type: 'is-success is-light',
-          hasIcon: true,
-        })
+      const hardSkills = response.analysis.required_hard_skills
+      const softSkills = response.analysis.required_soft_skills
+      const concatSkills = hardSkills.concat(softSkills)
+      response.analysis.skills = concatSkills
+      commit('TOGGLE_SUBMITTING_JOB', false)
+      Notification.open({
+        duration: 3000,
+        message: 'Job Order Uploaded Successfully',
+        position: 'is-top-right',
+        type: 'is-success is-light',
+        hasIcon: true,
       })
-    await dispatch('getInternships', state.auth.user.id)
+      commit('INCREMENT_STEP')
+      commit('SET_NEW_INTERNSHIP', response.analysis)
+    } catch (error) {
+      Notification.open({
+        duration: 3000,
+        message: error.response.data,
+        position: 'is-top-right',
+        type: 'is-danger is-light',
+        hasIcon: true,
+      })
+      commit('TOGGLE_SUBMITTING_JOB', false)
+    }
+
+    // await dispatch('getInternships', state.auth.user.id)
   },
   async getInternships({ commit, state }, id) {
     const response = await this.$axios.$get(`/api/users/${id}/internships`)

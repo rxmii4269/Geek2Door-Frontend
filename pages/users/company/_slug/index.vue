@@ -67,7 +67,8 @@
       <div class="column is-9">
         <b-button
           v-if="$auth.user.id === profileData.id"
-          type="is-pink"
+          type="is-primary"
+          outlined
           @click="nojobs = true"
           >Add Internship</b-button
         >
@@ -208,185 +209,9 @@
           <button type="button" class="delete" @click="closeJobModal" />
         </header>
         <section class="modal-card-body">
-          <ValidationObserver ref="createJobObserver">
-            <ValidationProvider
-              v-slot="{ errors, valid }"
-              rules="required"
-              name="Internship Title"
-              slim
-            >
-              <b-field
-                label="Title"
-                :type="{ 'is-danger': errors[0], 'is-success': valid }"
-                :message="errors"
-              >
-                <b-input v-model="jobForm.position"></b-input>
-              </b-field>
-            </ValidationProvider>
-            <ValidationProvider
-              v-slot="{ errors, validate, valid }"
-              rules="required"
-              slim
-            >
-              <b-field
-                class="file"
-                label=""
-                :type="{ 'is-danger': errors[0], 'is-success': valid }"
-                :message="errors"
-              >
-                <b-upload
-                  v-model="jobForm.file"
-                  drag-drop
-                  expanded
-                  accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                  required
-                  @change="validate"
-                >
-                  <section class="section">
-                    <div class="content has-text-centered">
-                      <p>
-                        <b-icon icon="upload" size="is-large"></b-icon>
-                      </p>
-                      <p>Drop your internship file here or click to upload</p>
-                    </div>
-                  </section>
-                </b-upload>
-              </b-field>
-              <b-tag
-                v-if="jobForm.file"
-                type="is-primary"
-                closable
-                aria-close-label="Delete file upload"
-                @close="deleteDropFile"
-              >
-                {{ jobForm.file.name }}
-              </b-tag>
-            </ValidationProvider>
-            <!-- <b-field grouped group-multiline>
-              <ValidationProvider
-                v-slot="{ errors, valid }"
-                rules="required"
-                name="GPA"
-                slim
-              >
-                <b-field
-                  label="Minimum GPA"
-                  :type="{ 'is-danger': errors[0], 'is-success': valid }"
-                  :message="errors"
-                  expanded
-                >
-                  <b-input
-                    v-model.number="jobForm.GPA"
-                    type="number"
-                    min="1.75"
-                    step="0.01"
-                    max="4.0"
-                    expanded
-                    lazy
-                  ></b-input>
-                </b-field>
-              </ValidationProvider>
-              <ValidationProvider
-                v-slot="{ errors, valid }"
-                rules="required"
-                name="Qualifications"
-                slim
-              >
-                <b-field
-                  label="Qualifications"
-                  :type="{ 'is-danger': errors[0], 'is-success': valid }"
-                  :message="errors"
-                  expanded
-                >
-                  <b-autocomplete
-                    ref="autocomplete"
-                    v-model="degreeName"
-                    open-on-focus
-                    clearable
-                    :data="filteredDegrees"
-                    expanded
-                    @select="(option) => (jobForm.qualifications = option)"
-                  >
-                    <template #footer>
-                      <a @click="showAddDegrees">
-                        <span>Add new...</span>
-                      </a>
-                    </template>
-                    <template #empty>No results for {{ degreeName }}</template>
-                  </b-autocomplete>
-                </b-field>
-              </ValidationProvider>
-            </b-field>
-            <b-field label="Location">
-              <b-input v-model="jobForm.location"></b-input>
-            </b-field>
-            <ValidationProvider
-              v-slot="{ errors, valid }"
-              slim
-              rules="required"
-              name="Tenure/Duration"
-            >
-              <b-field
-                label="Tenure/Duration"
-                :type="{ 'is-danger': errors[0], 'is-success': valid }"
-                :message="errors"
-                expanded
-              >
-                <b-datepicker
-                  v-model="jobForm.duration"
-                  editable
-                  range
-                  icon-pack="bx"
-                  icon="bxs-calendar-event"
-                  icon-next="bxs-right-arrow"
-                  icon-prev="bxs-left-arrow"
-                ></b-datepicker>
-              </b-field>
-            </ValidationProvider>
-            <ValidationProvider
-              v-slot="{ errors, valid }"
-              slim
-              rules="required"
-              name="Skills"
-            >
-              <b-field
-                label="Skills"
-                :type="{ 'is-danger': errors[0], 'is-success': valid }"
-              >
-                <template #message>
-                  <span
-                    >Enter each skill in the format <b>Skill name</b> -
-                    <b>weight</b> separating each skill weight pair with a
-                    comma. e.g. PHP-5, Javascript-2.</span
-                  >
-                </template>
-                <b-input
-                  v-model.trim="jobForm.skills"
-                  type="textarea"
-                ></b-input>
-              </b-field>
-            </ValidationProvider>
-            <ValidationProvider
-              v-slot="{ errors, valid }"
-              slim
-              rules="required"
-              name="Description"
-            >
-              <b-field
-                label="Description"
-                :type="{ 'is-danger': errors[0], 'is-success': valid }"
-                :message="errors"
-              >
-                <b-input
-                  v-model="jobForm.description"
-                  type="textarea"
-                  maxlength="350"
-                ></b-input>
-              </b-field>
-            </ValidationProvider> -->
-          </ValidationObserver>
+          <InternshipConfirmForm />
         </section>
-        <footer class="modal-card-foot">
+        <!-- <footer class="modal-card-foot">
           <b-button
             label="Close"
             icon-pack="bx"
@@ -402,7 +227,7 @@
             :loading.sync="isSubmittingJob"
             @click="submitJob"
           ></b-button>
-        </footer>
+        </footer> -->
       </div>
     </b-modal>
   </div>
@@ -410,26 +235,16 @@
 <script>
 import Talk from 'talkjs'
 import debounce from 'lodash.debounce'
-import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { mapState, mapGetters } from 'vuex'
 export default {
-  components: {
-    ValidationObserver,
-    ValidationProvider,
-  },
   data() {
     return {
       chatWith: '',
       edit: false,
       nojobs: false,
       jobForm: {
-        position: '',
-        GPA: 2.0,
-        qualifications: '',
-        skills: '',
-        location: '',
-        description: '',
-        duration: [],
+        company_id: '',
+        profile_picture: '',
         file: null,
       },
       degrees: [
@@ -446,6 +261,7 @@ export default {
       degreeName: '',
       count: 3,
       minDate: '',
+      inputs: [],
     }
   },
   computed: {
@@ -470,8 +286,18 @@ export default {
         this.$store.commit('SET_PROFILE_DATA', value)
       },
     },
+    // qualifications: {
+    //   get() {
+    //     if (this.$store.state.newInternship) {
+    //       return this.$store.state.newInternship.qualifications.join('\n')
+    //     } else {
+    //       return ''
+    //     }
+    //   },
+    //   set(newValue) {},
+    // },
     ...mapState(['internships', 'isSubmittingJob']),
-    ...mapGetters(['unarchivedJobs', 'archivedJobs']),
+    ...mapGetters(['unarchivedJobs', 'archivedJobs', 'qualifications2']),
   },
   created() {},
 
@@ -550,12 +376,6 @@ export default {
           this.isFetching = false
         })
     }),
-    add(index) {
-      this.inputs.push({ name: '' })
-    },
-    remove(index) {
-      this.inputs.splice(index, 1)
-    },
     addToSkills(option) {
       const skill = {
         name: option,
@@ -577,26 +397,6 @@ export default {
           this.$refs.autocomplete.setSelected(value)
         },
       })
-    },
-    async submitJob() {
-      const isValid = await this.$refs.createJobObserver.validate()
-      if (isValid) {
-        this.jobForm.company_id = this.profileData.id
-        this.jobForm.profile_picture = this.profileData.profile_picture
-        const formData = new FormData()
-        const keys = Object.keys(this.jobForm)
-
-        keys.forEach((key, index) => {
-          formData.append(key, this.jobForm[key])
-        })
-
-        await this.$store.dispatch('submitInternship', formData)
-        this.closeJobModal()
-        this.deleteDropFile()
-      }
-    },
-    deleteDropFile() {
-      this.jobForm.file = null
     },
     closeJobModal() {
       Object.keys(this.jobForm).forEach((key, index) => {

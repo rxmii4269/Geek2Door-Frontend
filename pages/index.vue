@@ -115,7 +115,7 @@ export default {
   padding-right: 200px;
 }
 
-.pullright{
+.pullright {
   margin-left: 80px;
 }
 </style>

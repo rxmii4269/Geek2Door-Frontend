@@ -242,41 +242,44 @@
             <ValidationProvider
               v-slot="{ errors, valid }"
               rules="required"
-              name="school"
+              name="School Attending"
               slim
             >
-             <b-field
-                label="School Attanding"
+              <b-field
+                label="School Attending"
                 :type="{ 'is-danger': errors[0], 'is-success': valid }"
                 :message="errors"
               >
                 <b-input v-model="updatedProfileData.school"></b-input>
+              </b-field>
             </ValidationProvider>
-           <ValidationProvider
+            <ValidationProvider
               v-slot="{ errors, valid }"
               rules="required"
-              name="major"
+              name="Major"
               slim
             >
-             <b-field
+              <b-field
                 label="Major"
                 :type="{ 'is-danger': errors[0], 'is-success': valid }"
                 :message="errors"
               >
                 <b-input v-model="updatedProfileData.major"></b-input>
+              </b-field>
             </ValidationProvider>
-           <ValidationProvider
+            <ValidationProvider
               v-slot="{ errors, valid }"
               rules="required"
-              name="minnor"
+              name="Minor"
               slim
             >
-             <b-field
-                label="Minnor"
+              <b-field
+                label="Minor"
                 :type="{ 'is-danger': errors[0], 'is-success': valid }"
                 :message="errors"
               >
-                <b-input v-model="updatedProfileData.minnor"></b-input>
+                <b-input v-model="updatedProfileData.minor"></b-input>
+              </b-field>
             </ValidationProvider>
             <b-field grouped group-multiline expanded>
               <ValidationProvider

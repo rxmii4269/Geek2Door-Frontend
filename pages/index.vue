@@ -57,7 +57,7 @@
             <img
               src="@/assets/img/lookup.svg"
               alt="picture_showing_lists"
-              class="fhomepic2 is-pulled-right mr-6"
+              class="fhomepic2 is-pulled-right pr-6"
             />
           </div>
         </div>
@@ -70,7 +70,7 @@
             <img
               src="@/assets/img/signup.svg"
               alt="picture_showing_lists"
-              class="fhomepic2 pullright"
+              class="fhomepic2 pl-6"
             />
           </div>
           <div class="column mt-6">

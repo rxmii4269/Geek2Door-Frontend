@@ -56,9 +56,9 @@
                 <b-taglist>
                   <b-tag
                     v-for="skill in profileData.skills"
-                    :key="skill.index"
+                    :key="skill.id"
                     type="is-primary"
-                    >{{ skill }}</b-tag
+                    >{{ skill.name }}</b-tag
                   >
                 </b-taglist>
                 <b-button
@@ -236,7 +236,10 @@
                   v-model="updatedProfileData.skills"
                   ellipsis
                   icon="label"
-                ></b-taginput>
+                  field="name"
+                  :create-tag="addSkill"
+                >
+                </b-taginput>
               </b-field>
             </ValidationProvider>
             <ValidationProvider
@@ -452,6 +455,10 @@ export default {
     closeJobModal() {
       this.edit = !this.edit
       this.$refs.editProfileObserver.reset()
+    },
+    addSkill(tag) {
+      const newTag = { name: tag }
+      return newTag
     },
   },
 }

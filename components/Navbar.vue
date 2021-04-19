@@ -6,6 +6,7 @@
           src="@/assets/img/facebook_cover_photo_1_fullpic.png"
           alt="logo"
           class="logo"
+          loading="lazy"
         />
         Geek<span class="large2 pink">2</span>Door
       </b-navbar-item>
@@ -50,6 +51,7 @@
                     class="is-rounded"
                     :src="`${$config.axios.browserBaseURL}/api/images/${$auth.user.profile_picture}`"
                     alt=""
+                    loading="lazy"
                   />
                 </figure>
               </div>

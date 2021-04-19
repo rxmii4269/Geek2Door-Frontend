@@ -85,6 +85,9 @@ export const mutations = {
   SET_TOTAL_WEIGHT(state, newWeight) {
     state.totalWeight = newWeight
   },
+  SET_DESCRIPTION(state, newDescription) {
+    state.newInternship.description = newDescription
+  },
   REMOVE_SKILL(state, index) {
     state.newInternship.skills.splice(index, 1)
     state.skillsList.splice(index, 1)
@@ -182,6 +185,9 @@ export const actions = {
       const response = await this.$axios.$post('/api/upload', internshipForm, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
+      if (typeof response.analysis.description === 'undefined') {
+        response.analysis.description = ''
+      }
       const hardSkills = response.analysis.required_hard_skills
       const softSkills = response.analysis.required_soft_skills
       const concatSkills = hardSkills.concat(softSkills)
@@ -212,7 +218,7 @@ export const actions = {
 
     // await dispatch('getInternships', state.auth.user.id)
   },
-  saveInternship({ commit, dispatch, state }) {
+  async saveInternship({ commit, dispatch, state }) {
     // eslint-disable-next-line no-unused-vars
     const form = {
       totalWeight: state.totalWeight,
@@ -220,7 +226,7 @@ export const actions = {
       weights: state.weights,
       skillsList: state.skillsList,
     }
-    const response = this.$axios.$post('/api/internships', form)
+    const response = await this.$axios.$post('/api/internships', form)
     console.log(response)
   },
   calculateTotalWeight({ commit, state }) {
@@ -397,7 +403,17 @@ export const actions = {
     await this.$axios.$delete(`/api/internships/${id}`)
   },
   async getAllStudents({ commit, dispatch }) {
-    const response = await this.$axios.$get('/api/users/students')
-    commit('SET_ALL_STUDENTS', response)
+    try {
+      const response = await this.$axios.$get('/api/users/students')
+      commit('SET_ALL_STUDENTS', response)
+    } catch (error) {
+      Notification.open({
+        duration: 3000,
+        message: error.response.data.message,
+        position: 'is-top-right',
+        type: 'is-danger is-light',
+        hasIcon: true,
+      })
+    }
   },
 }

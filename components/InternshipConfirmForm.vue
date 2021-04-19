@@ -86,6 +86,14 @@
             <b-input v-model="job_title"></b-input>
           </b-field>
         </ValidationProvider>
+        <ValidationProvider v-slot="{ errors, valid }">
+          <b-field
+            label="Description"
+            :type="{ 'is-danger': errors[0], 'is-success': valid }"
+          >
+            <b-input v-model="description" type="textarea"></b-input>
+          </b-field>
+        </ValidationProvider>
         <ValidationProvider
           v-if="activeStep === 1"
           v-slot="{ errors, valid }"
@@ -463,6 +471,18 @@ export default {
       },
       set(newValue) {
         console.log(newValue)
+      },
+    },
+    description: {
+      get() {
+        if (this.$store.state.newInternship) {
+          return this.$store.state.newInternship.description || ''
+        } else {
+          return ''
+        }
+      },
+      set(newValue) {
+        return this.$store.commit('SET_DESCRIPTION', newValue)
       },
     },
     ...mapState(['isSubmittingJob', 'activeStep']),

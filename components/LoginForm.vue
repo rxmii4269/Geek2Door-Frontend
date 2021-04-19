@@ -8,6 +8,7 @@
               slot-scope="{ errors, valid }"
               label="Login As"
               :type="{ 'is-danger': errors[0], 'is-success': valid }"
+              expanded
               :message="errors"
             >
               <b-radio-button
@@ -34,6 +35,7 @@
               label="Email or Username"
               :type="{ 'is-danger': errors[0], 'is-success': valid }"
               :message="errors"
+              expanded
             >
               <b-input
                 v-model="form.email"
@@ -43,6 +45,7 @@
                 icon="bxs-envelope"
                 icon-right="bx-user-circle"
                 size="is-medium"
+                expanded
               ></b-input>
             </b-field>
           </ValidationProvider>
@@ -52,6 +55,7 @@
               label="Password"
               :type="{ 'is-danger': errors[0], 'is-success': valid }"
               :message="errors"
+              expanded
             >
               <b-input
                 v-model="form.password"
@@ -60,6 +64,7 @@
                 size="is-medium"
                 icon="lock"
                 password-reveal
+                expanded
               ></b-input>
             </b-field>
           </ValidationProvider>

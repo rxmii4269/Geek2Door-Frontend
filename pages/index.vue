@@ -15,6 +15,7 @@
                 src="@/assets/img/intern.svg"
                 alt="picture_showing_lists"
                 class="fhomepic2 pl-6"
+                loading="lazy"
               />
             </div>
             <div class="column">
@@ -58,6 +59,7 @@
               src="@/assets/img/lookup.svg"
               alt="picture_showing_lists"
               class="fhomepic2 is-pulled-right pr-6"
+              loading="lazy"
             />
           </div>
         </div>
@@ -71,6 +73,7 @@
               src="@/assets/img/signup.svg"
               alt="picture_showing_lists"
               class="fhomepic2 pl-6"
+              loading="lazy"
             />
           </div>
           <div class="column mt-6">

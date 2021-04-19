@@ -56,9 +56,9 @@
                 <b-taglist>
                   <b-tag
                     v-for="skill in profileData.skills"
-                    :key="skill.index"
+                    :key="skill.id"
                     type="is-primary"
-                    >{{ skill }}</b-tag
+                    >{{ skill.name }}</b-tag
                   >
                 </b-taglist>
                 <b-button
@@ -179,11 +179,11 @@
             <ValidationProvider
               v-slot="{ errors, valid }"
               rules="required"
-              name="Name"
+              name="Full Name"
               slim
             >
               <b-field
-                label="Name"
+                label="Full Name"
                 :type="{ 'is-danger': errors[0], 'is-success': valid }"
                 :message="errors"
               >
@@ -236,7 +236,52 @@
                   v-model="updatedProfileData.skills"
                   ellipsis
                   icon="label"
-                ></b-taginput>
+                  field="name"
+                  :create-tag="addSkill"
+                >
+                </b-taginput>
+              </b-field>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required"
+              name="School Attending"
+              slim
+            >
+              <b-field
+                label="School Attending"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input v-model="updatedProfileData.school"></b-input>
+              </b-field>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required"
+              name="Major"
+              slim
+            >
+              <b-field
+                label="Major"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input v-model="updatedProfileData.major"></b-input>
+              </b-field>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required"
+              name="Minor"
+              slim
+            >
+              <b-field
+                label="Minor"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input v-model="updatedProfileData.minor"></b-input>
               </b-field>
             </ValidationProvider>
             <b-field grouped group-multiline expanded>
@@ -410,6 +455,10 @@ export default {
     closeJobModal() {
       this.edit = !this.edit
       this.$refs.editProfileObserver.reset()
+    },
+    addSkill(tag) {
+      const newTag = { name: tag }
+      return newTag
     },
   },
 }

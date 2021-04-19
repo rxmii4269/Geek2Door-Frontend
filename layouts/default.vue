@@ -3,7 +3,7 @@
     <Navbar />
     <section
       class="section is-flex-grow-1"
-      :class="[this.$route.name.includes('accounts') ? 'wave' : '']"
+      :class="[$route.name.includes('accounts') ? 'wave' : '']"
     >
       <Nuxt />
     </section>

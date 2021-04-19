@@ -4,12 +4,16 @@
       <div class="column is-3">
         <div class="card is-unclipped">
           <div class="card-image">
-            <figure class="image is-4by3">
+            <figure
+              v-if="profileData && !loadingProfileCard"
+              class="image is-4by4"
+            >
               <img
-                src="https://bulma.io/images/placeholders/1280x960.png"
-                alt="Placeholder image"
+                :src="`${$config.axios.browserBaseURL}/api/images/${profileData.profile_picture}`"
+                alt="Profile Picture"
               />
             </figure>
+            <b-skeleton height="80px" :active="loadingProfileCard"></b-skeleton>
           </div>
           <div class="card-content">
             <template v-if="!loadingProfileCard">
@@ -30,14 +34,6 @@
                 </b-tooltip>
               </div>
               <div class="media">
-                <div class="media-left">
-                  <figure v-if="profileData" class="image is-48x48">
-                    <img
-                      :src="`${$config.axios.browserBaseURL}/api/images/${profileData.profile_picture}`"
-                      alt="Profile Picture"
-                    />
-                  </figure>
-                </div>
                 <div class="media-content">
                   <p class="title is-4">{{ profileData.name }}</p>
                   <p class="subtitle is-6">@{{ profileData.username }}</p>
@@ -61,6 +57,7 @@
                     >{{ skill.name }}</b-tag
                   >
                 </b-taglist>
+
                 <b-button
                   v-if="profileData.username != $auth.user.username"
                   expanded
@@ -168,11 +165,11 @@
       </div>
     </div>
     <Chat v-if="$auth.loggedIn" ref="Chat" />
-    <b-modal :active="edit" has-modal-card>
+    <b-modal :active="edit" has-modal-card :can-cancel="false">
       <div class="modal-card">
         <header class="modal-card-head">
           <h1 class="modal-card-title">Edit Profile</h1>
-          <button type="button" class="delete" @click="closeJobModal" />
+          <button type="button" class="delete" @click="closeEditProfileModal" />
         </header>
         <div class="modal-card-body">
           <ValidationObserver ref="editProfileObserver">
@@ -342,7 +339,7 @@
             icon-left="bx-x"
             outlined
             type="is-danger"
-            @click="closeJobModal"
+            @click="closeEditProfileModal"
           ></b-button>
           <b-button
             label="Save"
@@ -452,7 +449,7 @@ export default {
         this.edit = !this.edit
       }
     },
-    closeJobModal() {
+    closeEditProfileModal() {
       this.edit = !this.edit
       this.$refs.editProfileObserver.reset()
     },

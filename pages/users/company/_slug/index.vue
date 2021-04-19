@@ -4,12 +4,16 @@
       <div class="column is-3">
         <div class="card is-unclipped">
           <div class="card-image">
-            <figure class="image is-4by3">
+            <figure
+              v-if="profileData && !loadingProfileCard"
+              class="image is-4by4"
+            >
               <img
-                src="https://bulma.io/images/placeholders/1280x960.png"
-                alt="Placeholder image"
+                :src="`${$config.axios.browserBaseURL}/api/images/${profileData.profile_picture}`"
+                alt="Profile Picture"
               />
             </figure>
+            <b-skeleton height="80px" :active="loadingProfileCard"></b-skeleton>
           </div>
           <div class="card-content">
             <template v-if="!loadingProfileCard">
@@ -30,14 +34,14 @@
                 </b-tooltip>
               </div>
               <div class="media mt-5">
-                <div class="media-left">
+                <!-- <div class="media-left">
                   <figure v-if="profileData" class="image is-48x48">
                     <img
                       :src="`${$config.axios.browserBaseURL}/api/images/${profileData.profile_picture}`"
                       alt="Profile Picture"
                     />
                   </figure>
-                </div>
+                </div> -->
                 <div class="media-content mt-2 is-unclipped">
                   <p class="title is-4">{{ profileData.company_name }}</p>
                 </div>
@@ -133,11 +137,12 @@
       </div>
     </div>
     <Chat v-if="$auth.loggedIn" ref="Chat" />
-    <b-modal v-model="edit" has-modal-card>
+    <b-modal v-model="edit" has-modal-card :can-cancel="false">
       <div class="modal-card">
-        <div class="modal-card-head">
-          <h1>Edit Profile</h1>
-        </div>
+        <header class="modal-card-head">
+          <h1 class="modal-card-title">Edit Profile</h1>
+          <button type="button" class="delete" @click="cancel" />
+        </header>
         <div class="modal-card-body">
           <b-field label="Name" label-position="on-border">
             <b-input
@@ -170,14 +175,33 @@
               ></b-input>
             </b-field>
             <b-field label="Parish" label-position="on-border" expanded>
-              <b-input
+              <b-select
                 v-model.trim="updatedProfileData.parish"
-                lazy
+                placeholder="Select your Parish"
+                icon-pack="bx"
+                icon="bx-globe"
                 expanded
-              ></b-input>
+              >
+                <option
+                  v-for="parish in parishes"
+                  :key="parish.index"
+                  :value="parish"
+                >
+                  {{ parish }}
+                </option>
+              </b-select>
             </b-field>
-            <b-field label="City" label-position="on-border" expanded>
-              <b-input v-model.trim="updatedProfileData.city" lazy></b-input>
+            <b-field
+              label="City"
+              label-position="on-border"
+              custom-class="mt-3"
+              expanded
+            >
+              <b-input
+                v-model.trim="updatedProfileData.city"
+                custom-class="mt-3"
+                lazy
+              ></b-input>
             </b-field>
           </b-field>
         </div>
@@ -202,6 +226,7 @@
       :destroy-on-hide="false"
       aria-role="dialog"
       aria-modal
+      :can-cancel="false"
     >
       <div class="modal-card">
         <header class="modal-card-head">
@@ -253,6 +278,22 @@ export default {
         'BSc. Software Engineering',
         'BSc. Computer Studies',
         'BSc. Information Systems',
+      ],
+      parishes: [
+        'St. Andrew',
+        'Kingston',
+        'St. Thomas',
+        'Portland',
+        'St. Catherine',
+        'Clarendon',
+        'Mandeville',
+        'St. Elizabeth',
+        'Hanover',
+        'Westmoreland',
+        'St. James',
+        'Trelawny',
+        'St. Ann',
+        'St. Mary',
       ],
       option: '',
       skillsData: [],
@@ -343,6 +384,7 @@ export default {
       })
     },
     async editProfile() {
+      this.parishes = this.parishes.sort()
       await this.$store.dispatch('editProfile', this.profileData)
       this.edit = !this.edit
     },
@@ -409,9 +451,8 @@ export default {
         }
       })
       this.degreeName = ''
-      this.deleteDropFile()
       this.nojobs = !this.nojobs
-      this.$refs.createJobObserver.reset()
+      // this.$refs.createJobObserver.reset()
     },
   },
 }

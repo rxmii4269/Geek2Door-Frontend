@@ -37,7 +37,7 @@ html {
 html,
 body,
 * {
-  font-family: 'Poppins', 'Lato', 'Roboto' !important;
+  font-family: 'IBM Plex Sans', sans-serif !important;
   -webkit-font-smoothing: antialiased;
 }
 body {

@@ -25,14 +25,17 @@
       </div>
 
       <hr />
-      <b-taglist>
-        <b-tag
-          v-for="(weight, skill) in skills"
-          :key="skill.index"
-          type="is-primary"
-          >{{ skill }}</b-tag
-        >
-      </b-taglist>
+      <b-field label="Skills" custom-class="is-size-7">
+        <b-taglist>
+          <b-tag
+            v-for="(weight, skill) in skills"
+            :key="skill.index"
+            type="is-primary"
+            >{{ skill }}</b-tag
+          >
+        </b-taglist>
+      </b-field>
+
       <b-field group-multiline grouped>
         <div class="control">
           <b-taglist attached>

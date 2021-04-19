@@ -19,7 +19,7 @@
           <p>{{ email }}</p>
           <b-taglist>
             <b-tag v-for="skill in skills" :key="skill.index" type="is-primary">
-              {{ skill }}
+              {{ skill.name }}
             </b-tag>
           </b-taglist>
         </div>

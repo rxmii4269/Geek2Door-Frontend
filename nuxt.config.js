@@ -115,7 +115,7 @@ export default {
 
   googleFonts: {
     families: {
-      Poppins: [100, 200, 300, 400, 500],
+      'IBM+Plex+Sans': [100, 200, 300, 400, 500],
     },
     display: 'auto',
     prefetch: true,

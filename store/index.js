@@ -9,6 +9,7 @@ export const state = () => ({
   isSavingProfile: false,
   isArchivingPost: false,
   isApplyingForInternship: false,
+  isSavingInternship: false,
   newInternship: null,
   activeStep: 0,
   internships: [],
@@ -64,6 +65,15 @@ export const mutations = {
   SET_NEW_INTERNSHIP(state, internshipData) {
     state.newInternship = internshipData
   },
+  SET_GPA(state, value) {
+    state.newInternship.minimum_gpa = value
+  },
+  SET_RESPONSIBILITIES(state, value) {
+    state.newInternship.responsibilities = value
+  },
+  SET_OTHER(state, value) {
+    state.newInternship.qualifications = value
+  },
   SET_DIPLOMA(state, value) {
     state.newInternship.diploma = value
   },
@@ -93,7 +103,7 @@ export const mutations = {
     state.skillsList.splice(index, 1)
   },
   ADD_SKILL(state) {
-    state.newInternship.skills.push('value')
+    state.newInternship.skills.push('skill')
     state.skillsList.push(state.skillsList.length)
   },
   SET_APPLIED_INTERNSHIPS(state, appliedInternships) {
@@ -119,6 +129,9 @@ export const mutations = {
   },
   TOGGLE_APPLYING_FOR_INTERNSHIP(state, flag) {
     state.isApplyingForInternship = flag
+  },
+  TOGGLE_SAVE_INTERNSHIP(state) {
+    state.isSavingInternship = !state.isSavingInternship
   },
 }
 
@@ -226,7 +239,9 @@ export const actions = {
       weights: state.weights,
       skillsList: state.skillsList,
     }
+    commit('TOGGLE_SAVE_INTERNSHIP')
     const response = await this.$axios.$post('/api/internships', form)
+    commit('TOGGLE_SAVE_INTERNSHIP')
     console.log(response)
   },
   calculateTotalWeight({ commit, state }) {
@@ -237,7 +252,7 @@ export const actions = {
       commit('SET_WEIGHT', { key, splitEvenly })
     })
   },
-  recalculateTotalWeight({ commit, state }, newWeight) {
+  recalculateTotalWeight({ commit, state, dispatch }, newWeight) {
     const weightKeys = Object.keys(state.weights)
     const weightlen = weightKeys.length
     const splitEvenly = Math.round((newWeight / weightlen) * 100) / 100
@@ -245,6 +260,7 @@ export const actions = {
     weightKeys.forEach((key, index) => {
       commit('SET_WEIGHT', { key, splitEvenly })
     })
+    dispatch('divideSkills')
   },
   recalculateWeight({ commit, state }, newWeight) {
     if (newWeight > state.totalWeight) {
@@ -259,7 +275,10 @@ export const actions = {
   },
   calculateQualWeight({ commit, state }, newWeight) {
     const key = 'qualificationWeight'
-    let splitEvenly = ''
+    const splitEvenly = newWeight
+    const cumulWeight =
+      newWeight + state.weights.gpaWeight + state.weights.skillsWeight
+    console.log(cumulWeight)
     if (newWeight > state.totalWeight) {
       Notification.open({
         duration: 3000,
@@ -271,14 +290,32 @@ export const actions = {
       // splitEvenly = state.weights.qualificationWeight
       // console.log(splitEvenly)
       // commit('SET_WEIGHT', { key, splitEvenly })
-    } else {
-      splitEvenly = newWeight
-      commit('SET_WEIGHT', { key, splitEvenly })
+    } else if (cumulWeight > state.totalWeight) {
+      Notification.open({
+        duration: 4000,
+        type: 'is-danger',
+        position: 'is-top-right',
+        message: `The sum of the weight categories is greater than ${state.totalWeight}`,
+        hasIcon: true,
+      })
+    } else if (cumulWeight < state.totalWeight) {
+      Notification.open({
+        duration: 4000,
+        type: 'is-warning',
+        position: 'is-top-right',
+        message: `The sum of the weight categories is less than ${state.totalWeight}`,
+        hasIcon: true,
+      })
     }
+    commit('SET_WEIGHT', { key, splitEvenly })
   },
   calculateGPAWeight({ commit, state }, newWeight) {
     const key = 'gpaWeight'
-    let splitEvenly = ''
+    const splitEvenly = newWeight
+    const cumulWeight =
+      newWeight + state.weights.qualificationWeight + state.weights.skillsWeight
+    console.log(cumulWeight)
+
     if (newWeight > state.totalWeight) {
       Notification.open({
         duration: 3000,
@@ -290,14 +327,32 @@ export const actions = {
       // splitEvenly = state.weights.qualificationWeight
       // console.log(splitEvenly)
       // commit('SET_WEIGHT', { key, splitEvenly })
-    } else {
-      splitEvenly = newWeight
-      commit('SET_WEIGHT', { key, splitEvenly })
+    } else if (cumulWeight > state.totalWeight) {
+      Notification.open({
+        duration: 4000,
+        type: 'is-danger',
+        position: 'is-top-right',
+        message: `The sum of the weight categories is greater than ${state.totalWeight}`,
+        hasIcon: true,
+      })
+    } else if (cumulWeight < state.totalWeight) {
+      Notification.open({
+        duration: 4000,
+        type: 'is-warning',
+        position: 'is-top-right',
+        message: `The sum of the weight categories is less than ${state.totalWeight}`,
+        hasIcon: true,
+      })
     }
+    commit('SET_WEIGHT', { key, splitEvenly })
   },
-  calculateSkillsWeight({ commit, state }, newWeight) {
+  calculateSkillsWeight({ commit, state, dispatch }, newWeight) {
     const key = 'skillsWeight'
-    let splitEvenly = ''
+    const splitEvenly = newWeight
+    const cumulWeight =
+      newWeight + state.weights.qualificationWeight + state.weights.gpaWeight
+    console.log(cumulWeight)
+
     if (newWeight > state.totalWeight) {
       Notification.open({
         duration: 3000,
@@ -309,20 +364,73 @@ export const actions = {
       // splitEvenly = state.weights.qualificationWeight
       // console.log(splitEvenly)
       // commit('SET_WEIGHT', { key, splitEvenly })
-    } else {
-      splitEvenly = newWeight
-      commit('SET_WEIGHT', { key, splitEvenly })
+    } else if (cumulWeight > state.totalWeight) {
+      Notification.open({
+        duration: 4000,
+        type: 'is-danger',
+        position: 'is-top-right',
+        message: `The sum of the weight categories is greater than ${state.totalWeight}`,
+        hasIcon: true,
+      })
+    } else if (cumulWeight < state.totalWeight) {
+      Notification.open({
+        duration: 4000,
+        type: 'is-warning',
+        position: 'is-top-right',
+        message: `The sum of the weight categories is less than ${state.totalWeight}`,
+        hasIcon: true,
+      })
     }
+    commit('SET_WEIGHT', { key, splitEvenly })
+    dispatch('divideSkills')
+  },
+  deleteSkill({ commit, dispatch }, index) {
+    commit('REMOVE_SKILL', index)
+    dispatch('divideSkills')
+  },
+  addSkill({ commit, dispatch }) {
+    commit('ADD_SKILL')
+    dispatch('divideSkills')
   },
   divideSkills({ commit, state }) {
     const skillsLength = state.newInternship.skills.length
-    const divideEvenly =
-      Math.round((state.weights.skillsWeight / skillsLength) * 100) / 100
+    const divideEvenly = parseFloat(
+      (state.weights.skillsWeight / skillsLength).toFixed(3)
+    )
     console.log(divideEvenly)
 
     state.skillsList.forEach((skill, index) => {
       commit('SET_SKILLS_LIST_VALUE', { index, divideEvenly })
     })
+  },
+  async editSkillWeight({ commit, dispatch, state }, newValue) {
+    const index = newValue.index
+    const divideEvenly = newValue.event
+    await commit('SET_SKILLS_LIST_VALUE', { index, divideEvenly })
+    const cumulSkill = state.skillsList.reduce((a, b) => {
+      return parseFloat((a + b).toFixed(3))
+    })
+
+    console.log(cumulSkill)
+    if (cumulSkill > state.weights.skillsWeight) {
+      Notification.open({
+        duration: 4000,
+        type: 'is-warning',
+        position: 'is-top-right',
+        message: `Cumulative skill weight cannot be greater than ${state.weights.skillsWeight}`,
+        hasIcon: true,
+      })
+    } else if (cumulSkill < state.weights.skillsWeight) {
+      Notification.open({
+        duration: 4000,
+        type: 'is-warning',
+        position: 'is-top-right',
+        message: `Cumulative skill weight cannot be lesser than ${state.weights.skillsWeight}`,
+        hasIcon: true,
+      })
+    }
+    commit('SET_SKILLS_LIST_VALUE', { index, divideEvenly })
+    console.log(newValue)
   },
   async getInternships({ commit, state }, id) {
     const response = await this.$axios.$get(`/api/users/${id}/internships`)

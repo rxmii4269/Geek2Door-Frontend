@@ -227,6 +227,7 @@
       aria-role="dialog"
       aria-modal
       :can-cancel="false"
+      :width="1366"
     >
       <div class="modal-card">
         <header class="modal-card-head">

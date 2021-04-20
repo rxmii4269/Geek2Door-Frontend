@@ -45,6 +45,7 @@
       </b-step-item>
       <b-step-item step="2" label="Confirm Details">
         <ValidationProvider
+          v-if="activeStep === 1"
           v-slot="{ errors, valid }"
           class="is-clearfix"
           rules="required|min_value:3"
@@ -86,7 +87,7 @@
             <b-input v-model="job_title"></b-input>
           </b-field>
         </ValidationProvider>
-        <ValidationProvider v-slot="{ errors, valid }">
+        <ValidationProvider v-if="activeStep === 1" v-slot="{ errors, valid }">
           <b-field
             label="Description"
             :type="{ 'is-danger': errors[0], 'is-success': valid }"
@@ -97,7 +98,7 @@
         <ValidationProvider
           v-if="activeStep === 1"
           v-slot="{ errors, valid }"
-          rules="requried"
+          rules="required"
         >
           <b-field
             grouped
@@ -110,27 +111,29 @@
               <b-numberinput
                 v-model="qualificationWeight"
                 step="0.01"
-                :controls="false"
+                controls-position="compact"
+                :controls="true"
               ></b-numberinput
             ></b-field>
           </b-field>
         </ValidationProvider>
-        <b-field grouped>
+        <b-field v-if="activeStep === 1" grouped>
           <b-field label="Minimum GPA" expanded>
             <b-numberinput
               v-model.number="gpa"
-              type="number"
               min="1.75"
               step="0.01"
-              :controls="false"
+              :controls="true"
+              controls-position="compact"
               max="4.0"
             ></b-numberinput>
           </b-field>
           <b-field label="Assign Weight" expanded>
             <b-numberinput
-              v-model="gpaWeight"
+              v-model.number="gpaWeight"
               step="0.01"
-              :controls="false"
+              controls-position="compact"
+              :controls="true"
             ></b-numberinput>
           </b-field>
         </b-field>
@@ -160,7 +163,8 @@
                 v-model="skillsWeight"
                 step="0.01"
                 class="ml-2"
-                :controls="false"
+                controls-position="compact"
+                :controls="true"
                 expanded
               ></b-numberinput>
             </b-field>
@@ -181,17 +185,24 @@
             <b-field>
               <b-numberinput
                 v-if="`skill-${index}`"
-                v-model="skillsList[index]"
+                :value="skillsList[index]"
+                step="0.001"
                 controls-alignment="right"
                 controls-position="compact"
                 expanded
+                @input="editSkillWeight($event, index)"
               ></b-numberinput>
             </b-field>
           </b-field>
         </b-field>
         <ValidationProvider v-if="activeStep === 1">
           <b-field label="Responsibilities">
-            <b-input type="textarea"></b-input>
+            <b-input v-model="responsibilities" type="textarea"></b-input>
+          </b-field>
+        </ValidationProvider>
+        <ValidationProvider v-if="activeStep === 1">
+          <b-field label="Other">
+            <b-input v-model="other" type="textarea"></b-input>
           </b-field>
         </ValidationProvider>
       </b-step-item>
@@ -210,7 +221,12 @@
       </template>
     </b-steps>
     <div v-if="activeStep === 1" class="buttons is-pulled-right">
-      <b-button type="is-success" @click="saveInternship">Submit</b-button>
+      <b-button
+        type="is-success"
+        :loading="isSavingInternship"
+        @click="saveInternship"
+        >Submit</b-button
+      >
     </div>
     <!-- <b-field grouped group-multiline>
               <ValidationProvider
@@ -393,12 +409,56 @@ export default {
     gpa: {
       get() {
         if (this.$store.state.newInternship) {
-          return this.$store.state.newInternship.minimum_gpa
+          return parseFloat(this.$store.state.newInternship.minimum_gpa)
         } else {
           return ''
         }
       },
-      set() {},
+      set(newValue) {
+        console.log(newValue)
+        this.$store.commit('SET_GPA', newValue)
+      },
+    },
+    responsibilities: {
+      get() {
+        if (
+          this.$store.state.newInternship &&
+          typeof this.$store.state.newInternship.responsibilities === 'object'
+        ) {
+          return this.$store.state.newInternship.responsibilities.join('\n ')
+        } else if (
+          this.$store.state.newInternship &&
+          typeof this.$store.state.newInternship.responsibilities === 'string'
+        ) {
+          return this.$store.state.newInternship.responsibilities
+        } else {
+          return ''
+        }
+      },
+      set(newValue) {
+        console.log(newValue)
+        return this.$store.commit('SET_RESPONSIBILITIES', newValue)
+      },
+    },
+    other: {
+      get() {
+        if (
+          this.$store.state.newInternship &&
+          typeof this.$store.state.newInternship.qualifications === 'object'
+        ) {
+          return this.$store.state.newInternship.qualifications.join('\n ')
+        } else if (
+          this.$store.state.newInternship &&
+          typeof this.$store.state.newInternship.qualifications === 'string'
+        ) {
+          return this.$store.state.newInternship.qualifications
+        } else {
+          return ''
+        }
+      },
+      set(newValue) {
+        return this.$store.commit('SET_OTHER', newValue)
+      },
     },
     newInternshipData: {
       get() {
@@ -467,7 +527,11 @@ export default {
     },
     skillsList: {
       get() {
-        return this.$store.state.skillsList
+        if (this.$store.state.newInternship) {
+          return this.$store.state.skillsList
+        } else {
+          return ''
+        }
       },
       set(newValue) {
         console.log(newValue)
@@ -485,14 +549,14 @@ export default {
         return this.$store.commit('SET_DESCRIPTION', newValue)
       },
     },
-    ...mapState(['isSubmittingJob', 'activeStep']),
+    ...mapState(['isSubmittingJob', 'activeStep', 'isSavingInternship']),
   },
   methods: {
     add(index) {
-      this.$store.commit('ADD_SKILL')
+      this.$store.dispatch('addSkill')
     },
     remove(index) {
-      this.$store.commit('REMOVE_SKILL', index)
+      this.$store.dispatch('deleteSkill', index)
     },
     previousStep() {
       this.$store.commit('DECREMENT_STEP')
@@ -516,8 +580,8 @@ export default {
         // this.deleteDropFile()
       }
     },
-    saveInternship() {
-      this.$store.dispatch('saveInternship')
+    async saveInternship() {
+      await this.$store.dispatch('saveInternship')
     },
     deleteDropFile() {
       this.jobForm.file = null
@@ -536,6 +600,9 @@ export default {
       this.deleteDropFile()
       this.nojobs = !this.nojobs
       this.$refs.createJobObserver.reset()
+    },
+    editSkillWeight(event, index) {
+      this.$store.dispatch('editSkillWeight', { event, index })
     },
   },
 }

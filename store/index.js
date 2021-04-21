@@ -73,7 +73,7 @@ export const mutations = {
   },
   SET_DURATION(state, value) {
     state.newInternship.duration = value
-  },a
+  },
   SET_OTHER(state, value) {
     state.newInternship.qualifications = value
   },

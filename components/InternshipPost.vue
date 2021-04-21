@@ -19,12 +19,17 @@
           </figure>
         </div>
         <div class="media-content">
-          <h1 class="is-size-5">{{ position }}</h1>
+          <h1 class="is-size-5 is-capitalized">{{ position }}</h1>
           <p class="is-size-7">{{ shortDescription }}</p>
         </div>
       </div>
-
-      <hr />
+      <p class="is-size-7 has-text-weight-medium mt-2">
+        by:
+        <nuxt-link :to="'/users/company/' + companyName">{{
+          companyName
+        }}</nuxt-link>
+      </p>
+      <hr class="my-3" />
       <b-field label="Skills" custom-class="is-size-7">
         <b-taglist>
           <b-tag v-for="skill in skills" :key="skill.id" type="is-primary">{{
@@ -374,6 +379,10 @@ export default {
     companyId: {
       type: Number,
       default: 0,
+    },
+    companyName: {
+      type: String,
+      default: '',
     },
     hasApplied: {
       type: Boolean,

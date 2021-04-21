@@ -95,6 +95,7 @@
                 :qualifications="internship.qualifications"
                 :is-active="internship.is_active"
                 :company-id="internship.company_id"
+                :company-name="internship.company_name"
                 :has-applied="internship.has_applied"
               />
             </div>
@@ -120,6 +121,7 @@
                 :qualifications="internship.qualifications"
                 :is-active="internship.is_active"
                 :company-id="internship.company_id"
+                :company-name="internship.company_name"
               />
             </div>
             <section v-else class="hero is-primary">
@@ -235,7 +237,7 @@
           <button type="button" class="delete" @click="closeJobModal" />
         </header>
         <section class="modal-card-body">
-          <InternshipConfirmForm />
+          <InternshipConfirmForm @closeJobModal="closeJobModal" />
         </section>
         <!-- <footer class="modal-card-foot">
           <b-button

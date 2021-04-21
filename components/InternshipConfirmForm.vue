@@ -602,10 +602,19 @@ export default {
         // this.deleteDropFile()
       }
     },
-    async saveInternship() {
-      await this.$store.dispatch('saveInternship')
-      this.closeJobModal()
+    saveInternship() {
+      // await this.$store.dispatch('saveInternship')
+      this.$emit('closeJobModal', true)
+      this.$buefy.notification.open({
+        duration: 3000,
+        type: 'is-success',
+        message: 'Post created successfully',
+        hasIcon: true,
+        position: 'is-top-right',
+      })
+      this.$store.commit('DECREMENT_STEP')
       this.deleteDropFile()
+      this.$store.dispatch('getInternships', this.$auth.user.id)
     },
     deleteDropFile() {
       this.jobForm.file = null

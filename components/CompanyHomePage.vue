@@ -34,18 +34,25 @@
           :skills="student.skills"
           :username="student.username"
         />
+        <InfiniteLoading @infinite="infiniteHandler"> </InfiniteLoading>
       </div>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
+import debounce from 'lodash/debounce'
 export default {
   computed: {
-    ...mapState(['allStudents']),
+    ...mapState(['allStudents', 'page']),
   },
   async mounted() {
     await this.$store.dispatch('getAllStudents')
+  },
+  methods: {
+    infiniteHandler: debounce(function ($state) {
+      this.$store.dispatch('getAllStudents', $state)
+    }, 100),
   },
 }
 </script>

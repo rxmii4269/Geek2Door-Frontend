@@ -17,6 +17,7 @@ export const state = () => ({
   internshipPageInfo: [],
   allInternships: [],
   allStudents: [],
+  page: 1,
   totalWeight: 100,
   weights: {
     qualificationWeight: 0,
@@ -38,9 +39,6 @@ export const getters = {
   getJobById: (state) => (id) => {
     return state.internships.filter((internship) => internship.id === id)
   },
-  qualifications2: (state) => {
-    return state.newInternship.qualifications.join('\n') || ''
-  },
 }
 
 export const mutations = {
@@ -60,7 +58,10 @@ export const mutations = {
     state.allInternships = internships
   },
   SET_ALL_STUDENTS(state, students) {
-    state.allStudents = students
+    state.allStudents.push(...students)
+  },
+  INCREMENT_PAGE(state) {
+    state.page++
   },
   SET_NEW_INTERNSHIP(state, internshipData) {
     state.newInternship = internshipData
@@ -215,7 +216,7 @@ export const actions = {
         duration: 3000,
         message: 'Job Order Uploaded Successfully',
         position: 'is-top-right',
-        type: 'is-success is-light',
+        type: 'is-success',
         hasIcon: true,
       })
       commit('INCREMENT_STEP')
@@ -439,6 +440,7 @@ export const actions = {
   async getInternships({ commit, state }, id) {
     const response = await this.$axios.$get(`/api/users/${id}/internships`)
     response.forEach((element, index, response) => {
+      response[index].position = response[index].position.toLowerCase()
       response[index].shortDescription =
         element.description.replace(/\r?\n|\r/g, ' ').slice(0, 100) + '...'
     })
@@ -514,11 +516,25 @@ export const actions = {
   async deleteInternship({ commit, state, dispatch }, id) {
     await this.$axios.$delete(`/api/internships/${id}`)
   },
-  async getAllStudents({ commit, dispatch }) {
+  async getAllStudents({ commit, dispatch, state }, infiniteState) {
     try {
-      const response = await this.$axios.$get('/api/users/students')
+      if (infiniteState) {
+        commit('INCREMENT_PAGE')
+      }
+      console.log(infiniteState)
+      const response = await this.$axios.$get('/api/users/students', {
+        params: {
+          page: state.page,
+        },
+      })
       commit('SET_ALL_STUDENTS', response)
+      if (infiniteState && response.length) {
+        infiniteState.loaded()
+      } else if (infiniteState) {
+        infiniteState.complete()
+      }
     } catch (error) {
+      console.log(error)
       Notification.open({
         duration: 3000,
         message: error.response.data.message,

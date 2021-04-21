@@ -40,10 +40,7 @@
               <b-input
                 v-model="form.email"
                 type="text"
-                custom-class="green"
-                icon-pack="bx"
-                icon="bxs-envelope"
-                icon-right="bx-user-circle"
+                icon="email"
                 size="is-medium"
                 expanded
               ></b-input>

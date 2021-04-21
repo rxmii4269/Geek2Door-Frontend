@@ -95,6 +95,16 @@
             <b-input v-model="description" type="textarea"></b-input>
           </b-field>
         </ValidationProvider>
+        <ValidationProvider v-if="activeStep === 1">
+          <b-field label="Tenure/Duration">
+            <b-datepicker
+              v-model="duration"
+              placeholder="Pick a date range..."
+              range
+              editable
+            ></b-datepicker>
+          </b-field>
+        </ValidationProvider>
         <ValidationProvider
           v-if="activeStep === 1"
           v-slot="{ errors, valid }"
@@ -525,6 +535,18 @@ export default {
         return this.$store.dispatch('calculateSkillsWeight', newValue)
       },
     },
+    duration: {
+      get() {
+        if (this.$store.state.newInternship) {
+          return this.$store.state.newInternship.duration
+        } else {
+          return []
+        }
+      },
+      set(newValue) {
+        return this.$store.commit('SET_DURATION', newValue)
+      },
+    },
     skillsList: {
       get() {
         if (this.$store.state.newInternship) {
@@ -582,6 +604,8 @@ export default {
     },
     async saveInternship() {
       await this.$store.dispatch('saveInternship')
+      this.closeJobModal()
+      this.deleteDropFile()
     },
     deleteDropFile() {
       this.jobForm.file = null

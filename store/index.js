@@ -71,6 +71,9 @@ export const mutations = {
   SET_RESPONSIBILITIES(state, value) {
     state.newInternship.responsibilities = value
   },
+  SET_DURATION(state, value) {
+    state.newInternship.duration = value
+  },a
   SET_OTHER(state, value) {
     state.newInternship.qualifications = value
   },
@@ -205,6 +208,7 @@ export const actions = {
       const softSkills = response.analysis.required_soft_skills
       const concatSkills = hardSkills.concat(softSkills)
       response.analysis.skills = concatSkills
+      response.analysis.duration = []
       commit('TOGGLE_SUBMITTING_JOB', false)
       await dispatch('calculateTotalWeight')
       Notification.open({

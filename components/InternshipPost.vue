@@ -27,12 +27,9 @@
       <hr />
       <b-field label="Skills" custom-class="is-size-7">
         <b-taglist>
-          <b-tag
-            v-for="(weight, skill) in skills"
-            :key="skill.index"
-            type="is-primary"
-            >{{ skill }}</b-tag
-          >
+          <b-tag v-for="skill in skills" :key="skill.id" type="is-primary">{{
+            skill.name
+          }}</b-tag>
         </b-taglist>
       </b-field>
 

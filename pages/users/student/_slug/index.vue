@@ -40,6 +40,9 @@
                 </div>
               </div>
               <div class="content">
+                {{ profileData.bio }}
+              </div>
+              <div class="content">
                 <p class="subtitle is-7">{{ profileData.email }}</p>
                 <b-taglist v-if="profileData.parish" attached>
                   <b-tag type="is-dark"
@@ -215,6 +218,23 @@
                 <b-input
                   v-model="updatedProfileData.email"
                   type="email"
+                ></b-input>
+              </b-field>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required"
+              name="Bio"
+              slim
+            >
+              <b-field
+                label="Bio"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-input
+                  v-model="updatedProfileData.bio"
+                  type="textarea"
                 ></b-input>
               </b-field>
             </ValidationProvider>

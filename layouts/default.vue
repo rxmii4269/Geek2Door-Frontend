@@ -1,6 +1,7 @@
 <template>
   <div class="is-flex-direction-column is-flex h-100">
     <Navbar />
+    <!-- <BreadCrumbs /> -->
     <section
       class="section is-flex-grow-1"
       :class="[$route.name.includes('accounts') ? 'wave' : '']"

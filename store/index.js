@@ -55,7 +55,7 @@ export const mutations = {
     state.internships = internships
   },
   SET_ALL_INTERNSHIPS(state, internships) {
-    state.allInternships = internships
+    state.allInternships.push(...internships)
   },
   SET_ALL_STUDENTS(state, students) {
     state.allStudents.push(...students)
@@ -492,13 +492,38 @@ export const actions = {
     const response = await this.$axios.$get(`/api/internships/${id}`)
     commit('SET_JOB_PAGE_INFO', response)
   },
-  async getAllInternships({ commit }) {
-    const response = await this.$axios.$get(`/api/internships`)
-    response.forEach((element, index, response) => {
-      response[index].shortDescription =
-        element.description.replace(/\r?\n|\r/g, ' ').slice(0, 100) + '...'
-    })
-    commit('SET_ALL_INTERNSHIPS', response)
+  async getAllInternships({ commit, state }, infiniteState) {
+    try {
+      if (infiniteState) {
+        commit('INCREMENT_PAGE')
+      }
+
+      const response = await this.$axios.$get(`/api/internships`, {
+        params: {
+          page: state.page,
+        },
+      })
+      response.forEach((element, index, response) => {
+        response[index].shortDescription =
+          element.description.replace(/\r?\n|\r/g, ' ').slice(0, 100) + '...'
+      })
+
+      if (infiniteState && response.length) {
+        infiniteState.loaded()
+      } else if (infiniteState) {
+        infiniteState.complete()
+      }
+      commit('SET_ALL_INTERNSHIPS', response)
+    } catch (error) {
+      console.log(error)
+      Notification.open({
+        duration: 3000,
+        message: error.response.data.message,
+        position: 'is-top-right',
+        type: 'is-danger is-light',
+        hasIcon: true,
+      })
+    }
   },
   async applyForInternship({ commit, state, dispatch }, data) {
     commit('TOGGLE_APPLYING_FOR_INTERNSHIP', true)
@@ -521,7 +546,6 @@ export const actions = {
       if (infiniteState) {
         commit('INCREMENT_PAGE')
       }
-      console.log(infiniteState)
       const response = await this.$axios.$get('/api/users/students', {
         params: {
           page: state.page,

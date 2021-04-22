@@ -22,7 +22,7 @@
           ></b-input>
         </b-field>
       </div>
-      <div v-if="$auth.user.role === 'student'" class="columns">
+      <div v-if="$auth.user.role === 'student'" class="columns is-multiline">
         <InternshipPost
           v-for="internship in allInternships"
           :id="internship.id"
@@ -39,12 +39,15 @@
           :is-active="internship.is_active"
           :company-id="internship.company_id"
           :has-applied="internship.has_applied"
+          :company-name="internship.company_name"
         />
+        <InfiniteLoading @infinite="infiniteHandler"></InfiniteLoading>
       </div>
     </div>
   </div>
 </template>
 <script>
+import debounce from 'lodash/debounce'
 import { mapState } from 'vuex'
 export default {
   computed: {
@@ -52,6 +55,11 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch('getAllInternships')
+  },
+  methods: {
+    infiniteHandler: debounce(function ($state) {
+      this.$store.dispatch('getAllInternships', $state)
+    }, 100),
   },
 }
 </script>

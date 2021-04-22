@@ -39,17 +39,27 @@
                   <p class="subtitle is-6">@{{ profileData.username }}</p>
                 </div>
               </div>
+              <p class="subtitle is-6">{{ profileData.email }}</p>
               <div class="content">
                 {{ profileData.bio }}
               </div>
               <div class="content">
-                <p class="subtitle is-7">{{ profileData.email }}</p>
-                <b-taglist v-if="profileData.parish" attached>
-                  <b-tag type="is-dark"
-                    ><b-icon pack="bx" icon="bx-map"></b-icon
-                  ></b-tag>
-                  <b-tag type="is-primary">{{ profileData.parish }}</b-tag>
-                </b-taglist>
+                <b-field grouped group-multiline>
+                  <div class="control">
+                    <b-taglist v-if="profileData.parish" attached>
+                      <b-tag type="is-dark"
+                        ><b-icon pack="bx" icon="bx-map"></b-icon
+                      ></b-tag>
+                      <b-tag type="is-primary">{{ profileData.parish }}</b-tag>
+                    </b-taglist>
+                  </div>
+                  <div class="control">
+                    <b-taglist v-if="profileData.gpa" attached>
+                      <b-tag type="is-dark">GPA</b-tag>
+                      <b-tag type="is-primary">{{ profileData.gpa }}</b-tag>
+                    </b-taglist>
+                  </div>
+                </b-field>
               </div>
               <div class="content">
                 <b-taglist>
@@ -123,43 +133,6 @@
             :has-applied="internship.has_applied"
           />
         </div>
-        <!-- <b-button type="is-primary">Create Blog </b-button> -->
-
-        <!-- <div class="card column is-4">
-          <div class="card-image">
-            <figure class="image is-4by3">
-              <img
-                src="https://bulma.io/images/placeholders/1280x960.png"
-                alt="Placeholder image"
-              />
-            </figure>
-          </div>
-          <div class="card-content">
-            <div class="media">
-              <div class="media-content">
-                <p class="title is-4">Some Blog Title</p>
-                <p class="subtitle is-6">by: {{ profileData.username }}</p>
-              </div>
-            </div>
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-              nec iaculis mauris. <a>@thingsStressingYou</a>.
-              <a href="#">#LifeonlyGetsWorse</a>
-              <a href="#">#responsive</a>
-              <br />
-
-              <b-button slim type="is-pink" class="is-pulled-left"
-                >Comment</b-button
-              >
-              <b-button slim type="is-pink" class="is-pulled-left"
-                >Edit</b-button
-              >
-              <br />
-              <br />
-              <time datetime="2016-1-1">11:09 PM - 1 Jan 2021</time>
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
     <div v-if="profileData.message" class="hero is-warning is-medium">
@@ -257,6 +230,26 @@
                   :create-tag="addSkill"
                 >
                 </b-taginput>
+              </b-field>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, valid }"
+              rules="required"
+              name="GPA"
+              slim
+            >
+              <b-field
+                label="GPA"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-numberinput
+                  v-model.number="updatedProfileData.gpa"
+                  expanded
+                  controls-position="compact"
+                  :step="0.01"
+                  :max="4.0"
+                ></b-numberinput>
               </b-field>
             </ValidationProvider>
             <ValidationProvider

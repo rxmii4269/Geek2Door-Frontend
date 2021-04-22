@@ -341,7 +341,7 @@ export default {
     //   set(newValue) {},
     // },
     ...mapState(['internships', 'isSubmittingJob']),
-    ...mapGetters(['unarchivedJobs', 'archivedJobs', 'qualifications2']),
+    ...mapGetters(['unarchivedJobs', 'archivedJobs']),
   },
   created() {},
 

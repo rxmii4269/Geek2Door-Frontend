@@ -489,8 +489,28 @@ export const actions = {
     await dispatch('getInternships', state.auth.user.id)
   },
   async getInternshipPage({ commit }, id) {
-    const response = await this.$axios.$get(`/api/internships/${id}`)
-    commit('SET_JOB_PAGE_INFO', response)
+    try {
+      const response = await this.$axios.$get(`/api/internships/${id}`)
+      response.skills.sort((a, b) => {
+        const fa = a.name.toLowerCase()
+        const fb = b.name.toLowerCase()
+        if (fa < fb) {
+          return -1
+        }
+        if (fa > fb) {
+          return 1
+        }
+        return 0
+      })
+      commit('SET_JOB_PAGE_INFO', response)
+    } catch (error) {
+      Notification.open({
+        duration: 4000,
+        type: 'is-danger',
+        message: error.response.data,
+        hasIcon: true,
+      })
+    }
   },
   async getAllInternships({ commit, state }, infiniteState) {
     try {

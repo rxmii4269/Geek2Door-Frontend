@@ -470,8 +470,8 @@ export default {
         // this.deleteDropFile()
       }
     },
-    saveInternship() {
-      // await this.$store.dispatch('saveInternship')
+    async saveInternship() {
+      await this.$store.dispatch('saveInternship')
       this.$emit('closeJobModal', true)
       this.$buefy.notification.open({
         duration: 3000,

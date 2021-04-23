@@ -264,6 +264,7 @@
 import Talk from 'talkjs'
 import debounce from 'lodash.debounce'
 import { mapState, mapGetters } from 'vuex'
+import cloneDeep from 'lodash/cloneDeep'
 export default {
   data() {
     return {
@@ -275,6 +276,7 @@ export default {
         profile_picture: '',
         file: null,
       },
+      updatedProfileData: '',
       degrees: [
         'BSc. Computer Science',
         'BSc. Information Technology',
@@ -322,24 +324,6 @@ export default {
         return this.$store.state.profileData
       },
     },
-    updatedProfileData: {
-      get() {
-        return this.$store.state.updatedProfileData
-      },
-      set(value) {
-        this.$store.commit('SET_PROFILE_DATA', value)
-      },
-    },
-    // qualifications: {
-    //   get() {
-    //     if (this.$store.state.newInternship) {
-    //       return this.$store.state.newInternship.qualifications.join('\n')
-    //     } else {
-    //       return ''
-    //     }
-    //   },
-    //   set(newValue) {},
-    // },
     ...mapState(['internships', 'isSubmittingJob']),
     ...mapGetters(['unarchivedJobs', 'archivedJobs']),
   },
@@ -386,9 +370,9 @@ export default {
         popup.show()
       })
     },
-    async editProfile() {
+    editProfile() {
       this.parishes = this.parishes.sort()
-      await this.$store.dispatch('editProfile', this.profileData)
+      this.updatedProfileData = cloneDeep(this.profileData)
       this.edit = !this.edit
     },
     cancel() {

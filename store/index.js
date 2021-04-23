@@ -458,6 +458,7 @@ export const actions = {
   },
   async updateInternship({ commit, dispatch, state }, internshipForm) {
     commit('TOGGLE_SUBMITTING_JOB', true)
+    console.log(internshipForm)
     await this.$axios
       .$post(`/api/internships/${internshipForm.id}`, internshipForm)
       .then((response) => {

@@ -81,7 +81,7 @@
           type="is-primary"
           size="is-small"
           :loading="isApplyingForInternship"
-          :disabled="hasApplied"
+          :disabled="hasAppliedCheck"
           @click="applyForInternship"
         >
           {{ isApplied }}
@@ -123,10 +123,11 @@
       destroy-on-hide
       aria-role="dialog"
       aria-modal
+      :can-cancel="false"
     >
       <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">Create a Job</p>
+          <p class="modal-card-title">Edit Internship</p>
           <button type="button" class="delete" @click="closeJobModal" />
         </header>
         <section class="modal-card-body">
@@ -239,12 +240,23 @@
                 label="Skills"
                 :type="{ 'is-danger': errors[0], 'is-success': valid }"
                 :message="errors"
+                expanded
+                :addons="false"
               >
-                <b-input
-                  v-model.trim="jobForm.skills"
-                  :value="skills"
-                  type="textarea"
-                ></b-input>
+                <b-field
+                  v-for="skill in jobForm.skills"
+                  :key="skill.id"
+                  expanded
+                >
+                  <b-input v-model="skill.name" expanded></b-input>
+                  <b-field>
+                    <b-numberinput
+                      v-model="skill.weight"
+                      expanded
+                      controls-position="compact"
+                    ></b-numberinput>
+                  </b-field>
+                </b-field>
               </b-field>
             </ValidationProvider>
             <ValidationProvider
@@ -413,6 +425,7 @@ export default {
         'BSc. Information Systems',
       ],
       active: this.isActive ? 'Archive' : 'Unarchive',
+      hasAppliedCheck: this.hasApplied,
       isApplied: this.hasApplied ? 'Applied' : 'Apply',
     }
   },
@@ -437,6 +450,8 @@ export default {
         student_id: this.$auth.user.id,
         post_id: this.id,
       })
+      this.hasAppliedCheck = true
+      this.isApplied = this.hasAppliedCheck ? 'Applied' : 'Apply'
     },
     async updateJob() {
       const isValid = await this.$refs.updateJobObserver.validate()

@@ -9,7 +9,7 @@
           <div class="card-content">
             <div class="content">
               <time class="block"> Start Date: {{ startDate }}</time>
-              <time class="block">{{ endDate }}</time>
+              <time class="block"> End Date: {{ endDate }}</time>
               <p class="is-size-7 has-text-weight-medium">
                 by:
                 <nuxt-link
@@ -34,6 +34,18 @@
                 </b-taglist>
               </b-field>
             </div>
+          </div>
+          <div class="card-footer">
+            <a
+              role="button"
+              class="card-footer-item has-background-dark has-text-warning"
+              >Archive</a
+            >
+            <a
+              role="button"
+              class="card-footer-item has-background-primary has-text-white"
+              >Edit</a
+            >
           </div>
         </div>
       </div>

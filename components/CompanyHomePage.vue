@@ -120,7 +120,7 @@ export default {
     }, 500),
     infiniteHandler: debounce(function ($state) {
       this.$store.dispatch('getAllStudents', $state)
-    }, 100),
+    }, 500),
     navigate(option) {
       this.$router.push(`/users/student/${option.username}`)
     },

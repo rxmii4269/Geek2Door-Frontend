@@ -12,12 +12,17 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Geek2Door',
+    htmlAttrs: {
+      lang: 'en',
+    },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
+      { name: 'theme-color', content: '#7957D5' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }],
+    noscript: [{ innerHTML: 'This website requires JavaScript' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -121,7 +126,7 @@ export default {
     families: {
       'IBM+Plex+Sans': [100, 200, 300, 400, 500],
     },
-    display: 'auto',
+    display: 'swap',
     prefetch: true,
     preload: true,
   },
@@ -130,6 +135,11 @@ export default {
   pwa: {
     manifest: {
       lang: 'en',
+      name: 'Geek2Door',
+      short_name: 'Geek2Door',
+    },
+    meta: {
+      theme_color: '#7957D5',
     },
   },
 

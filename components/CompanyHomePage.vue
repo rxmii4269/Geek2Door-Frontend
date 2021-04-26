@@ -122,7 +122,7 @@ export default {
       this.$store.dispatch('getAllStudents', $state)
     }, 500),
     navigate(option) {
-      this.$router.push(`/users/student/${option.username}`)
+      this.$router.push(`/student/${option.username}`)
     },
   },
 }

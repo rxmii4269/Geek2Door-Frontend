@@ -144,9 +144,9 @@ export const actions = {
     if (this.$auth.loggedIn) {
       let url = ''
       if (this.$auth.user.role === 'company') {
-        url = `/users/${this.$auth.user.role}/${this.$auth.user.name}`
+        url = `/${this.$auth.user.role}/${this.$auth.user.name}`
       } else {
-        url = `/users/${this.$auth.user.role}/${this.$auth.user.username}`
+        url = `/${this.$auth.user.role}/${this.$auth.user.username}`
       }
       commit('SET_PROFILE_URL', url)
     }
@@ -173,7 +173,7 @@ export const actions = {
             hasIcon: true,
           })
           await self.$auth.setUser(updatedUser.user)
-          self.$router.push(`/users/company/${self.$auth.user.name}`)
+          self.$router.push(`/company/${self.$auth.user.name}`)
           dispatch('getProfile', updatedUser.user.name)
         })
     } else if (this.$auth.user.role === 'student') {
@@ -191,7 +191,7 @@ export const actions = {
             hasIcon: true,
           })
           await self.$auth.setUser(updateUser.user)
-          self.$router.push(`/users/student/${self.$auth.user.username}`)
+          self.$router.push(`/student/${self.$auth.user.username}`)
           dispatch('getProfile', updateUser.user.username)
         })
     }

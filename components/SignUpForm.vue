@@ -273,9 +273,9 @@ export default {
             this.$auth.loginWith('local', { data: loginData }).then(() => {
               this.$store.dispatch('generateProfileUrl')
               if (this.userType === 'student') {
-                this.$router.push(`/users/student/${this.form.username}`)
+                this.$router.push(`/student/${this.form.username}`)
               } else {
-                this.$router.push(`/users/company/${this.form.company_name}`)
+                this.$router.push(`/company/${this.form.company_name}`)
               }
             })
           })

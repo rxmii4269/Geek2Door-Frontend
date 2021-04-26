@@ -13,7 +13,7 @@
               <p class="is-size-7 has-text-weight-medium">
                 by:
                 <nuxt-link
-                  :to="'/users/company/' + internshipPageInfo.company_name"
+                  :to="'/company/' + internshipPageInfo.company_name"
                   >{{ internshipPageInfo.company_name }}</nuxt-link
                 >
               </p>

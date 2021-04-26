@@ -25,9 +25,7 @@
       </div>
       <p class="is-size-7 has-text-weight-medium mt-2">
         by:
-        <nuxt-link :to="'/users/company/' + companyName">{{
-          companyName
-        }}</nuxt-link>
+        <nuxt-link :to="'/company/' + companyName">{{ companyName }}</nuxt-link>
       </p>
       <hr class="my-3" />
       <b-field label="Skills" custom-class="is-size-7">

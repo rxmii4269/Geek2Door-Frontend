@@ -78,7 +78,7 @@ export default {
       return `${this.$config.axios.browserBaseURL}/api/images/${this.profilePicture}`
     },
     profile() {
-      return `/users/student/${this.username}`
+      return `/student/${this.username}`
     },
   },
   //   mounted: {},

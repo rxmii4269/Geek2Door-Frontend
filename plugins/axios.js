@@ -13,7 +13,7 @@ export default function ({ $axios, redirect, $auth }) {
         duration: 4000,
         type: 'is-danger',
         hasIcon: true,
-        message: error.response,
+        message: error.response.data,
       })
     }
   })

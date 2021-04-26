@@ -23,16 +23,35 @@
             field="title"
             :loading="isFetching"
             @typing="getAsyncData"
-            @select="(option) => (selected = option)"
+            @select="navigate($event)"
           >
             <template slot-scope="props">
               <div class="media">
                 <div class="media-left">
                   <img
                     width="32"
-                    :src="`${$config.axios.browserBaseURL}/api/images/${props.profile_picture}`"
+                    :src="`${$config.axios.browserBaseURL}/api/images/${props.option.profile_picture}`"
                     alt=""
                   />
+                </div>
+                <div class="media-content">
+                  {{ props.option.firstname }} {{ props.option.lastname }}
+                  <br />
+                  <small>
+                    <b-taglist v-if="props.option.gpa" attached>
+                      <b-tag type="is-primary">GPA</b-tag>
+                      <b-tag type="is-dark">{{ props.option.gpa }}</b-tag>
+                    </b-taglist>
+                    <b-taglist v-if="props.option.skills">
+                      <b-tag
+                        v-for="skill in props.option.skills"
+                        :key="skill.id"
+                        type="is-primary"
+                      >
+                        {{ skill.name }}
+                      </b-tag>
+                    </b-taglist>
+                  </small>
                 </div>
               </div>
             </template>
@@ -89,7 +108,6 @@ export default {
         })
         .then(({ data }) => {
           this.data = []
-          console.log(data)
           data.results.forEach((item) => this.data.push(item))
         })
         .catch((error) => {
@@ -103,6 +121,16 @@ export default {
     infiniteHandler: debounce(function ($state) {
       this.$store.dispatch('getAllStudents', $state)
     }, 100),
+    navigate(option) {
+      this.$router.push(`/users/student/${option.username}`)
+    },
   },
 }
 </script>
+<style scoped>
+@media screen and (max-width: 768px) {
+  .media-content {
+    overflow-x: visible;
+  }
+}
+</style>

@@ -3,7 +3,7 @@ export default {
   ssr: true,
 
   // Target: https://go.nuxtjs.dev/config-target
-  target: 'static',
+  target: 'server',
   loadingIndicator: {
     name: 'cube-grid',
     color: '#fb8a8a',

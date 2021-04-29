@@ -57,3 +57,8 @@ export default {
   },
 }
 </script>
+<style scoped>
+.is-large.modal-close {
+  background-color: #7a7a7a !important;
+}
+</style>

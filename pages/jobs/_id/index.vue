@@ -359,7 +359,6 @@
     <DocumentModal
       :active="modalIsActive"
       :filename="internshipPageInfo.filename"
-      :file-type="internshipPageInfo.file_type"
       @update:active="toggleModal($event)"
     />
   </section>

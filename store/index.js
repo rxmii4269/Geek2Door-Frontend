@@ -93,6 +93,9 @@ export const mutations = {
   SET_SKILLS_LIST_VALUE(state, val) {
     state.skillsList[val.index] = val.divideEvenly
   },
+  SET_SKILL_VALUE(state, val) {
+    state.newInternship.skills[val.index] = val.value
+  },
   SET_WEIGHT(state, update) {
     state.weights[update.key] = update.splitEvenly
   },
@@ -407,6 +410,11 @@ export const actions = {
     state.skillsList.forEach((skill, index) => {
       commit('SET_SKILLS_LIST_VALUE', { index, divideEvenly })
     })
+  },
+  async editSkill({ commit, state }, newValue) {
+    const index = newValue.index
+    const value = newValue.skill
+    await commit('SET_SKILL_VALUE', { index, value })
   },
   async editSkillWeight({ commit, dispatch, state }, newValue) {
     const index = newValue.index

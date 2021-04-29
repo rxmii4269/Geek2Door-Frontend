@@ -196,7 +196,10 @@
                 @click="remove(index)"
               ></b-button>
             </p>
-            <b-input v-model="skills[index]"></b-input>
+            <b-input
+              :value="skills[index]"
+              @input="editSkill($event, index)"
+            ></b-input>
             <b-field>
               <b-numberinput
                 v-if="`skill-${index}`"
@@ -314,7 +317,6 @@ export default {
         }
       },
       set(newValue) {
-        console.log(newValue)
         this.$store.commit('SET_GPA', newValue)
       },
     },
@@ -335,7 +337,6 @@ export default {
         }
       },
       set(newValue) {
-        console.log(newValue)
         return this.$store.commit('SET_RESPONSIBILITIES', newValue)
       },
     },
@@ -444,9 +445,7 @@ export default {
           return ''
         }
       },
-      set(newValue) {
-        console.log(newValue)
-      },
+      set(newValue) {},
     },
     description: {
       get() {
@@ -526,6 +525,9 @@ export default {
     },
     editSkillWeight(event, index) {
       this.$store.dispatch('editSkillWeight', { event, index })
+    },
+    editSkill(skill, index) {
+      this.$store.dispatch('editSkill', { skill, index })
     },
   },
 }

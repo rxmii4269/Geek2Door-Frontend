@@ -12,7 +12,16 @@
       powered by
       <a target="_blank" href="http://office.com/webapps">Office Online</a>.
     </iframe>
-    <Pdf v-else :src="pdfSrc" />
+    <div v-else class="is-flex is-justify-content-center">
+      <div class="pdf">
+        <iframe
+          height="100%"
+          width="100%"
+          :src="pdfSrc"
+          frameborder="0"
+        ></iframe>
+      </div>
+    </div>
   </b-modal>
 </template>
 <script>
@@ -30,7 +39,10 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      currentPage: 0,
+      pageCount: 0,
+    }
   },
   computed: {
     isActive() {
@@ -43,7 +55,9 @@ export default {
       return `${this.$config.axios.browserBaseURL}/api/document/${this.filename}`
     },
     fileType() {
-      if (this.filename.split('.')[1] === 'pdf') {
+      const filename = this.filename.split('.')
+      const filetype = filename.slice(-1)[0]
+      if (filetype === 'pdf') {
         return 'pdf'
       } else {
         return 'docx'
@@ -57,8 +71,13 @@ export default {
   },
 }
 </script>
-<style scoped>
+<style>
 .is-large.modal-close {
   background-color: #7a7a7a !important;
+}
+.pdf {
+  width: 100%;
+  height: 100vh;
+  min-width: 400px;
 }
 </style>

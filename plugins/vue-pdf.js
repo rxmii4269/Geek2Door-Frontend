@@ -1,4 +1,4 @@
 import Vue from 'vue'
-import pdf from 'vue-pdf'
+import pdf from 'pdfvuer'
 
 Vue.component('Pdf', pdf)

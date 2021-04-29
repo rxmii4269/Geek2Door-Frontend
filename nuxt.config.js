@@ -36,7 +36,6 @@ export default {
   plugins: [
     '@/plugins/vee-validate.js',
     { src: '@/plugins/infiniteloading.js', ssr: false },
-    { src: '@/plugins/vue-pdf.js', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

@@ -1,6 +1,17 @@
 <template>
-  <b-modal :active="isActive" @update:active="toggleModal($event)">
-    <iframe v-if="fileType === 'docx'" :src="url" frameborder="0"></iframe>
+  <b-modal full-screen :active="isActive" @update:active="toggleModal($event)">
+    <iframe
+      v-if="fileType === 'docx'"
+      :src="url"
+      frameborder="0"
+      height="100%"
+      width="100%"
+    >
+      This is an embedded
+      <a target="_blank" href="http://office.com">Microsoft Office</a> document,
+      powered by
+      <a target="_blank" href="http://office.com/webapps">Office Online</a>.
+    </iframe>
     <Pdf v-else :src="pdfSrc" />
   </b-modal>
 </template>
@@ -26,7 +37,7 @@ export default {
       return this.active
     },
     url() {
-      return `https://docs.google.com/gview?url=${this.$config.axios.browserBaseURL}/api/document/${this.filename}&embedded=true`
+      return `https://view.officeapps.live.com/op/embed.aspx?src=${this.$config.axios.browserBaseURL}/api/document/${this.filename}`
     },
     pdfSrc() {
       return `${this.$config.axios.browserBaseURL}/api/document/${this.filename}`

@@ -4,7 +4,7 @@
       <b-step-item step="1" label="Part One">
         <ValidationProvider
           v-slot="{ errors, validate, valid }"
-          rules="required"
+          rules="required|mimes:application/pdf,mimes:application/docx,application/doc"
           name="Internship Document"
           slim
         >
@@ -95,8 +95,11 @@
             <b-input v-model="description" type="textarea"></b-input>
           </b-field>
         </ValidationProvider>
-        <ValidationProvider v-if="activeStep === 1">
-          <b-field label="Tenure/Duration">
+        <ValidationProvider v-if="activeStep === 1" v-slot="{ errors, valid }">
+          <b-field
+            label="Tenure/Duration"
+            :type="{ 'is-danger': errors[0], 'is-success': valid }"
+          >
             <b-datepicker
               v-model="duration"
               placeholder="Pick a date range..."
@@ -105,28 +108,40 @@
             ></b-datepicker>
           </b-field>
         </ValidationProvider>
-        <ValidationProvider
-          v-if="activeStep === 1"
-          v-slot="{ errors, valid }"
-          rules="required"
-        >
-          <b-field
-            grouped
-            :type="{ 'is-danger': errors[0], 'is-success': valid }"
+        <b-field grouped>
+          <ValidationProvider
+            v-if="activeStep === 1"
+            v-slot="{ errors, valid }"
+            rules="required"
+            name="Qualifications"
+            slim
           >
-            <b-field label="Qualification" expanded>
+            <b-field
+              label="Qualification"
+              :type="{ 'is-danger': errors[0], 'is-success': valid }"
+              :message="errors"
+              expanded
+            >
               <b-input v-model="diploma"></b-input>
             </b-field>
+          </ValidationProvider>
+          <ValidationProvider
+            v-if="activeStep === 1"
+            v-slot="{ errors, valid }"
+            rules="required"
+            slim
+          >
             <b-field label="Assign Weight" expanded>
               <b-numberinput
                 v-model="qualificationWeight"
+                :type="{ 'is-danger': errors[0], 'is-primary': valid }"
                 step="0.01"
                 controls-position="compact"
                 :controls="true"
               ></b-numberinput
             ></b-field>
-          </b-field>
-        </ValidationProvider>
+          </ValidationProvider>
+        </b-field>
         <b-field v-if="activeStep === 1" grouped>
           <b-field label="Minimum GPA" expanded>
             <b-numberinput
@@ -237,6 +252,12 @@ export default {
   components: {
     ValidationObserver,
     ValidationProvider,
+  },
+  props: {
+    clear: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -408,7 +429,7 @@ export default {
         if (this.$store.state.newInternship) {
           return this.$store.state.newInternship.duration
         } else {
-          return []
+          return ''
         }
       },
       set(newValue) {
@@ -466,23 +487,24 @@ export default {
         })
 
         await this.$store.dispatch('submitInternship', formData)
-        // this.closeJobModal()
-        // this.deleteDropFile()
       }
     },
     async saveInternship() {
-      await this.$store.dispatch('saveInternship')
-      this.$emit('closeJobModal', true)
-      this.$buefy.notification.open({
-        duration: 3000,
-        type: 'is-success',
-        message: 'Post created successfully',
-        hasIcon: true,
-        position: 'is-top-right',
-      })
-      this.$store.commit('DECREMENT_STEP')
-      this.deleteDropFile()
-      this.$store.dispatch('getInternships', this.$auth.user.id)
+      const isValid = await this.$refs.createJobObserver.validate()
+      if (isValid) {
+        await this.$store.dispatch('saveInternship')
+        this.$emit('closeJobModal', true)
+        this.$buefy.notification.open({
+          duration: 3000,
+          type: 'is-success',
+          message: 'Post created successfully',
+          hasIcon: true,
+          position: 'is-top-right',
+        })
+        this.$store.commit('DECREMENT_STEP')
+        this.deleteDropFile()
+        this.$store.dispatch('getInternships', this.$auth.user.id)
+      }
     },
     deleteDropFile() {
       this.jobForm.file = null

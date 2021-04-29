@@ -3,20 +3,40 @@
     <div v-if="internshipPageInfo" class="columns is-multiline">
       <div class="column is-one-third">
         <div class="card">
-          <header class="card-header">
-            <p class="card-header-title">{{ internshipPageInfo.position }}</p>
+          <header class="card-header is-flex-direction-column">
+            <p class="card-header-title pb-1">
+              {{ internshipPageInfo.position }}
+            </p>
+            <p class="is-size-7 has-text-weight-medium card-header-title pt-0">
+              by:
+              <nuxt-link
+                class="ml-1"
+                :to="'/company/' + internshipPageInfo.company_name"
+                >{{ internshipPageInfo.company_name }}</nuxt-link
+              >
+            </p>
           </header>
           <div class="card-content">
             <div class="content">
-              <time class="block"> Start Date: {{ startDate }}</time>
-              <time class="block"> End Date: {{ endDate }}</time>
-              <p class="is-size-7 has-text-weight-medium">
-                by:
-                <nuxt-link
-                  :to="'/company/' + internshipPageInfo.company_name"
-                  >{{ internshipPageInfo.company_name }}</nuxt-link
+              <div
+                v-if="internshipPageInfo.company_name == $auth.user.name"
+                class="is-clearfix"
+              >
+                <b-button
+                  class="is-pulled-right"
+                  type="is-info is-light"
+                  size="is-small"
+                  rounded
+                  @click="toggleModal"
+                  >View Uploaded File</b-button
                 >
-              </p>
+              </div>
+              <p>{{ internshipPageInfo.description }}</p>
+              <div class="is-flex is-flex-direction-row">
+                <span class="is-size-6"> {{ startDate }}</span>
+                <span class="mx-2">-</span>
+                <span class="is-size-6"> {{ endDate }}</span>
+              </div>
               <b-field label="Skills">
                 <b-taglist>
                   <b-tag
@@ -35,7 +55,10 @@
               </b-field>
             </div>
           </div>
-          <div class="card-footer">
+          <div
+            v-if="internshipPageInfo.company_name == $auth.user.name"
+            class="card-footer"
+          >
             <a
               role="button"
               class="card-footer-item has-background-dark has-text-warning"
@@ -333,6 +356,12 @@
         </footer>
       </div>
     </b-modal>
+    <DocumentModal
+      :active="modalIsActive"
+      :filename="internshipPageInfo.filename"
+      :file-type="internshipPageInfo.file_type"
+      @update:active="toggleModal($event)"
+    />
   </section>
 </template>
 <script>
@@ -358,6 +387,7 @@ export default {
         'BSc. Computer Studies',
         'BSc. Information Systems',
       ],
+      modalIsActive: false,
     }
   },
   computed: {
@@ -380,6 +410,9 @@ export default {
     this.endDate = endDate.toDateString()
   },
   methods: {
+    toggleModal(value) {
+      this.modalIsActive = !this.modalIsActive
+    },
     add() {
       this.jobForm.skills.push({
         name: 'value',

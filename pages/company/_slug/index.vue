@@ -237,25 +237,11 @@
           <button type="button" class="delete" @click="closeJobModal" />
         </header>
         <section class="modal-card-body">
-          <InternshipConfirmForm @closeJobModal="closeJobModal" />
+          <InternshipConfirmForm
+            :clear="clear"
+            @closeJobModal="closeJobModal"
+          />
         </section>
-        <!-- <footer class="modal-card-foot">
-          <b-button
-            label="Close"
-            icon-pack="bx"
-            icon-left="bx-x"
-            type="is-danger is-outlined"
-            @click="closeJobModal"
-          ></b-button>
-          <b-button
-            label="Save"
-            type="is-primary"
-            icon-pack="bx"
-            icon-left="bx-check"
-            :loading.sync="isSubmittingJob"
-            @click="submitJob"
-          ></b-button>
-        </footer> -->
       </div>
     </b-modal>
   </div>
@@ -271,11 +257,7 @@ export default {
       chatWith: '',
       edit: false,
       nojobs: false,
-      jobForm: {
-        company_id: '',
-        profile_picture: '',
-        file: null,
-      },
+      clear: false,
       updatedProfileData: '',
       degrees: [
         'BSc. Computer Science',
@@ -428,17 +410,10 @@ export default {
       })
     },
     closeJobModal() {
-      Object.keys(this.jobForm).forEach((key, index) => {
-        if (typeof this.jobForm[key] === 'object') {
-          this.jobForm[key] = []
-        } else if (typeof this.jobForm[key] === 'number') {
-          this.jobForm[key] = 2
-        } else {
-          this.jobForm[key] = ''
-        }
-      })
       this.degreeName = ''
       this.nojobs = !this.nojobs
+      this.$store.commit('DECREMENT_STEP')
+      this.clear = true
       // this.$refs.createJobObserver.reset()
     },
   },

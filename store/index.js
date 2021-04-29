@@ -114,10 +114,10 @@ export const mutations = {
     state.appliedInternships = appliedInternships
   },
   INCREMENT_STEP(state) {
-    state.activeStep++
+    state.activeStep = 1
   },
   DECREMENT_STEP(state) {
-    state.activeStep--
+    state.activeStep = 0
   },
   TOGGLE_SUBMITTING_JOB(state, flag) {
     state.isSubmittingJob = flag

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container mobile tablet">
+    <div>
       <div class="mb-6 has-text-centered">
         <h1 class="is-size-2 has-text-weight-semibold">How does it work?</h1>
         <span class="has-text-weight-light"

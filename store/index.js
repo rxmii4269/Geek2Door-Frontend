@@ -248,9 +248,8 @@ export const actions = {
       skillsList: state.skillsList,
     }
     commit('TOGGLE_SAVE_INTERNSHIP')
-    const response = await this.$axios.$post('/api/internships', form)
+    await this.$axios.$post('/api/internships', form)
     commit('TOGGLE_SAVE_INTERNSHIP')
-    console.log(response)
   },
   calculateTotalWeight({ commit, state }) {
     const weightKeys = Object.keys(state.weights)
@@ -286,7 +285,6 @@ export const actions = {
     const splitEvenly = newWeight
     const cumulWeight =
       newWeight + state.weights.gpaWeight + state.weights.skillsWeight
-    console.log(cumulWeight)
     if (newWeight > state.totalWeight) {
       Notification.open({
         duration: 3000,
@@ -295,9 +293,6 @@ export const actions = {
         message: 'Value cannot be larger than the total weight',
         hasIcon: true,
       })
-      // splitEvenly = state.weights.qualificationWeight
-      // console.log(splitEvenly)
-      // commit('SET_WEIGHT', { key, splitEvenly })
     } else if (cumulWeight > state.totalWeight) {
       Notification.open({
         duration: 4000,
@@ -322,8 +317,6 @@ export const actions = {
     const splitEvenly = newWeight
     const cumulWeight =
       newWeight + state.weights.qualificationWeight + state.weights.skillsWeight
-    console.log(cumulWeight)
-
     if (newWeight > state.totalWeight) {
       Notification.open({
         duration: 3000,
@@ -332,9 +325,6 @@ export const actions = {
         message: 'Value cannot be larger than the total weight',
         hasIcon: true,
       })
-      // splitEvenly = state.weights.qualificationWeight
-      // console.log(splitEvenly)
-      // commit('SET_WEIGHT', { key, splitEvenly })
     } else if (cumulWeight > state.totalWeight) {
       Notification.open({
         duration: 4000,
@@ -359,7 +349,6 @@ export const actions = {
     const splitEvenly = newWeight
     const cumulWeight =
       newWeight + state.weights.qualificationWeight + state.weights.gpaWeight
-    console.log(cumulWeight)
 
     if (newWeight > state.totalWeight) {
       Notification.open({
@@ -369,9 +358,6 @@ export const actions = {
         message: 'Value cannot be larger than the total weight',
         hasIcon: true,
       })
-      // splitEvenly = state.weights.qualificationWeight
-      // console.log(splitEvenly)
-      // commit('SET_WEIGHT', { key, splitEvenly })
     } else if (cumulWeight > state.totalWeight) {
       Notification.open({
         duration: 4000,
@@ -405,7 +391,6 @@ export const actions = {
     const divideEvenly = parseFloat(
       (state.weights.skillsWeight / skillsLength).toFixed(3)
     )
-    console.log(divideEvenly)
 
     state.skillsList.forEach((skill, index) => {
       commit('SET_SKILLS_LIST_VALUE', { index, divideEvenly })
@@ -424,7 +409,6 @@ export const actions = {
       return parseFloat((a + b).toFixed(3))
     })
 
-    console.log(cumulSkill)
     if (cumulSkill > state.weights.skillsWeight) {
       Notification.open({
         duration: 4000,
@@ -443,7 +427,6 @@ export const actions = {
       })
     }
     commit('SET_SKILLS_LIST_VALUE', { index, divideEvenly })
-    console.log(newValue)
   },
   async getInternships({ commit, state }, id) {
     const response = await this.$axios.$get(`/api/users/${id}/internships`)
@@ -466,7 +449,6 @@ export const actions = {
   },
   async updateInternship({ commit, dispatch, state }, internshipForm) {
     commit('TOGGLE_SUBMITTING_JOB', true)
-    console.log(internshipForm)
     await this.$axios
       .$post(`/api/internships/${internshipForm.id}`, internshipForm)
       .then((response) => {
@@ -544,7 +526,6 @@ export const actions = {
       }
       commit('SET_ALL_INTERNSHIPS', response)
     } catch (error) {
-      console.log(error)
       Notification.open({
         duration: 3000,
         message: error.response.data.message,
@@ -587,7 +568,6 @@ export const actions = {
         infiniteState.complete()
       }
     } catch (error) {
-      console.log(error)
       Notification.open({
         duration: 3000,
         message: error.response.data.message,

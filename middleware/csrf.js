@@ -1,3 +1,5 @@
+import { NotificationProgrammatic as Notification } from 'buefy'
+
 export default async function ({ $axios, $auth }) {
   try {
     if (!$auth.loggedIn) {
@@ -5,6 +7,12 @@ export default async function ({ $axios, $auth }) {
       $axios.setHeader('X-CSRF-Token', csrf)
     }
   } catch (error) {
-    console.error(error.response)
+    Notification.open({
+      duration: 3000,
+      type: 'is-danger',
+      message: error.response,
+      hasIcon: true,
+      position: 'is-top-right',
+    })
   }
 }

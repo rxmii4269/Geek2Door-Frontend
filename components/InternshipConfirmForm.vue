@@ -4,7 +4,7 @@
       <b-step-item step="1" label="Part One">
         <ValidationProvider
           v-slot="{ errors, validate, valid }"
-          rules="required|mimes:application/pdf,mimes:application/docx,application/doc"
+          rules="required|mimes:application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           name="Internship Document"
           slim
         >
@@ -471,10 +471,7 @@ export default {
     previousStep() {
       this.$store.commit('DECREMENT_STEP')
     },
-    calculateWeights(event) {
-      const totalWeight = event.target.value
-      console.log(totalWeight)
-    },
+    calculateWeights(event) {},
     async submitJob() {
       const isValid = await this.$refs.createJobObserver.validate()
       if (isValid) {

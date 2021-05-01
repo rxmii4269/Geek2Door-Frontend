@@ -286,7 +286,6 @@ export default {
               message: error,
               hasIcon: true,
             })
-            console.error(error)
           })
       }
     },

@@ -8,7 +8,7 @@
           </div>
         </div>
       </div>
-      <b-button @click="$auth.refreshTokens()">Refresh</b-button>
+      <!-- <b-button @click="$auth.refreshTokens()">Refresh</b-button> -->
     </div>
     <div class="column is-9">
       <div class="container mb-5">

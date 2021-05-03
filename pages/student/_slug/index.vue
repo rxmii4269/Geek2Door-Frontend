@@ -102,7 +102,10 @@
           </div>
         </div>
       </div>
-      <div class="column is-9">
+      <div
+        v-if="$auth.user.username === profileData.username"
+        class="column is-9"
+      >
         <h1 class="title has-text-centered">Latest Internships Applied For</h1>
         <section v-if="appliedInternships.length === 0" class="hero is-primary">
           <div class="hero-body has-text-centered">

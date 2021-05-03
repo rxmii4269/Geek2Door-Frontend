@@ -161,6 +161,18 @@ a.navbar-item:hover {
     fill: #7957d5 !important;
   }
 }
+@media screen and (max-width: 1023px) {
+  .dropdown.is-mobile-modal > .dropdown-menu {
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+  }
+  .dropdown.dropdown.is-mobile-modal > .dropdown-menu .has-link {
+    margin-bottom: 0.75rem !important;
+  }
+  .navbar-item > .dropdown.dropdown.is-mobile-modal {
+    width: 100%;
+    display: block;
+  }
+}
 
 #message--svg {
   fill: #7957d5;

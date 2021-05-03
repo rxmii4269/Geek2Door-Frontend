@@ -23,6 +23,7 @@
                 class="is-clearfix"
               >
                 <b-button
+                  v-if="internshipPageInfo.filename"
                   class="is-pulled-right"
                   type="is-info is-light"
                   size="is-small"
@@ -357,6 +358,7 @@
       </div>
     </b-modal>
     <DocumentModal
+      v-if="internshipPageInfo.filename"
       :active="modalIsActive"
       :filename="internshipPageInfo.filename"
       @update:active="toggleModal($event)"

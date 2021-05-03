@@ -55,7 +55,7 @@ export default {
       return `${this.$config.axios.browserBaseURL}/api/document/${this.filename}`
     },
     fileType() {
-      const filename = this.filename.split('.')
+      const filename = this.filename ? this.filename.split('.') : ''
       const filetype = filename.slice(-1)[0]
       if (filetype === 'pdf') {
         return 'pdf'

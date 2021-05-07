@@ -89,8 +89,13 @@ export default {
   computed: {
     ...mapState(['allStudents', 'page']),
   },
-  async mounted() {
-    await this.$store.dispatch('getAllStudents')
+  created() {
+    if (process.browser) {
+      // eslint-disable-next-line nuxt/no-globals-in-created
+      window.addEventListener('load', () => {
+        this.$store.dispatch('getAllInternships')
+      })
+    }
   },
   methods: {
     getAsyncData: debounce(function (name) {

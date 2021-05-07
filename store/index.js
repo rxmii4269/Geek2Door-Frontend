@@ -495,6 +495,7 @@ export const actions = {
       })
       commit('SET_JOB_PAGE_INFO', response)
     } catch (error) {
+      console.error(error)
       Notification.open({
         duration: 4000,
         type: 'is-danger',

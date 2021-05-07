@@ -97,6 +97,8 @@
                 :company-id="internship.company_id"
                 :company-name="internship.company_name"
                 :has-applied="internship.has_applied"
+                :applied="internship.applied_count"
+                :views="internship.view_count"
               />
             </div>
           </b-tab-item>

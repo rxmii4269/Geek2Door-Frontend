@@ -119,8 +119,13 @@ export default {
   computed: {
     ...mapState(['allInternships']),
   },
-  async mounted() {
-    await this.$store.dispatch('getAllInternships')
+  created() {
+    if (process.browser) {
+      // eslint-disable-next-line nuxt/no-globals-in-created
+      window.addEventListener('load', () => {
+        this.$store.dispatch('getAllInternships')
+      })
+    }
   },
   methods: {
     getAsyncData: debounce(function (position) {

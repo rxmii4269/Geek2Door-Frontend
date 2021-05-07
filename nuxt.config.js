@@ -50,7 +50,7 @@ export default {
   ],
 
   router: {
-    middleware: ['talkjs', 'csrf', 'auth'],
+    middleware: ['talkjs', 'csrf', 'auth', 'track_views'],
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules

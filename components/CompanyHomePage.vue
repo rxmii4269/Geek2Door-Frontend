@@ -93,7 +93,7 @@ export default {
     if (process.browser) {
       // eslint-disable-next-line nuxt/no-globals-in-created
       window.addEventListener('load', () => {
-        this.$store.dispatch('getAllInternships')
+        this.$store.dispatch('getAllStudents')
       })
     }
   },

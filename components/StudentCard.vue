@@ -41,8 +41,18 @@
             </b-field>
           </div>
           <section>
-            <b-field expanded label="Ranking" group-multiline grouped>
-              <b-field expanded label="Qualifications Score">
+            <b-field
+              v-if="scores"
+              expanded
+              label="Ranking"
+              group-multiline
+              grouped
+            >
+              <b-field
+                v-if="scores.qual_score_percentage"
+                expanded
+                label="Qualifications Score"
+              >
                 <b-progress
                   type="is-primary"
                   :value="scores.qual_score_percentage"
@@ -50,7 +60,11 @@
                   show-value
                 ></b-progress>
               </b-field>
-              <b-field expanded label="GPA Score">
+              <b-field
+                v-if="scores.gpa_score_percentage"
+                expanded
+                label="GPA Score"
+              >
                 <b-progress
                   type="is-primary"
                   :value="scores.gpa_score_percentage"
@@ -59,7 +73,11 @@
                 ></b-progress>
               </b-field>
             </b-field>
-            <b-field epxanded label="Skills Score">
+            <b-field
+              v-if="scores.skill_score_percentage"
+              epxanded
+              label="Skills Score"
+            >
               <b-progress
                 type="is-primary"
                 :value="scores.skill_score_percentage"

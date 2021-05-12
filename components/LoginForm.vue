@@ -71,6 +71,7 @@
             native-type="submit"
             value="Continue"
             expanded
+            :loading="isLoading"
           ></b-button>
         </div>
       </form>
@@ -95,12 +96,14 @@ export default {
         password: '',
         userType: 'company',
       },
+      isLoading: false,
     }
   },
   methods: {
     async userLogin() {
       const isValid = await this.$refs.observer.validate()
       if (isValid) {
+        this.isLoading = true
         this.$auth
           .loginWith('local', { data: this.form })
           .then((response) => {
@@ -130,6 +133,7 @@ export default {
               })
             }
           })
+        this.isLoading = false
       }
     },
     resetForm() {

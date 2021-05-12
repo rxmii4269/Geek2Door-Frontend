@@ -31,7 +31,12 @@
               <b-tag type="is-primary">GPA</b-tag>
               <b-tag type="is-black">{{ gpa }}</b-tag>
             </b-taglist>
-            <b-field label="Qualifications" group-multiline grouped>
+            <b-field
+              v-if="major || minor"
+              label="Qualifications"
+              group-multiline
+              grouped
+            >
               <b-field label="Major">
                 <div>{{ major }}</div>
               </b-field>
@@ -42,7 +47,7 @@
           </div>
           <section>
             <b-field
-              v-if="scores"
+              v-if="Object.keys(scores).length > 0"
               expanded
               label="Ranking"
               group-multiline

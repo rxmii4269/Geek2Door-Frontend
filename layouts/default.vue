@@ -2,10 +2,7 @@
   <div class="is-flex-direction-column is-flex h-100">
     <Navbar />
     <!-- <BreadCrumbs /> -->
-    <section
-      class="section is-flex-grow-1"
-      :class="[$route.name.includes('accounts') ? 'wave' : '']"
-    >
+    <section class="section is-flex-grow-1" :class="[isForm ? 'wave' : '']">
       <Nuxt />
     </section>
     <Footer class="is-flex-shrink-1" />
@@ -17,6 +14,15 @@ export default {
     return {
       isForm: false,
     }
+  },
+  watch: {
+    $route() {
+      if (this.$route.name.includes('accounts')) {
+        this.isForm = true
+      } else {
+        this.isForm = false
+      }
+    },
   },
   mounted() {
     if (this.$auth.loggedIn) {

@@ -82,25 +82,27 @@
         </b-field>
       </div>
       <div v-if="$auth.user.role === 'student'" class="columns is-multiline">
-        <InternshipPost
-          v-for="internship in allInternships"
-          :id="internship.id"
-          :key="internship.id"
-          :gpa="internship.gpa"
-          :skills="internship.skills"
-          :position="internship.position"
-          :start-time="internship.start_date"
-          :end-time="internship.end_date"
-          :short-description="internship.shortDescription"
-          :description="internship.description"
-          :profile-picture="internship.profile_picture"
-          :qualifications="internship.qualifications"
-          :is-active="internship.is_active"
-          :company-id="internship.company_id"
-          :has-applied="internship.has_applied"
-          :company-name="internship.company_name"
-        />
-        <InfiniteLoading @infinite="infiniteHandler"></InfiniteLoading>
+        <client-only>
+          <InternshipPost
+            v-for="internship in allInternships"
+            :id="internship.id"
+            :key="internship.id"
+            :gpa="internship.gpa"
+            :skills="internship.skills"
+            :position="internship.position"
+            :start-time="internship.start_date"
+            :end-time="internship.end_date"
+            :short-description="internship.shortDescription"
+            :description="internship.description"
+            :profile-picture="internship.profile_picture"
+            :qualifications="internship.qualifications"
+            :is-active="internship.is_active"
+            :company-id="internship.company_id"
+            :has-applied="internship.has_applied"
+            :company-name="internship.company_name"
+          />
+          <InfiniteLoading @infinite="infiniteHandler"></InfiniteLoading>
+        </client-only>
       </div>
     </div>
   </div>
@@ -119,13 +121,8 @@ export default {
   computed: {
     ...mapState(['allInternships']),
   },
-  created() {
-    if (process.browser) {
-      // eslint-disable-next-line nuxt/no-globals-in-created
-      window.addEventListener('load', () => {
-        this.$store.dispatch('getAllInternships')
-      })
-    }
+  mounted() {
+    this.$store.dispatch('getAllInternships')
   },
   methods: {
     getAsyncData: debounce(function (position) {

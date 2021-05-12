@@ -59,18 +59,20 @@
         </b-field>
       </div>
       <div class="columns is-multiline">
-        <StudentCard
-          v-for="student in allStudents"
-          :key="student.id"
-          :first-name="student.firstname"
-          :last-name="student.lastname"
-          :profile-picture="student.profile_picture"
-          :role="student.role"
-          :email="student.email"
-          :skills="student.skills"
-          :username="student.username"
-        />
-        <InfiniteLoading @infinite="infiniteHandler"> </InfiniteLoading>
+        <client-only placeholder="Loading...">
+          <StudentCard
+            v-for="student in allStudents"
+            :key="student.id"
+            :first-name="student.firstname"
+            :last-name="student.lastname"
+            :profile-picture="student.profile_picture"
+            :role="student.role"
+            :email="student.email"
+            :skills="student.skills"
+            :username="student.username"
+          />
+          <InfiniteLoading @infinite="infiniteHandler"> </InfiniteLoading>
+        </client-only>
       </div>
     </div>
   </div>
@@ -89,13 +91,8 @@ export default {
   computed: {
     ...mapState(['allStudents', 'page']),
   },
-  created() {
-    if (process.browser) {
-      // eslint-disable-next-line nuxt/no-globals-in-created
-      window.addEventListener('load', () => {
-        this.$store.dispatch('getAllStudents')
-      })
-    }
+  mounted() {
+    this.$store.dispatch('getAllStudents')
   },
   methods: {
     getAsyncData: debounce(function (name) {

@@ -80,26 +80,28 @@
         <b-tabs>
           <b-tab-item label="Recent" icon="history">
             <div v-if="unarchivedJobs" class="columns is-multiline">
-              <InternshipPost
-                v-for="internship in unarchivedJobs"
-                :id="internship.id"
-                :key="internship.id"
-                :gpa="internship.gpa"
-                :skills="internship.skills"
-                :position="internship.position"
-                :start-time="internship.start_date"
-                :end-time="internship.end_date"
-                :short-description="internship.shortDescription"
-                :description="internship.description"
-                :profile-picture="internship.profile_picture"
-                :qualifications="internship.qualifications"
-                :is-active="internship.is_active"
-                :company-id="internship.company_id"
-                :company-name="internship.company_name"
-                :has-applied="internship.has_applied"
-                :applied="internship.applied_count"
-                :views="internship.view_count"
-              />
+              <client-only>
+                <InternshipPost
+                  v-for="internship in unarchivedJobs"
+                  :id="internship.id"
+                  :key="internship.id"
+                  :gpa="internship.gpa"
+                  :skills="internship.skills"
+                  :position="internship.position"
+                  :start-time="internship.start_date"
+                  :end-time="internship.end_date"
+                  :short-description="internship.shortDescription"
+                  :description="internship.description"
+                  :profile-picture="internship.profile_picture"
+                  :qualifications="internship.qualifications"
+                  :is-active="internship.is_active"
+                  :company-id="internship.company_id"
+                  :company-name="internship.company_name"
+                  :has-applied="internship.has_applied"
+                  :applied="internship.applied_count"
+                  :views="internship.view_count"
+                />
+              </client-only>
             </div>
           </b-tab-item>
           <b-tab-item
@@ -250,7 +252,6 @@
 </template>
 <script>
 import Talk from 'talkjs'
-import debounce from 'lodash.debounce'
 import { mapState, mapGetters } from 'vuex'
 import cloneDeep from 'lodash/cloneDeep'
 export default {
@@ -314,9 +315,11 @@ export default {
   created() {},
 
   async mounted() {
-    await this.$store.dispatch('getProfile', this.$route.params.slug)
-    this.loadingProfileCard = false
-    await this.$store.dispatch('getInternships', this.profileData.id)
+    if (process.browser) {
+      await this.$store.dispatch('getProfile', this.$route.params.slug)
+      this.loadingProfileCard = false
+      await this.$store.dispatch('getInternships', this.profileData.id)
+    }
   },
   methods: {
     async messageUser() {
@@ -368,27 +371,6 @@ export default {
       this.edit = !this.edit
       this.loadingProfileCard = false
     },
-    getAsyncData: debounce(function (name) {
-      if (!name.length) {
-        this.data = []
-        return
-      }
-      this.isFetching = true
-      this.$axios.setHeader('apikey', '0Sugakz7qs9ge2tBcL5tIWWv6iOwT346')
-      this.$axios
-        .get(`/api2/?q=${name}`)
-        .then(({ data }) => {
-          this.skillsData = []
-          data.forEach((item) => this.skillsData.push(item))
-        })
-        .catch((error) => {
-          this.skillsData = []
-          throw error
-        })
-        .finally(() => {
-          this.isFetching = false
-        })
-    }),
     addToSkills(option) {
       const skill = {
         name: option,

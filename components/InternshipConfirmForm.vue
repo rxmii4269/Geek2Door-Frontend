@@ -44,34 +44,45 @@
         </ValidationProvider>
       </b-step-item>
       <b-step-item step="2" label="Confirm Details">
-        <ValidationProvider
-          v-if="activeStep === 1"
-          v-slot="{ errors, valid }"
-          class="is-clearfix"
-          rules="required|min_value:3"
-          name="Total Weight"
-        >
-          <b-field
-            class="is-pulled-right"
-            label="Total Weight"
-            :type="{ 'is-danger': errors[0], 'is-success': valid }"
+        <div class="is-flex is-justify-content-between">
+          <ValidationProvider v-if="activeStep === 1" slim>
+            <b-field class="mr-1" label="Accepted Interns">
+              <b-numberinput
+                v-model="allowedInterns"
+                controls-position="compact"
+              ></b-numberinput>
+            </b-field>
+          </ValidationProvider>
+          <ValidationProvider
+            v-if="activeStep === 1"
+            v-slot="{ errors, valid }"
+            rules="required|min_value:3|integer|numeric"
+            name="Total Weight"
+            slim
           >
-            <template #message>
-              <span v-if="!errors[0]" class="has-text-grey-light">
-                <b-icon size="is-small" icon="information"></b-icon> Enter the
-                weighting metric you use.</span
-              >
-              <span v-for="(error, index) in errors" v-else :key="index">{{
-                error
-              }}</span>
-            </template>
-            <b-numberinput
-              v-model.number="totalWeight"
-              step="0.01"
-              :controls="false"
-            ></b-numberinput>
-          </b-field>
-        </ValidationProvider>
+            <b-field
+              class="is-pulled-right"
+              label="Total Weight"
+              :type="{ 'is-danger': errors[0], 'is-success': valid }"
+            >
+              <template #message>
+                <span v-if="!errors[0]" class="has-text-grey-light">
+                  <b-icon size="is-small" icon="information"></b-icon> Enter the
+                  weighting metric you use.</span
+                >
+                <span v-for="(error, index) in errors" v-else :key="index">{{
+                  error
+                }}</span>
+              </template>
+              <b-numberinput
+                v-model="totalWeight"
+                step="1"
+                :controls="false"
+              ></b-numberinput>
+            </b-field>
+          </ValidationProvider>
+        </div>
+
         <ValidationProvider
           v-if="activeStep === 1"
           v-slot="{ errors, valid }"
@@ -135,7 +146,7 @@
               <b-numberinput
                 v-model="qualificationWeight"
                 :type="{ 'is-danger': errors[0], 'is-primary': valid }"
-                step="0.01"
+                step="0.1"
                 controls-position="compact"
                 :controls="true"
               ></b-numberinput
@@ -147,7 +158,7 @@
             <b-numberinput
               v-model.number="gpa"
               min="1.75"
-              step="0.01"
+              step="0.1"
               :controls="true"
               controls-position="compact"
               max="4.0"
@@ -156,7 +167,7 @@
           <b-field label="Assign Weight" expanded>
             <b-numberinput
               v-model.number="gpaWeight"
-              step="0.01"
+              step="0.1"
               controls-position="compact"
               :controls="true"
             ></b-numberinput>
@@ -176,7 +187,7 @@
             <b-field class="is-pulled-right" label="Overall Skills Weight">
               <b-numberinput
                 v-model="skillsWeight"
-                step="0.01"
+                step="0.1"
                 class="ml-2"
                 controls-position="compact"
                 :controls="true"
@@ -204,7 +215,7 @@
               <b-numberinput
                 v-if="`skill-${index}`"
                 :value="skillsList[index]"
-                step="0.001"
+                step="0.1"
                 controls-alignment="right"
                 controls-position="compact"
                 expanded
@@ -382,6 +393,14 @@ export default {
       },
       set(newValue) {
         return this.$store.dispatch('recalculateTotalWeight', newValue)
+      },
+    },
+    allowedInterns: {
+      get() {
+        return this.$store.state.allowedInterns
+      },
+      set(newValue) {
+        return this.$store.commit('SET_ALLOWED_INTERNS', newValue)
       },
     },
     weights: {

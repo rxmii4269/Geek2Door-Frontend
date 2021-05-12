@@ -15,11 +15,19 @@
                 >{{ internshipPageInfo.company_name }}</nuxt-link
               >
             </p>
+            <p
+              class="is-size-6 pl-4 mt-1 has-text-weight-medium card-header-subtitle"
+            >
+              Allowed Interns: {{ internshipPageInfo.allowed_interns }}
+            </p>
           </header>
           <div class="card-content">
             <div class="content">
               <div
-                v-if="internshipPageInfo.company_name == $auth.user.name"
+                v-if="
+                  internshipPageInfo.company_name == $auth.user.name ||
+                  $auth.user.role === 'student'
+                "
                 class="is-clearfix"
               >
                 <b-button

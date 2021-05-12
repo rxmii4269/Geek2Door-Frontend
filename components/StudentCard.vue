@@ -85,3 +85,8 @@ export default {
   //   methods: {},
 }
 </script>
+<style scoped>
+.content > p {
+  word-break: break-all;
+}
+</style>

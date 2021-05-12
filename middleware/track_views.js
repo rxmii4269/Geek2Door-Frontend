@@ -7,12 +7,11 @@ export default function ({ $axios, $auth }) {
           !config.url.includes('views')
         ) {
           const internshipId = config.url.split('/')[3]
-          console.log(internshipId)
+          console.log(config.url)
           $axios.post(`/api/internships/${internshipId}/views`, {
             increment: 1,
             student_id: $auth.user.id,
           })
-          console.log('Making request to ' + config.url)
         }
       })
     }

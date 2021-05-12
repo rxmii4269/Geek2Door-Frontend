@@ -87,6 +87,7 @@
         <CompanyJobPage
           v-if="$auth.user.name === internshipPageInfo.company_name"
           :applied="internshipPageInfo.applied"
+          :ranked="internshipPageInfo.ranked_students"
         />
       </div>
     </div>

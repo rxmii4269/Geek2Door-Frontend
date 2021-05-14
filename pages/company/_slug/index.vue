@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <div v-if="!profileData.message" class="columns is-8">
-      <div class="column is-3">
+    <div v-if="!profileData.message" class="columns is-desktop">
+      <div class="column is-one-third-desktop">
         <div class="card is-unclipped">
           <div class="card-image">
             <figure
@@ -12,6 +12,27 @@
                 :src="`${$config.axios.browserBaseURL}/api/images/${profileData.profile_picture}`"
                 alt="Profile Picture"
               />
+              <div
+                v-if="$auth.user.name === $route.params.slug"
+                class="is-overlay"
+              >
+                <b-upload
+                  v-model="profile_Picture"
+                  class="is-clickable w-100 h-100"
+                  :multiple="true"
+                  @input="editProfilePicture($event)"
+                >
+                  <span class="file-cta">
+                    <b-icon
+                      class="file-icon mx-auto is-size-1"
+                      pack="bx"
+                      icon="bx-edit"
+                    >
+                      Edit Profile
+                    </b-icon>
+                  </span>
+                </b-upload>
+              </div>
             </figure>
             <b-skeleton height="80px" :active="loadingProfileCard"></b-skeleton>
           </div>
@@ -68,7 +89,7 @@
           </div>
         </div>
       </div>
-      <div class="column is-9">
+      <div class="column">
         <b-button
           v-if="$auth.user.id === profileData.id"
           type="is-primary"
@@ -248,6 +269,41 @@
         </section>
       </div>
     </b-modal>
+    <b-modal v-model="is_PP_Active" has-modal-card>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Crop Image</p>
+        </header>
+        <section class="modal-card-body">
+          <VueCropper
+            v-if="profile_Picture"
+            ref="cropper"
+            :guides="true"
+            :view-mode="2"
+            drag-mode="crop"
+            :auto-crop-area="0.5"
+            :background="true"
+            :min-container-width="250"
+            :min-container-height="180"
+            :img-style="{ width: '400px', height: '300px' }"
+            :src="cropped_img"
+          />
+        </section>
+        <div class="modal-card-foot is-justify-content-flex-end">
+          <div class="buttons">
+            <b-button type="is-danger is-outlined card-footer-item"
+              >Cancel</b-button
+            >
+            <b-button
+              type="is-primary card-footer-item"
+              :loading="isSavingImage"
+              @click="saveCroppedImage"
+              >Save</b-button
+            >
+          </div>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -293,6 +349,10 @@ export default {
       count: 3,
       minDate: '',
       inputs: [],
+      is_PP_Active: false,
+      profile_Picture: [],
+      cropped_img: null,
+      isSavingImage: false,
     }
   },
   computed: {
@@ -315,10 +375,10 @@ export default {
   created() {},
 
   async mounted() {
-    if (process.browser) {
-      await this.$store.dispatch('getProfile', this.$route.params.slug)
-      this.loadingProfileCard = false
-      await this.$store.dispatch('getInternships', this.profileData.id)
+    await this.$store.dispatch('getProfile', this.$route.params.slug)
+    this.loadingProfileCard = false
+    if (this.profileData) {
+      this.$store.dispatch('getInternships', this.profileData.id)
     }
   },
   methods: {
@@ -400,11 +460,82 @@ export default {
       this.clear = true
       // this.$refs.createJobObserver.reset()
     },
+    editProfilePicture(event) {
+      const self = this
+      this.profile_Picture = event[0]
+      this.$nextTick(() => {
+        const reader = new FileReader()
+        this.is_PP_Active = true
+        reader.onload = (event) => {
+          self.cropped_img = event.target.result
+          this.$refs.cropper.replace(this.cropped_img)
+        }
+        reader.readAsDataURL(event[0])
+        this.is_PP_Active = true
+      })
+    },
+    async saveCroppedImage() {
+      const val = this.$refs.cropper.getCroppedCanvas().toDataURL()
+      const formData = new FormData()
+      formData.set('profile_picture', val)
+      this.isSavingImage = true
+      await this.$axios
+        .post(
+          `/api/users/company/${this.$auth.user.id}/profile_picture`,
+          formData
+        )
+        .then((response) => {
+          this.$buefy.notification.open({
+            type: 'is-success',
+            hasIcon: true,
+            position: 'is-top-right',
+            message: response.data,
+          })
+          this.$store.dispatch('getProfile', this.$route.params.slug)
+          this.$store.dispatch('getInternships', this.profileData.id)
+          this.$auth.fetchUser()
+          this.isSavingImage = false
+          this.is_PP_Active = false
+        })
+    },
   },
 }
 </script>
 <style scoped>
 .is-unclipped {
   overflow: visible;
+}
+.image:hover .is-overlay {
+  opacity: 0.5;
+}
+.image:hover .file-cta {
+  opacity: 0.5;
+  background-color: #4a4a4a;
+  color: white;
+}
+.file-cta {
+  transition: 0.3s ease-in-out;
+}
+.is-overlay {
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: 0.3s ease-in-out;
+}
+.w-100 {
+  width: 100%;
+}
+.h-100 {
+  height: 100%;
+}
+.upload > .file-cta {
+  width: 100%;
+  flex-grow: 1;
+  height: 100%;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

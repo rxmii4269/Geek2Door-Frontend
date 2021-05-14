@@ -1,7 +1,7 @@
 <template>
   <b-tabs>
     <b-tab-item label="Applied">
-      <div class="columns is-multiline">
+      <div v-if="appliedStudents.length > 0" class="columns is-multiline">
         <StudentCard
           v-for="student in appliedStudents"
           :key="student.id"
@@ -18,6 +18,17 @@
           :minor="student.minor"
         />
       </div>
+      <section class="hero is-primary">
+        <div class="hero-body has-text-centered">
+          <p class="title">No one Applied</p>
+          <b-icon
+            class="subtitle is-size-2"
+            size="is-large"
+            pack="bx"
+            icon="bxs-sad"
+          ></b-icon>
+        </div>
+      </section>
     </b-tab-item>
     <b-tab-item label="Haven't Applied"></b-tab-item>
   </b-tabs>

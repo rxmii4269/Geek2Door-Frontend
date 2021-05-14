@@ -402,7 +402,6 @@ export default {
   data() {
     return {
       hover: false,
-      img_url: `${this.$config.axios.browserBaseURL}/api/images/${this.$auth.user.profile_picture}`,
       internshipUrl: `/jobs/${this.id}`,
       editPost: false,
       jobForm: {
@@ -433,6 +432,9 @@ export default {
       'isArchivingPost',
       'isApplyingForInternship',
     ]),
+    img_url() {
+      return `${this.$config.axios.browserBaseURL}/api/images/${this.profilePicture}`
+    },
     filteredDegrees() {
       return this.degrees.filter((option) => {
         return option

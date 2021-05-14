@@ -21,6 +21,15 @@
                 v-if="$auth.user.username === profileData.username"
                 class="is-clearfix"
               >
+                <b-field label="Status">
+                  <b-switch
+                    v-model="is_active"
+                    type="is-success"
+                    passive-type="is-danger"
+                    name="Available"
+                    >{{ status }}</b-switch
+                  >
+                </b-field>
                 <b-tooltip
                   label="Edit Profile"
                   size="is-small"
@@ -134,6 +143,7 @@
             :is-active="internship.is_active"
             :company-id="internship.company_id"
             :has-applied="internship.has_applied"
+            :company-name="internship.company_name"
           />
         </div>
       </div>
@@ -389,6 +399,7 @@ export default {
       loadingProfileCard: true,
       edit: false,
       updatedProfileData: '',
+      status: this.is_active ? 'Available' : 'Unavailable',
       parishes: [
         'St. Andrew',
         'Kingston',
@@ -409,6 +420,23 @@ export default {
   },
   computed: {
     ...mapState(['appliedInternships', 'isSavingProfile', 'profileData']),
+    is_active: {
+      get() {
+        return this.$store.state.profileData.is_active
+      },
+      set(val) {
+        return this.$store.dispatch('toggleActive', val)
+      },
+    },
+  },
+  watch: {
+    is_active(val) {
+      if (val) {
+        this.status = 'Available'
+      } else {
+        this.status = 'Unavailable'
+      }
+    },
   },
   created() {
     this.$store.dispatch('getAppliedInternships')

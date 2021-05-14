@@ -36,6 +36,7 @@
     "lodash": "^4.17.21",
     "prettier": "^2.2.1",
     "talkjs": "^0.14.3",
+    "vue-cropperjs": "4.2.0",
     "vue-infinite-loading": "^2.4.5"
   }
 }

@@ -30,12 +30,14 @@ export default {
     '@/assets/css/custom.css',
     'boxicons/css/boxicons.min.css',
     '@creativebulma/bulma-divider/dist/bulma-divider.min.css',
+    'cropperjs/dist/cropper.min.css',
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '@/plugins/vee-validate.js',
     { src: '@/plugins/infiniteloading.js', ssr: false },
+    { src: '@/plugins/cropperjs.js', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -50,7 +52,7 @@ export default {
   ],
 
   router: {
-    middleware: ['talkjs', 'csrf', 'auth'],
+    middleware: ['talkjs', 'csrf', 'auth', 'track_views'],
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules

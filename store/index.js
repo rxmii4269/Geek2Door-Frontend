@@ -19,6 +19,7 @@ export const state = () => ({
   allStudents: [],
   page: 1,
   totalWeight: 100,
+  allowedInterns: 1,
   weights: {
     qualificationWeight: 0,
     gpaWeight: 0,
@@ -105,6 +106,9 @@ export const mutations = {
   SET_DESCRIPTION(state, newDescription) {
     state.newInternship.description = newDescription
   },
+  SET_ALLOWED_INTERNS(state, newValue) {
+    state.allowedInterns = newValue
+  },
   REMOVE_SKILL(state, index) {
     state.newInternship.skills.splice(index, 1)
     state.skillsList.splice(index, 1)
@@ -121,6 +125,9 @@ export const mutations = {
   },
   DECREMENT_STEP(state) {
     state.activeStep = 0
+  },
+  TOGGLE_ACTIVE(state) {
+    state.profileData.is_active = !state.profileData.is_active
   },
   TOGGLE_SUBMITTING_JOB(state, flag) {
     state.isSubmittingJob = flag
@@ -143,6 +150,12 @@ export const mutations = {
 }
 
 export const actions = {
+  toggleActive({ commit }, val) {
+    this.$axios.post(`/api/users/student/${this.$auth.user.id}`, {
+      is_active: val,
+    })
+    commit('TOGGLE_ACTIVE')
+  },
   generateProfileUrl({ commit }) {
     if (this.$auth.loggedIn) {
       let url = ''
@@ -246,6 +259,7 @@ export const actions = {
       newInternship: state.newInternship,
       weights: state.weights,
       skillsList: state.skillsList,
+      allowedInterns: state.allowedInterns,
     }
     commit('TOGGLE_SAVE_INTERNSHIP')
     await this.$axios.$post('/api/internships', form)
@@ -254,19 +268,43 @@ export const actions = {
   calculateTotalWeight({ commit, state }) {
     const weightKeys = Object.keys(state.weights)
     const weightlen = weightKeys.length
-    const splitEvenly = Math.round((state.totalWeight / weightlen) * 100) / 100
-    weightKeys.forEach((key, index) => {
-      commit('SET_WEIGHT', { key, splitEvenly })
-    })
+    const splitEvenly = Math.round((state.totalWeight / weightlen) * 10) / 10
+    let cumulWeight = 0
+    for (const key in state.weights) {
+      if (Object.hasOwnProperty.call(state.weights, key)) {
+        if (weightKeys.indexOf(key) === weightKeys.length - 1) {
+          const val = Math.round((state.totalWeight - cumulWeight) * 10) / 10
+          console.log('CAlc', val)
+          console.log(cumulWeight)
+          commit('SET_WEIGHT', { key, splitEvenly: val })
+        } else {
+          cumulWeight += splitEvenly
+          console.log('org', splitEvenly)
+          commit('SET_WEIGHT', { key, splitEvenly })
+        }
+      }
+    }
   },
   recalculateTotalWeight({ commit, state, dispatch }, newWeight) {
     const weightKeys = Object.keys(state.weights)
     const weightlen = weightKeys.length
-    const splitEvenly = Math.round((newWeight / weightlen) * 100) / 100
+    const splitEvenly = Math.round((newWeight / weightlen) * 10) / 10
+    let cumulWeight = 0
     commit('SET_TOTAL_WEIGHT', newWeight)
-    weightKeys.forEach((key, index) => {
-      commit('SET_WEIGHT', { key, splitEvenly })
-    })
+    for (const key in state.weights) {
+      if (Object.hasOwnProperty.call(state.weights, key)) {
+        if (weightKeys.indexOf(key) === weightKeys.length - 1) {
+          const val = Math.round((state.totalWeight - cumulWeight) * 10) / 10
+          console.log('CAlc', val)
+          console.log(cumulWeight)
+          commit('SET_WEIGHT', { key, splitEvenly: val })
+        } else {
+          cumulWeight += splitEvenly
+          console.log('org', splitEvenly)
+          commit('SET_WEIGHT', { key, splitEvenly })
+        }
+      }
+    }
     dispatch('divideSkills')
   },
   recalculateWeight({ commit, state }, newWeight) {
@@ -284,7 +322,7 @@ export const actions = {
     const key = 'qualificationWeight'
     const splitEvenly = newWeight
     const cumulWeight =
-      newWeight + state.weights.gpaWeight + state.weights.skillsWeight
+      state.weights.gpaWeight + state.weights.skillsWeight + newWeight
     if (newWeight > state.totalWeight) {
       Notification.open({
         duration: 3000,
@@ -388,13 +426,25 @@ export const actions = {
   },
   divideSkills({ commit, state }) {
     const skillsLength = state.newInternship.skills.length
-    const divideEvenly = parseFloat(
-      (state.weights.skillsWeight / skillsLength).toFixed(3)
-    )
+    const divideEvenly =
+      Math.round((state.weights.skillsWeight / skillsLength) * 10) / 10
 
-    state.skillsList.forEach((skill, index) => {
-      commit('SET_SKILLS_LIST_VALUE', { index, divideEvenly })
-    })
+    let cumulSkillW = 0
+    for (let index = 0; index < state.skillsList.length; index++) {
+      const element = state.skillsList[index]
+      if (state.skillsList[state.skillsList.length - 1] === element) {
+        const val =
+          Math.round((state.weights.skillsWeight - cumulSkillW) * 10) / 10
+        commit('SET_SKILLS_LIST_VALUE', { index, divideEvenly: val })
+      } else {
+        cumulSkillW += divideEvenly
+        commit('SET_SKILLS_LIST_VALUE', { index, divideEvenly })
+      }
+    }
+
+    // state.skillsList.forEach((skill, index) => {
+    //   commit('SET_SKILLS_LIST_VALUE', { index, divideEvenly })
+    // })
   },
   async editSkill({ commit, state }, newValue) {
     const index = newValue.index
@@ -406,7 +456,7 @@ export const actions = {
     const divideEvenly = newValue.event
     await commit('SET_SKILLS_LIST_VALUE', { index, divideEvenly })
     const cumulSkill = state.skillsList.reduce((a, b) => {
-      return parseFloat((a + b).toFixed(3))
+      return parseFloat((a + b).toFixed(1))
     })
 
     if (cumulSkill > state.weights.skillsWeight) {
@@ -495,6 +545,7 @@ export const actions = {
       })
       commit('SET_JOB_PAGE_INFO', response)
     } catch (error) {
+      console.error(error)
       Notification.open({
         duration: 4000,
         type: 'is-danger',

@@ -49,8 +49,8 @@
                 <figure class="image is-32x32">
                   <img
                     class="is-rounded"
-                    :src="`${$config.axios.browserBaseURL}/api/images/${$auth.user.profile_picture}`"
-                    alt=""
+                    :src="img_url"
+                    :alt="$auth.user.name || $auth.user.first_name"
                     loading="lazy"
                   />
                 </figure>
@@ -100,6 +100,9 @@ export default {
   },
   computed: {
     ...mapState(['profile_url']),
+    img_url() {
+      return `${this.$config.axios.browserBaseURL}/api/images/${this.$auth.user.profile_picture}`
+    },
   },
   methods: {},
 }

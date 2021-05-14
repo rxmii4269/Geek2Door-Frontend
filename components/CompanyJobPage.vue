@@ -18,7 +18,7 @@
           :minor="student.minor"
         />
       </div>
-      <section class="hero is-primary">
+      <section v-else class="hero is-primary">
         <div class="hero-body has-text-centered">
           <p class="title">No one Applied</p>
           <b-icon

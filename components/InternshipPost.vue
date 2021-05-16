@@ -142,7 +142,7 @@
                 :type="{ 'is-danger': errors[0], 'is-success': valid }"
                 :message="errors"
               >
-                <b-input v-model="jobForm.position"></b-input>
+                <b-input v-model="postPosition"></b-input>
               </b-field>
             </ValidationProvider>
             <b-field grouped group-multiline>
@@ -159,7 +159,7 @@
                   expanded
                 >
                   <b-input
-                    v-model.number="jobForm.GPA"
+                    v-model.number="postGPA"
                     type="number"
                     min="1.75"
                     step="0.01"
@@ -241,12 +241,8 @@
                 expanded
                 :addons="false"
               >
-                <b-field
-                  v-for="skill in jobForm.skills"
-                  :key="skill.id"
-                  expanded
-                >
-                  <b-input v-model="skill.name" expanded></b-input>
+                <b-field v-for="skill in postSkills" :key="skill.id" expanded>
+                  <b-input v-model="skill.name"></b-input>
                   <b-field>
                     <b-numberinput
                       v-model="skill.weight"
@@ -270,7 +266,7 @@
               >
                 <b-input
                   v-model="jobForm.description"
-                  :value="description"
+                  :value="postDescription"
                   type="textarea"
                   maxlength="350"
                 ></b-input>
@@ -432,6 +428,56 @@ export default {
       'isArchivingPost',
       'isApplyingForInternship',
     ]),
+    postPosition: {
+      get() {
+        return this.position
+      },
+      set(value) {
+        this.jobForm.position = value
+      },
+    },
+    postGPA: {
+      get() {
+        return this.gpa
+      },
+      set(value) {
+        this.jobForm.GPA = value
+      },
+    },
+    postQualifications: {
+      get() {
+        return this.qualifications
+      },
+      set(value) {
+        this.jobForm.qualifications = value
+      },
+    },
+    postSkills: {
+      get() {
+        return this.skills
+      },
+      set(value) {
+        console.log(value)
+        // this.jobForm.skills = value
+      },
+    },
+    postLocation: {
+      get() {
+        return this.location
+      },
+      set(value) {
+        this.jobForm.location = value
+      },
+    },
+    postDescription: {
+      get() {
+        return this.description
+      },
+      set(value) {
+        this.jobForm.description = value
+      },
+    },
+
     img_url() {
       return `${this.$config.axios.browserBaseURL}/api/images/${this.profilePicture}`
     },

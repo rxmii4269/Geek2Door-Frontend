@@ -1,4 +1,5 @@
 import Talk from 'talkjs'
+import { sha256 } from 'js-sha256'
 export default function (context) {
   if (context.$auth.loggedIn && process.browser) {
     Talk.ready.then(() => {
@@ -15,8 +16,11 @@ export default function (context) {
 
       if (!window.talkSession) {
         window.talkSession = new Talk.Session({
-          appId: 'tR1gNHsD',
+          appId: process.env.APP_ID,
           me,
+          signature: sha256
+            .hmac(process.env.SECRET_KEY, context.$auth.user.id.toString())
+            .toString(),
         })
       }
       window.talkSession.unreads.on('change', (unreadConversations) => {

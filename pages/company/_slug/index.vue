@@ -309,6 +309,7 @@
 <script>
 import Talk from 'talkjs'
 import { mapState, mapGetters } from 'vuex'
+import { sha256 } from 'js-sha256'
 import cloneDeep from 'lodash/cloneDeep'
 export default {
   data() {
@@ -400,8 +401,12 @@ export default {
 
         if (!window.talkSession) {
           window.talkSession = new Talk.Session({
-            appId: 'tR1gNHsD',
+            appId: process.env.APP_ID,
             me,
+            signature: sha256.hmac(
+              process.env.SECRET_KEY,
+              self.$auth.user.id.toString()
+            ),
           })
         }
 

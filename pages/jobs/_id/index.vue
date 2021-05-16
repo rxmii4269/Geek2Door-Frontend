@@ -16,6 +16,7 @@
               >
             </p>
             <p
+              v-if="internshipPageInfo.allowed_interns"
               class="is-size-6 pl-4 mt-1 has-text-weight-medium card-header-subtitle"
             >
               Allowed Interns: {{ internshipPageInfo.allowed_interns }}
@@ -129,7 +130,7 @@
                 </template>
                 <b-numberinput
                   v-model.number="jobForm.weights.total_weight"
-                  step="0.01"
+                  step="0.1"
                   :controls="true"
                   @input="divideTotalWeight($event)"
                 ></b-numberinput>
@@ -187,7 +188,7 @@
                 >
                   <b-numberinput
                     v-model="jobForm.weights.gpa_weight"
-                    step="0.01"
+                    step="0.1"
                   ></b-numberinput>
                 </b-field>
               </ValidationProvider>
@@ -235,7 +236,7 @@
                 >
                   <b-numberinput
                     v-model="jobForm.weights.qualification_weight"
-                    step="0.01"
+                    step="0.1"
                   ></b-numberinput>
                 </b-field>
               </ValidationProvider>
@@ -287,7 +288,7 @@
                 <b-field class="is-pulled-right" label="Overall Skills Weight">
                   <b-numberinput
                     v-model="jobForm.weights.overall_skill_weight"
-                    step="0.01"
+                    step="0.1"
                     class="ml-2"
                     controls-position="compact"
                     :controls="true"
@@ -321,7 +322,7 @@
                       v-model="skill.weight"
                       expanded
                       controls-position="compact"
-                      step="0.001"
+                      step="0.1"
                     ></b-numberinput>
                   </b-field>
                 </b-field>

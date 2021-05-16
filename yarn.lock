@@ -5254,6 +5254,11 @@ jiti@^1.3.0, jiti@^1.6.4:
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-1.9.1.tgz#d9e267fa050ddc52191f17d8af815d49a38ebafd"
   integrity sha512-AhYrAxJ/IW2257nHkJasUjtxHhmYIUEHEjsofJtGYsPWk8pTjqjbPFlJfOwfY+WX8YBiKHM1l0ViDC/mye2SWg==
 
+js-sha256@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
+  integrity sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==
+
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"

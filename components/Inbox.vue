@@ -5,6 +5,7 @@
 </template>
 <script>
 import Talk from 'talkjs'
+import { sha256 } from 'js-sha256'
 export default {
   name: 'Inbox',
   props: {
@@ -23,8 +24,11 @@ export default {
         role: self.currentUser.role,
       })
       window.talkSession = new Talk.Session({
-        appId: 'tR1gNHsD',
+        appId: process.env.APP_ID,
         me,
+        signature: sha256
+          .hmac(process.env.SECRET_KEY, self.$auth.user.id.toString())
+          .toString(),
       })
       const inbox = window.talkSession.createInbox()
       inbox.mount(document.getElementById('inbox-container'))

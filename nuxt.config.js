@@ -69,6 +69,11 @@ export default {
     mode: 'out-in',
   },
 
+  env: {
+    SECRET_KEY: process.env.SECRET_KEY,
+    APP_ID: process.env.APP_ID,
+  },
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: process.env.API_URL,

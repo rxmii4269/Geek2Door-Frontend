@@ -1,35 +1,54 @@
 <template>
   <div class="container">
-    <div v-if="!profileData.message" class="columns is-8">
-      <div class="column is-3">
+    <div v-if="!profileData.message" class="columns">
+      <div class="column is-one-third-desktop">
         <div class="card is-unclipped">
-          <div class="card-image">
-            <figure
-              v-if="profileData && !loadingProfileCard"
-              class="image is-4by4"
-            >
-              <img
-                :src="`${$config.axios.browserBaseURL}/api/images/${profileData.profile_picture}`"
-                alt="Profile Picture"
-              />
-            </figure>
-            <b-skeleton height="80px" :active="loadingProfileCard"></b-skeleton>
+          <div class="columns mr-2">
+            <div class="card-image column">
+              <figure
+                v-if="profileData && !loadingProfileCard"
+                class="image is-square"
+              >
+                <img
+                  :src="`${$config.axios.browserBaseURL}/api/images/${profileData.profile_picture}`"
+                  alt="Profile Picture"
+                />
+                <div
+                  v-if="$auth.user.username === $route.params.slug"
+                  class="is-overlay"
+                  title="Edit Profile"
+                >
+                  <b-upload
+                    v-model="profile_Picture"
+                    class="is-clickable w-100 h-100"
+                    :multiple="true"
+                    @input="editProfilePicture($event)"
+                  >
+                    <span class="file-cta">
+                      <b-icon
+                        class="file-icon mx-auto is-size-1"
+                        pack="bx"
+                        icon="bx-edit"
+                      >
+                        Edit Profile
+                      </b-icon>
+                    </span>
+                  </b-upload>
+                </div>
+              </figure>
+              <b-skeleton
+                height="80px"
+                :active="loadingProfileCard"
+              ></b-skeleton>
+            </div>
           </div>
-          <div class="card-content">
+
+          <div class="card-content pt-2">
             <template v-if="!loadingProfileCard">
               <div
                 v-if="$auth.user.username === profileData.username"
                 class="is-clearfix"
               >
-                <b-field label="Status">
-                  <b-switch
-                    v-model="is_active"
-                    type="is-success"
-                    passive-type="is-danger"
-                    name="Available"
-                    >{{ status }}</b-switch
-                  >
-                </b-field>
                 <b-tooltip
                   label="Edit Profile"
                   size="is-small"
@@ -45,10 +64,25 @@
               <div class="media">
                 <div class="media-content">
                   <p class="title is-4">{{ profileData.name }}</p>
-                  <p class="subtitle is-6">@{{ profileData.username }}</p>
+                  <p class="subtitle is-6 mb-2">@{{ profileData.username }}</p>
+                  <p class="subtitle is-6">{{ profileData.email }}</p>
                 </div>
               </div>
-              <p class="subtitle is-6">{{ profileData.email }}</p>
+              <div
+                v-if="$auth.user.username === profileData.username"
+                class="is-clearfix"
+              >
+                <b-field label="Status">
+                  <b-switch
+                    v-model="is_active"
+                    type="is-success"
+                    passive-type="is-danger"
+                    name="Available"
+                    >{{ status }}</b-switch
+                  >
+                </b-field>
+              </div>
+
               <div class="content">
                 {{ profileData.bio }}
               </div>
@@ -111,10 +145,7 @@
           </div>
         </div>
       </div>
-      <div
-        v-if="$auth.user.username === profileData.username"
-        class="column is-9"
-      >
+      <div v-if="$auth.user.username === profileData.username" class="column">
         <h1 class="title has-text-centered">Latest Internships Applied For</h1>
         <section v-if="appliedInternships.length === 0" class="hero is-primary">
           <div class="hero-body has-text-centered">
@@ -378,6 +409,41 @@
         </footer>
       </div>
     </b-modal>
+    <b-modal v-model="is_PP_Active" has-modal-card>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Crop Image</p>
+        </header>
+        <section class="modal-card-body">
+          <VueCropper
+            v-if="profile_Picture"
+            ref="cropper"
+            :guides="true"
+            :view-mode="2"
+            drag-mode="crop"
+            :auto-crop-area="0.5"
+            :background="true"
+            :min-container-width="250"
+            :min-container-height="180"
+            :img-style="{ width: '400px', height: '300px' }"
+            :src="cropped_img"
+          />
+        </section>
+        <div class="modal-card-foot is-justify-content-flex-end">
+          <div class="buttons">
+            <b-button type="is-danger is-outlined card-footer-item"
+              >Cancel</b-button
+            >
+            <b-button
+              type="is-primary card-footer-item"
+              :loading="isSavingImage"
+              @click="saveCroppedImage"
+              >Save</b-button
+            >
+          </div>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -385,6 +451,7 @@ import Talk from 'talkjs'
 import { mapState } from 'vuex'
 import clonedeep from 'lodash/cloneDeep'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { sha256 } from 'js-sha256'
 
 export default {
   components: {
@@ -415,6 +482,10 @@ export default {
         'St. Ann',
         'St. Mary',
       ],
+      is_PP_Active: false,
+      profile_Picture: [],
+      cropped_img: null,
+      isSavingImage: false,
     }
   },
   computed: {
@@ -464,8 +535,11 @@ export default {
 
         if (!window.talkSession) {
           window.talkSession = new Talk.Session({
-            appId: 'tR1gNHsD',
+            appId: process.env.APP_ID,
             me,
+            signature: sha256
+              .hmac(process.env.SECRET_KEY, this.$auth.user.id.toString())
+              .toString(),
           })
         }
 
@@ -501,11 +575,90 @@ export default {
       const newTag = { name: tag }
       return newTag
     },
+    editProfilePicture(event) {
+      const self = this
+      this.profile_Picture = event[0]
+      this.$nextTick(() => {
+        const reader = new FileReader()
+        this.is_PP_Active = true
+        reader.onload = (event) => {
+          self.cropped_img = event.target.result
+          this.$refs.cropper.replace(this.cropped_img)
+        }
+        reader.readAsDataURL(event[0])
+        this.is_PP_Active = true
+      })
+    },
+    async saveCroppedImage() {
+      const val = this.$refs.cropper.getCroppedCanvas().toDataURL()
+      const formData = new FormData()
+      formData.set('profile_picture', val)
+      this.isSavingImage = true
+      await this.$axios
+        .post(
+          `/api/users/students/${this.$auth.user.id}/profile_picture`,
+          formData
+        )
+        .then((response) => {
+          this.$buefy.notification.open({
+            type: 'is-success',
+            hasIcon: true,
+            position: 'is-top-right',
+            message: response.data,
+          })
+          this.$store.dispatch('getProfile', this.$route.params.slug)
+          this.$auth.fetchUser()
+          this.isSavingImage = false
+          this.is_PP_Active = false
+        })
+    },
   },
 }
 </script>
 <style scoped>
 .is-unclipped {
   overflow: visible;
+}
+.mt-auto {
+  margin-top: auto;
+}
+
+@media screen and (max-width: 375px) {
+  .is-flex-direction-column-mobile {
+    flex-direction: column;
+  }
+}
+.image:hover .is-overlay {
+  opacity: 0.5;
+}
+.image:hover .file-cta {
+  opacity: 1;
+  background-color: #4a4a4a;
+  color: white;
+}
+.file-cta {
+  transition: 0.3s ease-in-out;
+}
+.is-overlay {
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: 0.3s ease-in-out;
+}
+.w-100 {
+  width: 100%;
+}
+.h-100 {
+  height: 100%;
+}
+.upload > .file-cta {
+  width: 100%;
+  flex-grow: 1;
+  height: 100%;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

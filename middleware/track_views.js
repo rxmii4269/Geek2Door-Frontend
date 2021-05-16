@@ -7,11 +7,12 @@ export default function ({ $axios, $auth }) {
           !config.url.includes('views')
         ) {
           const internshipId = config.url.split('/')[3]
-          console.log(config.url)
-          $axios.post(`/api/internships/${internshipId}/views`, {
-            increment: 1,
-            student_id: $auth.user.id,
-          })
+          if (internshipId) {
+            $axios.post(`/api/internships/${internshipId}/views`, {
+              increment: 1,
+              student_id: $auth.user.id,
+            })
+          }
         }
       })
     }

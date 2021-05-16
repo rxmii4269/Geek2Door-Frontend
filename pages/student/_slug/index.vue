@@ -252,6 +252,7 @@
                 <b-input
                   v-model="updatedProfileData.bio"
                   type="textarea"
+                  placeholder="Short description"
                 ></b-input>
               </b-field>
             </ValidationProvider>

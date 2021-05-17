@@ -274,12 +274,9 @@ export const actions = {
       if (Object.hasOwnProperty.call(state.weights, key)) {
         if (weightKeys.indexOf(key) === weightKeys.length - 1) {
           const val = Math.round((state.totalWeight - cumulWeight) * 10) / 10
-          console.log('CAlc', val)
-          console.log(cumulWeight)
           commit('SET_WEIGHT', { key, splitEvenly: val })
         } else {
           cumulWeight += splitEvenly
-          console.log('org', splitEvenly)
           commit('SET_WEIGHT', { key, splitEvenly })
         }
       }
@@ -295,12 +292,9 @@ export const actions = {
       if (Object.hasOwnProperty.call(state.weights, key)) {
         if (weightKeys.indexOf(key) === weightKeys.length - 1) {
           const val = Math.round((state.totalWeight - cumulWeight) * 10) / 10
-          console.log('CAlc', val)
-          console.log(cumulWeight)
           commit('SET_WEIGHT', { key, splitEvenly: val })
         } else {
           cumulWeight += splitEvenly
-          console.log('org', splitEvenly)
           commit('SET_WEIGHT', { key, splitEvenly })
         }
       }

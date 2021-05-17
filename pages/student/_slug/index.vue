@@ -3,8 +3,8 @@
     <div v-if="!profileData.message" class="columns">
       <div class="column is-one-third-desktop">
         <div class="card is-unclipped">
-          <div class="columns mr-2">
-            <div class="card-image column">
+          <div class="columns">
+            <div class="card-image column pt-0">
               <figure
                 v-if="profileData && !loadingProfileCard"
                 class="image is-square"

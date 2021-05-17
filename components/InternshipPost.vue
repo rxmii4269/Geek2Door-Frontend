@@ -457,7 +457,6 @@ export default {
         return this.skills
       },
       set(value) {
-        console.log(value)
         // this.jobForm.skills = value
       },
     },

@@ -68,19 +68,35 @@
                   <p class="subtitle is-6">{{ profileData.email }}</p>
                 </div>
               </div>
-              <div
-                v-if="$auth.user.username === profileData.username"
-                class="is-clearfix"
-              >
+              <div class="content">
                 <b-field label="Status">
                   <b-switch
                     v-model="is_active"
                     type="is-success"
                     passive-type="is-danger"
                     name="Available"
+                    :disabled="$auth.user.username !== profileData.username"
                     >{{ status }}</b-switch
                   >
                 </b-field>
+                <div class="buttons">
+                  <b-button
+                    v-if="$auth.user.username === profileData.username"
+                    size="is-small"
+                    type="is-primary is-outlined"
+                    expanded
+                    @click="openResumeUpload"
+                    >Upload Resume</b-button
+                  >
+                  <b-button
+                    v-if="profileData.resume"
+                    size="is-small"
+                    type="is-primary is-outlined"
+                    expanded
+                    @click="toggleModal"
+                    >View Most Recent Resume</b-button
+                  >
+                </div>
               </div>
 
               <div class="content">
@@ -445,6 +461,77 @@
         </div>
       </div>
     </b-modal>
+    <b-modal v-model="uploadModalActive" has-modal-card>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Upload Resume</p>
+        </header>
+        <section class="modal-card-body">
+          <ValidationObserver ref="resumeUpload">
+            <ValidationProvider
+              v-slot="{ errors, valid, validate }"
+              rules="required|mimes:application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              name="Resume"
+              slim
+            >
+              <b-field
+                class="file is-flex-direction-column is-align-items-center"
+                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="errors"
+              >
+                <b-upload
+                  v-model="uploadedResume"
+                  drag-drop
+                  expanded
+                  accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  required
+                  @change="validate"
+                >
+                  <section class="section">
+                    <div class="content has-text-centered">
+                      <p>
+                        <b-icon icon="upload" size="is-large"></b-icon>
+                      </p>
+                      <p>Drop your resume here or click to upload</p>
+                    </div>
+                  </section>
+                </b-upload>
+              </b-field>
+              <b-tag
+                v-if="uploadedResume"
+                type="is-primary"
+                closable
+                aria-close-label="Delete uploaded Resume"
+                @close="deleteDropFile"
+              >
+                {{ uploadedResume.name }}
+              </b-tag>
+            </ValidationProvider>
+          </ValidationObserver>
+        </section>
+        <div class="modal-card-foot is-justify-content-flex-end">
+          <div class="buttons">
+            <b-button
+              type="is-danger is-outlined card-footer-item"
+              @click="closeResumeUpload"
+              >Cancel</b-button
+            >
+            <b-button
+              type="is-primary card-footer-item"
+              :loading="isUploadingResume"
+              @click="uploadResume"
+              >Save</b-button
+            >
+          </div>
+        </div>
+      </div>
+    </b-modal>
+    <DocumentModal
+      v-if="profileData.resume"
+      :active="modalIsActive"
+      :filename="profileData.resume"
+      @update:active="toggleModal($event)"
+    />
   </div>
 </template>
 <script>
@@ -487,6 +574,10 @@ export default {
       profile_Picture: [],
       cropped_img: null,
       isSavingImage: false,
+      uploadModalActive: false,
+      uploadedResume: null,
+      isUploadingResume: false,
+      modalIsActive: false,
     }
   },
   computed: {
@@ -613,6 +704,53 @@ export default {
           this.is_PP_Active = false
         })
     },
+    toggleModal(value) {
+      this.modalIsActive = !this.modalIsActive
+    },
+    openResumeUpload() {
+      this.uploadModalActive = true
+    },
+    closeResumeUpload() {
+      this.uploadModalActive = false
+      this.uploadedResume = null
+    },
+    async uploadResume() {
+      const isValid = this.$refs.resumeUpload.validate()
+      if (isValid) {
+        this.isUploadingResume = true
+        const formData = new FormData()
+        formData.append('resume', this.uploadedResume)
+        await this.$axios
+          .$post(
+            `/api/users/students/${this.profileData.id}/resume`,
+            formData,
+            {
+              headers: { 'Content-Type': 'multipart/form-data' },
+            }
+          )
+          .then((response) => {
+            this.$buefy.notification.open({
+              hasIcon: true,
+              position: 'is-top-right',
+              message: response.data,
+              type: 'is-success',
+            })
+            this.uploadModalActive = false
+          })
+          .catch((error) => {
+            this.$buefy.notification.open({
+              hasIcon: true,
+              position: 'is-top-right',
+              message: error,
+              type: 'is-danger',
+            })
+          })
+        this.isUploadingResume = false
+      }
+    },
+    deleteDropFile() {
+      this.uploadedResume = null
+    },
   },
 }
 </script>
@@ -661,5 +799,8 @@ export default {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+.switch[disabled] {
+  opacity: 1;
 }
 </style>

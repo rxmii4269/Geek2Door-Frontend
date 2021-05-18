@@ -90,6 +90,7 @@
           </b-field>
         </section>
         <b-button
+          v-if="internshipId"
           class="mt-3"
           expanded
           type="is-primary is-outlined"

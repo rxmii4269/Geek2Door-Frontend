@@ -515,9 +515,9 @@ export const actions = {
     })
     commit('SET_APPLIED_INTERNSHIPS', response)
   },
-  async getNotAppliedInternships({ commit, state }) {
+  async getNotAppliedInternships({ commit, state }, id) {
     const response = await this.$axios.$get(
-      `/api/users/${state.auth.user.id}/internships/notApplied`
+      `/api/users/${id}/internships/notApplied`
     )
     response.forEach((element, index, response) => {
       response[index].shortDescription =

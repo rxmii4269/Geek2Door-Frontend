@@ -421,6 +421,10 @@ export default {
 
   async mounted() {
     await this.$store.dispatch('getInternshipPage', this.$route.params.id)
+    await this.$store.dispatch(
+      'getNotAppliedInternships',
+      this.$route.params.id
+    )
     const startDate = new Date(this.internshipPageInfo.start_date)
     const endDate = new Date(this.internshipPageInfo.end_date)
     this.startDate = startDate.toDateString()

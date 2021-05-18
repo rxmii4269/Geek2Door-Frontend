@@ -650,5 +650,6 @@ export const actions = {
   },
   getNotifications({ commit }, data) {
     commit('SET_INTERNSHIP_OFFERS', data)
+    console.log(data)
   },
 }

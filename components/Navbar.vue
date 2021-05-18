@@ -87,6 +87,13 @@
         to="/accounts/login"
         >Log In</b-navbar-item
       >
+      <b-navbar-item
+        v-if="!$auth.loggedIn"
+        target="_blank"
+        href="https://admin.geek2door.rmtech.tk"
+        class="is-tab"
+        >Admin <b-icon pack="bx" icon="bx-link-external"></b-icon
+      ></b-navbar-item>
     </template>
   </b-navbar>
 </template>

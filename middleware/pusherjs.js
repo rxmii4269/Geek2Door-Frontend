@@ -18,7 +18,6 @@ export default function ({ $auth, context, store }) {
           if (process.browser) {
             console.log(data)
             store.dispatch('getNotifications', data)
-            alert(JSON.stringify(data))
           }
         })
       }

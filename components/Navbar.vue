@@ -41,7 +41,7 @@
         </div>
         <span>Messages</span>
       </b-navbar-item>
-      <b-navbar-item>
+      <b-navbar-item v-if="$auth.loggedIn">
         <b-dropdown append-to-body position="is-bottom-left">
           <template #trigger>
             <div class="is-flex is-flex-direction-column">

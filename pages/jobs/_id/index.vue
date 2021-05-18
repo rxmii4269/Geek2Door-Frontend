@@ -1,19 +1,6 @@
 <template>
   <section>
     <div v-if="internshipPageInfo" class="columns is-multiline">
-      <section
-        v-if="offers && $auth.user.name === internshipPageInfo.company_name"
-        class="section"
-      >
-        <b-message
-          v-for="offer in offers"
-          :key="offer.internship_id"
-          title="Offer"
-        >
-          {{ offer.offer }}
-        </b-message>
-      </section>
-
       <div class="column is-one-third">
         <div class="card">
           <header class="card-header is-flex-direction-column">
@@ -102,6 +89,7 @@
           v-if="$auth.user.name === internshipPageInfo.company_name"
           :applied="internshipPageInfo.applied"
           :ranked="internshipPageInfo.ranked_students"
+          :not-applied="notappliedInternships"
         />
       </div>
     </div>
@@ -419,7 +407,7 @@ export default {
       'internshipPageInfo',
       'isSubmittingJob',
       'isArchivingPost',
-      'offers',
+      'notappliedInternships',
     ]),
     filteredDegrees() {
       return this.degrees.filter((option) => {

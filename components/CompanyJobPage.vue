@@ -32,7 +32,27 @@
         </div>
       </section>
     </b-tab-item>
-    <b-tab-item label="Haven't Applied"></b-tab-item>
+    <b-tab-item label="Haven't Applied">
+      <div class="columns is-multiline">
+        <StudentCard
+          v-for="student in notApplied"
+          :id="student.id"
+          :key="student.id"
+          :first-name="student.firstname"
+          :last-name="student.lastname"
+          :email="student.email"
+          :profile-picture="student.profile_picture"
+          :role="student.role"
+          :skills="student.skills"
+          :username="student.username"
+          :scores="student.rank"
+          :gpa="student.gpa"
+          :major="student.major"
+          :minor="student.minor"
+          :internship-id="parseInt($route.params.id)"
+        />
+      </div>
+    </b-tab-item>
   </b-tabs>
 </template>
 <script>
@@ -40,6 +60,13 @@ import clonedeep from 'lodash/cloneDeep'
 export default {
   props: {
     applied: {
+      type: Array,
+      default: () => {
+        return []
+      },
+      validator: (prop) => prop.every((e) => typeof e === 'object'),
+    },
+    notApplied: {
       type: Array,
       default: () => {
         return []

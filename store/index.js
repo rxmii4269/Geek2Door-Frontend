@@ -14,6 +14,7 @@ export const state = () => ({
   activeStep: 0,
   internships: [],
   appliedInternships: [],
+  notappliedInternships: [],
   internshipPageInfo: [],
   allInternships: [],
   allStudents: [],
@@ -121,6 +122,9 @@ export const mutations = {
   },
   SET_APPLIED_INTERNSHIPS(state, appliedInternships) {
     state.appliedInternships = appliedInternships
+  },
+  SET_NOT_APPLIED_INTERNSHIPS(state, notappliedInternships) {
+    state.notappliedInternships = notappliedInternships
   },
   INCREMENT_STEP(state) {
     state.activeStep = 1
@@ -511,6 +515,16 @@ export const actions = {
     })
     commit('SET_APPLIED_INTERNSHIPS', response)
   },
+  async getNotAppliedInternships({ commit, state }) {
+    const response = await this.$axios.$get(
+      `/api/users/${state.auth.user.id}/internships/notApplied`
+    )
+    response.forEach((element, index, response) => {
+      response[index].shortDescription =
+        element.description.replace(/\r?\n|\r/g, ' ').slice(0, 100) + '...'
+    })
+    commit('SET_NOT_APPLIED_INTERNSHIPS', response)
+  },
   async updateInternship({ commit, dispatch, state }, internshipForm) {
     commit('TOGGLE_SUBMITTING_JOB', true)
     await this.$axios
@@ -650,6 +664,5 @@ export const actions = {
   },
   getNotifications({ commit }, data) {
     commit('SET_INTERNSHIP_OFFERS', data)
-    console.log(data)
   },
 }

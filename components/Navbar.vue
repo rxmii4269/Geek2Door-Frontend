@@ -41,6 +41,35 @@
         </div>
         <span>Messages</span>
       </b-navbar-item>
+      <b-navbar-item>
+        <b-dropdown append-to-body position="is-bottom-left">
+          <template #trigger>
+            <div class="is-flex is-flex-direction-column">
+              <b-icon
+                pack="bx"
+                custom-class="is-size-4"
+                class="mx-auto mt-2 is-flex-grow-1"
+                icon="bxs-bell"
+                type="is-primary"
+              ></b-icon>
+              <p class="is-size-7">Notifications</p>
+            </div>
+          </template>
+          <b-dropdown-item
+            v-for="offer in offers"
+            :key="offer.internship_id"
+            class="p-0"
+          >
+            <b-message type="is-primary"
+              ><p>{{ offer.offer }}</p>
+              <div class="buttons">
+                <b-button @click="accept(offer.internship_id)">Accept</b-button>
+                <b-button @click="reject(offer.internship_id)">Reject</b-button>
+              </div>
+            </b-message>
+          </b-dropdown-item>
+        </b-dropdown>
+      </b-navbar-item>
       <b-navbar-item v-if="$auth.loggedIn">
         <b-dropdown append-to-body position="is-bottom-left">
           <template #trigger>
@@ -106,12 +135,23 @@ export default {
     }
   },
   computed: {
-    ...mapState(['profile_url']),
+    ...mapState(['profile_url', 'offers']),
     img_url() {
       return `${this.$config.axios.browserBaseURL}/api/images/${this.$auth.user.profile_picture}`
     },
   },
-  methods: {},
+  methods: {
+    accept(id) {
+      this.$axios.post(`/api/internships/${id}/invitation/accept`, {
+        student_id: this.$auth.user.id,
+      })
+    },
+    reject(id) {
+      this.$axios.post(`/api/internships/${id}/invitation/reject`, {
+        student_id: this.$auth.user.id,
+      })
+    },
+  },
 }
 </script>
 <style>
@@ -151,6 +191,11 @@ a.navbar-item:hover {
   line-height: 1;
   min-width: 19px;
   z-index: 1;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .notification-badge--count {

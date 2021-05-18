@@ -1,16 +1,82 @@
 <template>
-  <div class="columns is-8">
-    <div class="column is-3">
+  <div class="columns">
+    <div class="column is-one-third-desktop">
       <div class="card">
-        <div class="card-content">
+        <div class="card-header">
+          <p class="card-header-title is-centered">
+            Hello These are your recommended Jobs
+          </p>
+        </div>
+        <div class="card-content p-0">
           <div class="content">
-            <h5>Hello These are your recommended Jobs:</h5>
+            <section>
+              <b-collapse
+                v-for="(internship, index) of recommendedInternships"
+                :key="internship.id"
+                :open="isOpen == index"
+                class="card"
+                animation="slide"
+                @open="isOpen = index"
+              >
+                <template #trigger="props">
+                  <div class="card-header" role="button">
+                    <div class="media mb-0">
+                      <div class="media-left mr-0">
+                        <figure class="image is-48x48">
+                          <img
+                            :src="`${$config.axios.browserBaseURL}/api/images/${internship.profile_picture}`"
+                            alt="internship profile picture"
+                          />
+                        </figure>
+                      </div>
+                    </div>
+                    <p class="card-header-title">
+                      {{ internship.position }}
+                    </p>
+                    <a class="card-header-icon">
+                      <b-icon
+                        :icon="props.open ? 'menu-down' : 'menu-up'"
+                      ></b-icon>
+                    </a>
+                  </div>
+                </template>
+                <div class="card-content">
+                  <div class="content">
+                    <b-field label="Compatibility">
+                      <b-progress
+                        :value="internship.total_rank"
+                        show-value
+                        format="percent"
+                        type="is-primary"
+                      ></b-progress>
+                    </b-field>
+                    <div class="buttons is-centered">
+                      <b-button
+                        size="is-small"
+                        type="is-primary is-outlined"
+                        :loading="isApplying"
+                        :disabled="hasAppliedCheck"
+                        @click="applyForInternship(internship.id)"
+                        >{{ isApplied }}</b-button
+                      >
+                      <b-button
+                        tag="nuxt-link"
+                        :to="`/jobs/${internship.id}`"
+                        size="is-small"
+                        type="is-primary is-outlined"
+                        >View More</b-button
+                      >
+                    </div>
+                  </div>
+                </div>
+              </b-collapse>
+            </section>
           </div>
         </div>
       </div>
       <!-- <b-button @click="$auth.refreshTokens()">Refresh</b-button> -->
     </div>
-    <div class="column is-9">
+    <div class="column">
       <div class="container mb-5">
         <b-field expanded>
           <b-autocomplete
@@ -116,13 +182,20 @@ export default {
       data: [],
       isFetching: false,
       selected: null,
+      isOpen: 0,
+      hasAppliedCheck: false,
+      isApplying: false,
     }
   },
   computed: {
-    ...mapState(['allInternships']),
+    ...mapState(['allInternships', 'recommendedInternships']),
+    isApplied() {
+      return this.hasAppliedCheck ? 'Applied' : 'Apply'
+    },
   },
-  mounted() {
-    this.$store.dispatch('getAllInternships')
+  async mounted() {
+    await this.$store.dispatch('getAllInternships')
+    await this.$store.dispatch('getRecommendedInternships')
   },
   methods: {
     getAsyncData: debounce(function (position) {
@@ -161,6 +234,15 @@ export default {
     }, 100),
     navigate(option) {
       this.$router.push(`/jobs/${option.id}`)
+    },
+    async applyForInternship(id) {
+      this.isApplying = true
+      await this.$store.dispatch('applyForInternship', {
+        student_id: this.$auth.user.id,
+        post_id: id,
+      })
+      this.isApplying = false
+      this.hasAppliedCheck = true
     },
   },
 }

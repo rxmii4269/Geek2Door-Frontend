@@ -580,7 +580,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['appliedInternships', 'isSavingProfile', 'profileData']),
+    ...mapState([
+      'appliedInternships',
+      'isSavingProfile',
+      'profileData',
+      'offers',
+    ]),
     is_active: {
       get() {
         return this.$store.state.profileData.is_active

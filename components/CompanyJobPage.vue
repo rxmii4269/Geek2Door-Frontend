@@ -4,6 +4,7 @@
       <div v-if="appliedStudents.length > 0" class="columns is-multiline">
         <StudentCard
           v-for="student in appliedStudents"
+          :id="student.id"
           :key="student.id"
           :first-name="student.firstname"
           :last-name="student.lastname"
@@ -16,6 +17,7 @@
           :gpa="student.gpa"
           :major="student.major"
           :minor="student.minor"
+          :internship-id="parseInt($route.params.id)"
         />
       </div>
       <section v-else class="hero is-primary">

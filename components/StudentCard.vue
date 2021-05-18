@@ -1,7 +1,7 @@
 <template>
-  <div class="column is-half">
-    <nuxt-link :to="profile">
-      <div class="card">
+  <div class="column" :class="customClass">
+    <div class="card">
+      <nuxt-link :to="profile">
         <div class="card-image is-flex is-justify-content-center">
           <figure class="image is-96x96">
             <img :src="profilePictureURL" alt="" class="" />
@@ -14,91 +14,99 @@
             </p>
           </nuxt-link>
         </header>
-        <div class="card-content">
-          <div class="content">
-            <p>@{{ username }}</p>
-            <p>{{ email }}</p>
-            <b-taglist>
-              <b-tag
-                v-for="skill in skills"
-                :key="skill.index"
-                type="is-primary"
-              >
-                {{ skill.name }}
-              </b-tag>
-            </b-taglist>
-            <b-taglist v-if="gpa" attached>
-              <b-tag type="is-primary">GPA</b-tag>
-              <b-tag type="is-black">{{ gpa }}</b-tag>
-            </b-taglist>
-            <b-field
-              v-if="major || minor"
-              label="Qualifications"
-              group-multiline
-              grouped
-            >
-              <b-field label="Major">
-                <div>{{ major }}</div>
-              </b-field>
-              <b-field label="Minor">
-                <div>{{ minor }}</div>
-              </b-field>
+      </nuxt-link>
+
+      <div class="card-content">
+        <div class="content">
+          <p>@{{ username }}</p>
+          <p>{{ email }}</p>
+          <b-taglist>
+            <b-tag v-for="skill in skills" :key="skill.index" type="is-primary">
+              {{ skill.name }}
+            </b-tag>
+          </b-taglist>
+          <b-taglist v-if="gpa" attached>
+            <b-tag type="is-primary">GPA</b-tag>
+            <b-tag type="is-black">{{ gpa }}</b-tag>
+          </b-taglist>
+          <b-field
+            v-if="major || minor"
+            label="Qualifications"
+            group-multiline
+            grouped
+          >
+            <b-field label="Major">
+              <div>{{ major }}</div>
             </b-field>
-          </div>
-          <section>
+            <b-field label="Minor">
+              <div>{{ minor }}</div>
+            </b-field>
+          </b-field>
+        </div>
+        <section>
+          <b-field
+            v-if="Object.keys(scores).length > 0"
+            expanded
+            label="Ranking"
+            group-multiline
+            grouped
+          >
             <b-field
-              v-if="Object.keys(scores).length > 0"
+              v-if="scores.qual_score_percentage"
               expanded
-              label="Ranking"
-              group-multiline
-              grouped
-            >
-              <b-field
-                v-if="scores.qual_score_percentage"
-                expanded
-                label="Qualifications Score"
-              >
-                <b-progress
-                  type="is-primary"
-                  :value="scores.qual_score_percentage"
-                  format="percent"
-                  show-value
-                ></b-progress>
-              </b-field>
-              <b-field
-                v-if="scores.gpa_score_percentage"
-                expanded
-                label="GPA Score"
-              >
-                <b-progress
-                  type="is-primary"
-                  :value="scores.gpa_score_percentage"
-                  format="percent"
-                  show-value
-                ></b-progress>
-              </b-field>
-            </b-field>
-            <b-field
-              v-if="scores.skill_score_percentage"
-              epxanded
-              label="Skills Score"
+              label="Qualifications Score"
             >
               <b-progress
                 type="is-primary"
-                :value="scores.skill_score_percentage"
-                show-value
+                :value="scores.qual_score_percentage"
                 format="percent"
+                show-value
               ></b-progress>
             </b-field>
-          </section>
-        </div>
+            <b-field
+              v-if="scores.gpa_score_percentage"
+              expanded
+              label="GPA Score"
+            >
+              <b-progress
+                type="is-primary"
+                :value="scores.gpa_score_percentage"
+                format="percent"
+                show-value
+              ></b-progress>
+            </b-field>
+          </b-field>
+          <b-field
+            v-if="scores.skill_score_percentage"
+            epxanded
+            label="Skills Score"
+          >
+            <b-progress
+              type="is-primary"
+              :value="scores.skill_score_percentage"
+              show-value
+              format="percent"
+            ></b-progress>
+          </b-field>
+        </section>
+        <b-button
+          class="mt-3"
+          expanded
+          type="is-primary is-outlined"
+          @click="sendInvitation"
+          >Send Internship Invitation</b-button
+        >
       </div>
-    </nuxt-link>
+    </div>
   </div>
 </template>
 <script>
 export default {
   props: {
+    id: {
+      type: Number,
+      default: 0,
+    },
     username: {
       type: String,
       default: '',
@@ -153,6 +161,14 @@ export default {
       type: String,
       default: '',
     },
+    customClass: {
+      type: String,
+      default: 'is-half',
+    },
+    internshipId: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {}
@@ -169,7 +185,17 @@ export default {
     },
   },
   //   mounted: {},
-  //   methods: {},
+  methods: {
+    sendInvitation() {
+      console.log(this.id, this.internshipId)
+      this.$axios.post(
+        `/api/internships/${this.internshipId}/invitation/${this.id}`,
+        {
+          message: 'I am offering you a job offer',
+        }
+      )
+    },
+  },
 }
 </script>
 <style scoped>

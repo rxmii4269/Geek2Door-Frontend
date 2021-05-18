@@ -1,16 +1,6 @@
 <template>
-  <div class="columns is-8">
-    <div class="column is-3">
-      <div class="card">
-        <div class="card-content">
-          <div class="content">
-            <h5>Hello These are your recommended Students:</h5>
-          </div>
-        </div>
-      </div>
-      <!-- <b-button @click="$auth.refreshTokens()">Refresh</b-button> -->
-    </div>
-    <div class="column is-9">
+  <div class="columns">
+    <div class="column">
       <div class="container mb-5">
         <b-field expanded>
           <b-autocomplete
@@ -70,6 +60,7 @@
             :email="student.email"
             :skills="student.skills"
             :username="student.username"
+            :custom-class="customClass"
           />
           <InfiniteLoading @infinite="infiniteHandler"> </InfiniteLoading>
         </client-only>
@@ -86,13 +77,15 @@ export default {
       data: [],
       isFetching: false,
       selected: null,
+      isOpen: 0,
+      customClass: 'is-one-third',
     }
   },
   computed: {
     ...mapState(['allStudents', 'page']),
   },
-  mounted() {
-    this.$store.dispatch('getAllStudents')
+  async mounted() {
+    await this.$store.dispatch('getAllStudents')
   },
   methods: {
     getAsyncData: debounce(function (name) {

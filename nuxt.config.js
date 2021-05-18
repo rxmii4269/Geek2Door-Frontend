@@ -1,6 +1,6 @@
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: true,
+  ssr: false,
 
   // Target: https://go.nuxtjs.dev/config-target
   target: 'server',
@@ -52,7 +52,7 @@ export default {
   ],
 
   router: {
-    middleware: ['talkjs', 'csrf', 'auth', 'track_views'],
+    middleware: ['talkjs', 'csrf', 'auth', 'track_views', 'pusherjs'],
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -72,6 +72,7 @@ export default {
   env: {
     SECRET_KEY: process.env.SECRET_KEY,
     APP_ID: process.env.APP_ID,
+    API_URL: process.env.API_URL,
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -95,7 +96,7 @@ export default {
   },
 
   auth: {
-    plugins: [{ src: '@/plugins/axios' }],
+    plugins: [{ src: '@/plugins/axios', ssr: false }],
     resetOnError: true,
     fullPathRedirect: true,
     localStorage: false,

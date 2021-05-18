@@ -26,6 +26,8 @@ export const state = () => ({
     skillsWeight: 0,
   },
   skillsList: [],
+  recommendedInternships: [],
+  offers: [],
 })
 
 export const getters = {
@@ -147,6 +149,22 @@ export const mutations = {
   TOGGLE_SAVE_INTERNSHIP(state) {
     state.isSavingInternship = !state.isSavingInternship
   },
+  SET_RECOMMENDED_INTERNSHIPS(state, value) {
+    state.recommendedInternships = value
+  },
+  SET_INTERNSHIP_OFFERS(state, value) {
+    if (state.offers.length > 0) {
+      state.offers.forEach(function (offer) {
+        console.log(value.internship_id)
+        if (offer.internship_id !== value.internship_id) {
+          console.log(value.internship_id)
+          state.offers.push(value)
+        }
+      })
+    } else {
+      state.offers.push(value)
+    }
+  },
 }
 
 export const actions = {
@@ -215,7 +233,9 @@ export const actions = {
   async submitInternship({ commit, dispatch, state }, internshipForm) {
     commit('TOGGLE_SUBMITTING_JOB', true)
     try {
+      const source = this.$axios.CancelToken.source()
       const response = await this.$axios.$post('/api/upload', internshipForm, {
+        cancelToken: source.token,
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       if (typeof response.analysis.description === 'undefined') {
@@ -295,6 +315,7 @@ export const actions = {
           commit('SET_WEIGHT', { key, splitEvenly: val })
         } else {
           cumulWeight += splitEvenly
+          console.log(cumulWeight)
           commit('SET_WEIGHT', { key, splitEvenly })
         }
       }
@@ -410,16 +431,16 @@ export const actions = {
     commit('SET_WEIGHT', { key, splitEvenly })
     dispatch('divideSkills')
   },
-  deleteSkill({ commit, dispatch }, index) {
-    commit('REMOVE_SKILL', index)
-    dispatch('divideSkills')
+  async deleteSkill({ commit, dispatch }, index) {
+    await commit('REMOVE_SKILL', index)
+    await dispatch('divideSkills')
   },
-  addSkill({ commit, dispatch }) {
-    commit('ADD_SKILL')
-    dispatch('divideSkills')
+  async addSkill({ commit, dispatch }) {
+    await commit('ADD_SKILL')
+    await dispatch('divideSkills')
   },
   divideSkills({ commit, state }) {
-    const skillsLength = state.newInternship.skills.length
+    const skillsLength = state.skillsList.length
     const divideEvenly =
       Math.round((state.weights.skillsWeight / skillsLength) * 10) / 10
 
@@ -452,7 +473,6 @@ export const actions = {
     const cumulSkill = state.skillsList.reduce((a, b) => {
       return parseFloat((a + b).toFixed(1))
     })
-
     if (cumulSkill > state.weights.skillsWeight) {
       Notification.open({
         duration: 4000,
@@ -621,5 +641,14 @@ export const actions = {
         hasIcon: true,
       })
     }
+  },
+  async getRecommendedInternships({ commit }) {
+    await this.$axios.$get('/api/internships/recommended').then((response) => {
+      console.log(response)
+      commit('SET_RECOMMENDED_INTERNSHIPS', response)
+    })
+  },
+  getNotifications({ commit }, data) {
+    commit('SET_INTERNSHIP_OFFERS', data)
   },
 }

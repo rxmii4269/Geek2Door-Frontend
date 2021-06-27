@@ -27,13 +27,9 @@ export default {
         const match = this.$router.match(path)
         if (match.name !== null) {
           crumbs.push({ title: param.replace(/-/g, ' '), ...match })
-          console.log(`yep: ${path}`)
         } else {
-          console.log(`nope: ${path}`)
         }
-        console.log(path)
       })
-      console.log(params)
       return crumbs
     },
   },

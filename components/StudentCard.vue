@@ -188,7 +188,6 @@ export default {
   //   mounted: {},
   methods: {
     sendInvitation() {
-      console.log(this.id, this.internshipId)
       this.$axios.post(
         `/api/internships/${this.internshipId}/invitation/${this.id}`,
         {

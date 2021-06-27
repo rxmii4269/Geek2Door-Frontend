@@ -16,7 +16,6 @@ export default function ({ $auth, context, store }) {
         )
         channel.bind('Invitations', (data) => {
           if (process.browser) {
-            console.log(data)
             store.dispatch('getNotifications', data)
           }
         })
@@ -25,14 +24,12 @@ export default function ({ $auth, context, store }) {
           `private-Internship-Accept-${$auth.user.id}`
         )
         channel.bind('Accept', (data) => {
-          console.log(data)
           store.dispatch('getNotifications', data)
         })
         const channel2 = pusher.subscribe(
           `private-Internship-Reject-${$auth.user.id}`
         )
         channel2.bind('Reject', (data) => {
-          console.log(data)
           store.dispatch('getNotifications', data)
         })
       }

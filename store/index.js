@@ -159,9 +159,7 @@ export const mutations = {
   SET_INTERNSHIP_OFFERS(state, value) {
     if (state.offers.length > 0) {
       state.offers.forEach(function (offer) {
-        console.log(value.internship_id)
         if (offer.internship_id !== value.internship_id) {
-          console.log(value.internship_id)
           state.offers.push(value)
         }
       })
@@ -319,7 +317,6 @@ export const actions = {
           commit('SET_WEIGHT', { key, splitEvenly: val })
         } else {
           cumulWeight += splitEvenly
-          console.log(cumulWeight)
           commit('SET_WEIGHT', { key, splitEvenly })
         }
       }
@@ -658,7 +655,6 @@ export const actions = {
   },
   async getRecommendedInternships({ commit }) {
     await this.$axios.$get('/api/internships/recommended').then((response) => {
-      console.log(response)
       commit('SET_RECOMMENDED_INTERNSHIPS', response)
     })
   },
